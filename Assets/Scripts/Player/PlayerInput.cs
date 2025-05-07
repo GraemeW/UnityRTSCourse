@@ -7,7 +7,7 @@ namespace GameDevTV.RTS
     public class PlayerInput : MonoBehaviour
     {
         // Tunables
-        [SerializeField] private Transform cameraTarget;
+        [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private CameraConfig cameraConfig;
 
@@ -39,8 +39,7 @@ namespace GameDevTV.RTS
             Vector3 moveAmount = GetKeyboardMoveAmount();
             moveAmount += GetMouseMoveAmount();
 
-            moveAmount *= Time.deltaTime;
-            cameraTarget.position = cameraTarget.position + moveAmount;
+            cameraTarget.linearVelocity = moveAmount;
         }
 
         private Vector3 GetKeyboardMoveAmount()
