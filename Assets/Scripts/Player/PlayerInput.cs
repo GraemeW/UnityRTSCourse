@@ -13,12 +13,14 @@ namespace GameDevTV.RTS
         [SerializeField] private float keyboardPanSpeed = 5;
         [SerializeField] private float minZoomDistance = 5;
         [SerializeField] private float zoomSpeed = 1;
+        [SerializeField] private float rotationSpeed = 1;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
 
         // State
         private float zoomStartTime;
+        private float rotationStartTime;
         private Vector3 startingFollowOffset;
 
         private void Awake()
@@ -33,6 +35,7 @@ namespace GameDevTV.RTS
 
             HandlePanning();
             HandleZooming();
+            HandleRotation();
         }
 
         private void HandlePanning()
@@ -83,9 +86,60 @@ namespace GameDevTV.RTS
             );
         }
 
+        private void HandleRotation()
+        {
+            if (ShouldSetRotationStartTime())
+            {
+                rotationStartTime = Time.time;
+            }
+
+            Vector3 targetFollowOffset;
+            float rotationTime = Mathf.Clamp01((Time.time - rotationStartTime) * rotationSpeed);
+
+            if (Keyboard.current.pageUpKey.isPressed && Keyboard.current.pageDownKey.isPressed)
+            {
+                targetFollowOffset = cinemachineFollow.FollowOffset;
+            }
+            else if (Keyboard.current.pageUpKey.isPressed)
+            {
+                targetFollowOffset = new Vector3(
+                    startingFollowOffset.z,
+                    cinemachineFollow.FollowOffset.y,
+                    startingFollowOffset.x
+                );
+            }
+            else if (Keyboard.current.pageDownKey.isPressed)
+            {
+                targetFollowOffset = new Vector3(
+                    -startingFollowOffset.z,
+                    cinemachineFollow.FollowOffset.y,
+                    startingFollowOffset.x
+                );
+            }
+            else
+            {
+                targetFollowOffset = new Vector3(
+                    startingFollowOffset.x,
+                    cinemachineFollow.FollowOffset.y,
+                    startingFollowOffset.z
+                );
+            }
+
+            cinemachineFollow.FollowOffset = Vector3.Slerp(
+                cinemachineFollow.FollowOffset,
+                targetFollowOffset,
+                rotationTime
+            );
+        }
+
         private static bool ShouldSetZoomStartTime()
         {
             return Keyboard.current.endKey.wasPressedThisFrame || Keyboard.current.endKey.wasReleasedThisFrame;
+        }
+
+        private static bool ShouldSetRotationStartTime()
+        {
+            return Keyboard.current.pageUpKey.wasPressedThisFrame || Keyboard.current.pageUpKey.wasReleasedThisFrame || Keyboard.current.pageDownKey.wasPressedThisFrame || Keyboard.current.pageDownKey.wasReleasedThisFrame;
         }
     }
 }
