@@ -1,6 +1,8 @@
+using GameDevTV.RTS.Units;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace GameDevTV.RTS
 {
@@ -9,6 +11,7 @@ namespace GameDevTV.RTS
         // Tunables
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
+        [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
 
         // Cached References
@@ -18,6 +21,7 @@ namespace GameDevTV.RTS
         private float zoomStartTime;
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
+        private ISelectable selectedUnit;
 
         private void Awake()
         {
@@ -32,6 +36,7 @@ namespace GameDevTV.RTS
             HandlePanning();
             HandleZooming();
             HandleRotation();
+            HandleLeftClick();
         }
 
         private void HandlePanning()
@@ -158,6 +163,29 @@ namespace GameDevTV.RTS
         private static bool ShouldSetRotationStartTime()
         {
             return Keyboard.current.pageUpKey.wasPressedThisFrame || Keyboard.current.pageUpKey.wasReleasedThisFrame || Keyboard.current.pageDownKey.wasPressedThisFrame || Keyboard.current.pageDownKey.wasReleasedThisFrame;
+        }
+
+        private void HandleLeftClick()
+        {
+            if (camera == null) { return; }
+
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                if (selectedUnit != null)
+                {
+                    selectedUnit.Deselect();
+                    selectedUnit = null;
+                }
+
+                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Default"))
+                && hit.collider.TryGetComponent(out ISelectable selectable))
+                {
+                    selectable.Select();
+                    selectedUnit = selectable;
+                }
+            }
         }
     }
 }
