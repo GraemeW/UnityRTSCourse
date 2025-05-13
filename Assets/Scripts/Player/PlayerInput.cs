@@ -14,7 +14,7 @@ namespace GameDevTV.RTS
         [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnitsLayers;
-        [SerializeField] private LayerMask terrainLayer;
+        [SerializeField] private LayerMask floorLayers;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -195,6 +195,7 @@ namespace GameDevTV.RTS
         {
             if (camera == null) { return; }
             if (selectedUnit == null) { return; }
+            if (selectedUnit is not IMoveable moveable) { return; }
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -203,11 +204,11 @@ namespace GameDevTV.RTS
                 if (Physics.Raycast(cameraRay, out RaycastHit targetHit, float.MaxValue, selectableUnitsLayers) 
                     && targetHit.collider.TryGetComponent(out ISelectable selectable))
                 {
-                    selectedUnit.SetTarget(targetHit.transform);
+                    moveable.SetMoveTarget(targetHit.transform);
                 }
-                else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, terrainLayer))
+                else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, floorLayers))
                 {
-                    selectedUnit.SetPosition(terrainHit.point);
+                    moveable.MoveTo(terrainHit.point);
                 }
             }
         }

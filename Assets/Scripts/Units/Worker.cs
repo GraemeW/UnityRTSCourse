@@ -6,13 +6,13 @@ using UnityEngine.Rendering.Universal;
 namespace GameDevTV.RTS.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Worker : MonoBehaviour, ISelectable
+    public class Worker : MonoBehaviour, ISelectable, IMoveable
     {
         // Tunables
         [SerializeField] private DecalProjector decalProjector;
-        [SerializeField] private Transform target;
 
         // State
+        private Transform target;
         private Vector3 targetPosition;
 
         // Cached References
@@ -34,16 +34,17 @@ namespace GameDevTV.RTS.Units
             }
         }
 
-        public void SetTarget(Transform target)
+        public void SetMoveTarget(Transform target)
         {
             if (target == null) { return; }
             this.target = target;
         }
 
-        public void SetPosition(Vector3 position)
+        public void MoveTo(Vector3 position)
         {
             if (target != null) { target = null; }
             targetPosition = position;
+            navMeshAgent.SetDestination(targetPosition);
         }
 
         private void Awake()
@@ -54,10 +55,11 @@ namespace GameDevTV.RTS.Units
 
         private void Update()
         {
-            if (target != null) { targetPosition = target.position; }
-            if (Mathf.Approximately(Vector3.Distance(transform.position, targetPosition), 0.0f)) { return; }
-
-            navMeshAgent.SetDestination(targetPosition);
+            if (target != null) {
+                targetPosition = target.position;
+                navMeshAgent.SetDestination(targetPosition); 
+            }
+            
             if (navMeshAgent.isStopped) { targetPosition = transform.position; }
         }
     }
