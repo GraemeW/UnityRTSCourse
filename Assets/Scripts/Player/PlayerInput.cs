@@ -1,4 +1,7 @@
 using GameDevTV.RTS.Units;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,12 +26,13 @@ namespace GameDevTV.RTS
         private float zoomStartTime;
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
-        private ISelectable selectedUnit;
+        private List<ISelectable> selectedUnits;
 
         private void Awake()
         {
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
             startingFollowOffset = cinemachineFollow.FollowOffset;
+            selectedUnits = new List<ISelectable>();
         }
 
         private void Update()
@@ -171,22 +175,26 @@ namespace GameDevTV.RTS
         private void HandleLeftClick()
         {
             if (camera == null) { return; }
+            if (selectedUnits == null) { selectedUnits = new List<ISelectable>(); }
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                if (selectedUnit != null)
+                if (selectedUnits != null && selectedUnits.Count > 0)
                 {
-                    selectedUnit.Deselect();
-                    selectedUnit = null;
+                    foreach (ISelectable selectedUnit in selectedUnits)
+                    {
+                        selectedUnit.Deselect();
+                    }
+                    selectedUnits.Clear();
                 }
 
                 if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
                 && hit.collider.TryGetComponent(out ISelectable selectable))
                 {
                     selectable.Select();
-                    selectedUnit = selectable;
+                    selectedUnits.Add(selectable);
                 }
             }
         }
@@ -194,8 +202,7 @@ namespace GameDevTV.RTS
         private void HandleRightClick()
         {
             if (camera == null) { return; }
-            if (selectedUnit == null) { return; }
-            if (selectedUnit is not IMoveable moveable) { return; }
+            if (selectedUnits == null || selectedUnits.Count == 0) { return; }
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -204,11 +211,19 @@ namespace GameDevTV.RTS
                 if (Physics.Raycast(cameraRay, out RaycastHit targetHit, float.MaxValue, selectableUnitsLayers) 
                     && targetHit.collider.TryGetComponent(out ISelectable selectable))
                 {
-                    moveable.SetMoveTarget(targetHit.transform);
+                    foreach (ISelectable selectedUnit in selectedUnits)
+                    {
+                        if (selectedUnit is not IMoveable moveable) { continue; }
+                        moveable.SetMoveTarget(targetHit.transform);
+                    }
                 }
                 else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, floorLayers))
                 {
-                    moveable.MoveTo(terrainHit.point);
+                    foreach (ISelectable selectedUnit in selectedUnits)
+                    {
+                        if (selectedUnit is not IMoveable moveable) { continue; }
+                        moveable.MoveTo(terrainHit.point);
+                    }
                 }
             }
         }
