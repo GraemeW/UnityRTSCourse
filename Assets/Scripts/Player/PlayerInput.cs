@@ -1,5 +1,8 @@
+using GameDevTV.RTS.EventBus;
+using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Units;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
@@ -18,6 +21,7 @@ namespace GameDevTV.RTS
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask floorLayers;
+        [SerializeField] private RectTransform selectionBox;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -26,6 +30,7 @@ namespace GameDevTV.RTS
         private float zoomStartTime;
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
+        private Vector2 startingMousePosition;
         private List<ISelectable> selectedUnits;
 
         private void Awake()
@@ -33,6 +38,18 @@ namespace GameDevTV.RTS
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
             startingFollowOffset = cinemachineFollow.FollowOffset;
             selectedUnits = new List<ISelectable>();
+
+            Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
+        }
+
+        private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
+        {
+            selectedUnits.Add(unitSelectedEvent.unit);
         }
 
         private void Update()
@@ -44,6 +61,7 @@ namespace GameDevTV.RTS
             HandleRotation();
             HandleLeftClick();
             HandleRightClick();
+            HandleDragSelect();
         }
 
         private void HandlePanning()
@@ -175,26 +193,17 @@ namespace GameDevTV.RTS
         private void HandleLeftClick()
         {
             if (camera == null) { return; }
-            if (selectedUnits == null) { selectedUnits = new List<ISelectable>(); }
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                if (selectedUnits != null && selectedUnits.Count > 0)
-                {
-                    foreach (ISelectable selectedUnit in selectedUnits)
-                    {
-                        selectedUnit.Deselect();
-                    }
-                    selectedUnits.Clear();
-                }
+                ClearSelectedUnits();
 
                 if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
                 && hit.collider.TryGetComponent(out ISelectable selectable))
                 {
                     selectable.Select();
-                    selectedUnits.Add(selectable);
                 }
             }
         }
@@ -226,6 +235,47 @@ namespace GameDevTV.RTS
                     }
                 }
             }
+        }
+
+        private void HandleDragSelect()
+        {
+            if (selectionBox == null) { return; }
+
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                selectionBox.gameObject.SetActive(true);
+                startingMousePosition = Mouse.current.position.ReadValue();
+            }
+            else if (Mouse.current.leftButton.isPressed && !Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                Vector2 mousePosition = Mouse.current.position.ReadValue();
+                ResizeSelectionBox(mousePosition);
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                selectionBox.sizeDelta = Vector2.zero;
+                selectionBox.gameObject.SetActive(false);
+
+                //ClearSelectedUnits();
+            }
+        }
+
+        private void ResizeSelectionBox(Vector2 mousePosition)
+        {
+            float width = mousePosition.x - startingMousePosition.x;
+            float height = mousePosition.y - startingMousePosition.y;
+
+            selectionBox.anchoredPosition = startingMousePosition + new Vector2(width / 2, height / 2);
+            selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+        }
+
+        private void ClearSelectedUnits()
+        {
+            foreach (ISelectable selectedUnit in selectedUnits)
+            {
+                selectedUnit.Deselect();
+            }
+            selectedUnits.Clear();
         }
     }
 }

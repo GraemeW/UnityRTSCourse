@@ -1,3 +1,5 @@
+using GameDevTV.RTS.EventBus;
+using GameDevTV.RTS.Events;
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.AI;
@@ -32,6 +34,8 @@ namespace GameDevTV.RTS.Units
             {
                 decalProjector.gameObject.SetActive(true);
             }
+
+            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
 
         public void SetMoveTarget(Transform target)

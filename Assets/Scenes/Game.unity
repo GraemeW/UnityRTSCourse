@@ -4235,6 +4235,7 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 256
+  selectionBox: {fileID: 13369786}
 --- !u!1001 &332197402
 PrefabInstance:
   m_ObjectHideFlags: 0
