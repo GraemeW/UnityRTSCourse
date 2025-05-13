@@ -40,16 +40,23 @@ namespace GameDevTV.RTS
             selectedUnits = new List<ISelectable>();
 
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
         }
 
         private void OnDestroy()
         {
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
         }
 
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
             selectedUnits.Add(unitSelectedEvent.unit);
+        }
+
+        private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent)
+        {
+            selectedUnits.Remove(unitDeselectedEvent.unit);
         }
 
         private void Update()
@@ -271,11 +278,11 @@ namespace GameDevTV.RTS
 
         private void ClearSelectedUnits()
         {
-            foreach (ISelectable selectedUnit in selectedUnits)
+            List<ISelectable> currentSelectedUnits = new List<ISelectable>(selectedUnits);
+            foreach (ISelectable selectedUnit in currentSelectedUnits)
             {
                 selectedUnit.Deselect();
             }
-            selectedUnits.Clear();
         }
     }
 }
