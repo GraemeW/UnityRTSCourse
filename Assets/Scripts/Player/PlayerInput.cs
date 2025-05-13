@@ -14,6 +14,7 @@ namespace GameDevTV.RTS
         [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnitsLayers;
+        [SerializeField] private LayerMask terrainLayer;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -38,6 +39,7 @@ namespace GameDevTV.RTS
             HandleZooming();
             HandleRotation();
             HandleLeftClick();
+            HandleRightClick();
         }
 
         private void HandlePanning()
@@ -185,6 +187,27 @@ namespace GameDevTV.RTS
                 {
                     selectable.Select();
                     selectedUnit = selectable;
+                }
+            }
+        }
+
+        private void HandleRightClick()
+        {
+            if (camera == null) { return; }
+            if (selectedUnit == null) { return; }
+
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Mouse.current.rightButton.wasReleasedThisFrame)
+            {
+                if (Physics.Raycast(cameraRay, out RaycastHit targetHit, float.MaxValue, selectableUnitsLayers) 
+                    && targetHit.collider.TryGetComponent(out ISelectable selectable))
+                {
+                    selectedUnit.SetTarget(targetHit.transform);
+                }
+                else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, terrainLayer))
+                {
+                    selectedUnit.SetPosition(terrainHit.point);
                 }
             }
         }
