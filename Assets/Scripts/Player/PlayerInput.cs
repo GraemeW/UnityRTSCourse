@@ -13,6 +13,7 @@ namespace GameDevTV.RTS
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
+        [SerializeField] private LayerMask selectableUnitsLayers;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -179,7 +180,7 @@ namespace GameDevTV.RTS
                     selectedUnit = null;
                 }
 
-                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Default"))
+                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
                 && hit.collider.TryGetComponent(out ISelectable selectable))
                 {
                     selectable.Select();
