@@ -78,7 +78,14 @@ namespace GameDevTV.RTS
         #region EventHandlers
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
-            if (selectedUnits.Count < maxSelectionCount) { selectedUnits.Add(unitSelectedEvent.unit); }
+            if (selectedUnits.Count < maxSelectionCount)
+            { 
+                selectedUnits.Add(unitSelectedEvent.unit); 
+            }
+            else 
+            {
+                unitSelectedEvent.unit.Deselect(); 
+            }
         }
         private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent) => selectedUnits.Remove(unitDeselectedEvent.unit);
         private void HandleUnitSpawned(UnitSpawnEvent unitSpawnEvent) => aliveUnits.Add(unitSpawnEvent.unit);
