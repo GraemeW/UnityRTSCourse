@@ -70,7 +70,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   decalProjector: {fileID: 7125182531640849594}
-  <health>k__BackingField: 0
+  unitSO: {fileID: 11400000, guid: 37c2da07dfaa7024e8124e0e37645fd8, type: 2}
+  <currentHealth>k__BackingField: 0
+  <maxHealth>k__BackingField: 0
 --- !u!208 &673827689897250194
 NavMeshObstacle:
   m_ObjectHideFlags: 0

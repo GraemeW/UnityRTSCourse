@@ -23,8 +23,9 @@ namespace GameDevTV.RTS.Units
             targetPosition = transform.position;
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 

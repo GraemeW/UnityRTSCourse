@@ -9,8 +9,19 @@ namespace GameDevTV.RTS.Units
     {
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
-        [Header("Game Properties")]
-        [field: SerializeField] public int health { get; private set; }
+        [Header("Unit Properties")]
+        [SerializeField] private UnitSO unitSO;
+        [Header("State")]
+        [field: SerializeField] public int currentHealth { get; private set; }
+        [field: SerializeField] public int maxHealth { get; private set; }
+
+        #region UnityMethods
+        protected virtual void Start()
+        {
+            currentHealth = unitSO.health;
+            maxHealth = unitSO.health;
+        }
+        #endregion
 
         #region Selection
         public void Deselect()

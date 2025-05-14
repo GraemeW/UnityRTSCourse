@@ -150,7 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   decalProjector: {fileID: 8330919918598534545}
-  health: 0
+  unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
+  <currentHealth>k__BackingField: 0
+  <maxHealth>k__BackingField: 0
 --- !u!136 &5751534426758041788
 CapsuleCollider:
   m_ObjectHideFlags: 0
