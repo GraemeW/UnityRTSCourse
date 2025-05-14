@@ -70,9 +70,8 @@ namespace GameDevTV.RTS
             HandlePanning();
             HandleZooming();
             HandleRotation();
-            //HandleLeftClick();
-            HandleRightClick();
             HandleDragSelect();
+            HandleRightClick();
         }
         #endregion
 
@@ -222,24 +221,6 @@ namespace GameDevTV.RTS
         #endregion
 
         #region SelectionControls
-        private void HandleLeftClick()
-        {
-            if (camera == null) { return; }
-
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Mouse.current.leftButton.wasReleasedThisFrame)
-            {
-                ClearSelectedUnits();
-
-                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
-                && hit.collider.TryGetComponent(out ISelectable selectable))
-                {
-                    selectable.Select();
-                }
-            }
-        }
-
         private void HandleRightClick()
         {
             if (camera == null) { return; }
@@ -274,38 +255,54 @@ namespace GameDevTV.RTS
 
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                selectionBox.gameObject.SetActive(true);
-                startingMousePosition = Mouse.current.position.ReadValue();
-                addedUnits.Clear();
+                HandleMouseDown();
             }
             else if (Mouse.current.leftButton.isPressed && !Mouse.current.leftButton.wasPressedThisFrame)
             {
-                Vector2 mousePosition = Mouse.current.position.ReadValue();
-                Bounds selectionBoxBounds = ResizeSelectionBox(mousePosition);
-                foreach(AbstractUnit unit in aliveUnits)
-                {
-                    Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
-
-                    if (selectionBoxBounds.Contains(unitPosition))
-                    {
-                        addedUnits.Add(unit);
-                    }
-                    if (addedUnits.Count == maxSelectionCount) { break; }
-                }
+                HandleMouseDrag();
             }
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                ClearSelectedUnits();
-                foreach (AbstractUnit unit in addedUnits)
-                {
-                    if (unit is not ISelectable selectableUnit) { continue; }
-                    selectableUnit.Select();
-                    selectedUnits.Add(selectableUnit);
-                }
-
-                selectionBox.sizeDelta = Vector2.zero;
-                selectionBox.gameObject.SetActive(false);
+                HandleMouseUp();
             }
+        }
+
+        private void HandleMouseDown()
+        {
+            selectionBox.gameObject.SetActive(true);
+            startingMousePosition = Mouse.current.position.ReadValue();
+            addedUnits.Clear();
+        }
+
+        private void HandleMouseDrag()
+        {
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Bounds selectionBoxBounds = ResizeSelectionBox(mousePosition);
+            foreach (AbstractUnit unit in aliveUnits)
+            {
+                Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
+
+                if (selectionBoxBounds.Contains(unitPosition))
+                {
+                    addedUnits.Add(unit);
+                }
+                if (addedUnits.Count == maxSelectionCount) { break; }
+            }
+        }
+
+        private void HandleMouseUp()
+        {
+            ClearSelectedUnits();
+            HandleLeftClick();
+
+            foreach (AbstractUnit unit in addedUnits)
+            {
+                if (unit is not ISelectable selectableUnit) { continue; }
+                selectableUnit.Select();
+            }
+
+            selectionBox.sizeDelta = Vector2.zero;
+            selectionBox.gameObject.SetActive(false);
         }
 
         private Bounds ResizeSelectionBox(Vector2 mousePosition)
@@ -318,6 +315,18 @@ namespace GameDevTV.RTS
 
             Bounds selectionBoxBounds = new Bounds(selectionBox.anchoredPosition, selectionBox.sizeDelta);
             return selectionBoxBounds;
+        }
+
+        private void HandleLeftClick()
+        {
+            if (camera == null) { return; }
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
+            && hit.collider.TryGetComponent(out ISelectable selectable))
+            {
+                selectable.Select();
+            }
         }
         #endregion
 
