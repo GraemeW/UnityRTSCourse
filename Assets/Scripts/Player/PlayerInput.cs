@@ -15,10 +15,14 @@ namespace GameDevTV.RTS
     public class PlayerInput : MonoBehaviour
     {
         // Tunables
+        [Header("Hookups")]
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
+        [Header("Game Behaviour")]
+        [SerializeField] private int maxUnitCount = 100;
+        [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
@@ -32,35 +36,31 @@ namespace GameDevTV.RTS
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
         private Vector2 startingMousePosition;
+        private HashSet<AbstractUnit> aliveUnits;
+        private HashSet<AbstractUnit> addedUnits;
         private List<ISelectable> selectedUnits;
 
+        #region UnitMethods
         private void Awake()
         {
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
             startingFollowOffset = cinemachineFollow.FollowOffset;
             selectedUnits = new List<ISelectable>(maxSelectionCount);
+            addedUnits = new HashSet<AbstractUnit>(maxSelectionCount);
+            aliveUnits = new HashSet<AbstractUnit>(maxUnitCount);
 
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
+            Bus<UnitDespawnEvent>.OnEvent += HandleUnitDespawned;
         }
 
         private void OnDestroy()
         {
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-        }
-
-        private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
-        {
-            if (selectedUnits.Count < maxSelectionCount)
-            {
-                selectedUnits.Add(unitSelectedEvent.unit);
-            }
-        }
-
-        private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent)
-        {
-            selectedUnits.Remove(unitDeselectedEvent.unit);
+            Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
+            Bus<UnitDespawnEvent>.OnEvent -= HandleUnitDespawned;
         }
 
         private void Update()
@@ -70,11 +70,30 @@ namespace GameDevTV.RTS
             HandlePanning();
             HandleZooming();
             HandleRotation();
-            HandleLeftClick();
+            //HandleLeftClick();
             HandleRightClick();
             HandleDragSelect();
         }
+        #endregion
 
+        #region EventHandlers
+        private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
+        {
+            if (selectedUnits.Count < maxSelectionCount) { selectedUnits.Add(unitSelectedEvent.unit); }
+        }
+        private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent) => selectedUnits.Remove(unitDeselectedEvent.unit);
+        private void HandleUnitSpawned(UnitSpawnEvent unitSpawnEvent) => aliveUnits.Add(unitSpawnEvent.unit);
+        private void HandleUnitDespawned(UnitDespawnEvent unitDespawnEvent)
+        {
+            addedUnits.Remove(unitDespawnEvent.unit);
+            aliveUnits.Remove(unitDespawnEvent.unit);
+
+            ISelectable selectableUnit = unitDespawnEvent.unit as ISelectable;
+            selectedUnits.Remove(selectableUnit);
+        }
+        #endregion
+
+        #region CameraControls
         private void HandlePanning()
         {
             Vector3 moveAmount = GetKeyboardMoveAmount();
@@ -200,7 +219,9 @@ namespace GameDevTV.RTS
         {
             return Keyboard.current.pageUpKey.wasPressedThisFrame || Keyboard.current.pageUpKey.wasReleasedThisFrame || Keyboard.current.pageDownKey.wasPressedThisFrame || Keyboard.current.pageDownKey.wasReleasedThisFrame;
         }
+        #endregion
 
+        #region SelectionControls
         private void HandleLeftClick()
         {
             if (camera == null) { return; }
@@ -247,7 +268,6 @@ namespace GameDevTV.RTS
                 }
             }
         }
-
         private void HandleDragSelect()
         {
             if (selectionBox == null) { return; }
@@ -256,37 +276,60 @@ namespace GameDevTV.RTS
             {
                 selectionBox.gameObject.SetActive(true);
                 startingMousePosition = Mouse.current.position.ReadValue();
+                addedUnits.Clear();
             }
             else if (Mouse.current.leftButton.isPressed && !Mouse.current.leftButton.wasPressedThisFrame)
             {
                 Vector2 mousePosition = Mouse.current.position.ReadValue();
-                ResizeSelectionBox(mousePosition);
+                Bounds selectionBoxBounds = ResizeSelectionBox(mousePosition);
+                foreach(AbstractUnit unit in aliveUnits)
+                {
+                    Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
+
+                    if (selectionBoxBounds.Contains(unitPosition))
+                    {
+                        addedUnits.Add(unit);
+                    }
+                    if (addedUnits.Count == maxSelectionCount) { break; }
+                }
             }
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
+                ClearSelectedUnits();
+                foreach (AbstractUnit unit in addedUnits)
+                {
+                    if (unit is not ISelectable selectableUnit) { continue; }
+                    selectableUnit.Select();
+                    selectedUnits.Add(selectableUnit);
+                }
+
                 selectionBox.sizeDelta = Vector2.zero;
                 selectionBox.gameObject.SetActive(false);
-
-                //ClearSelectedUnits();
             }
         }
 
-        private void ResizeSelectionBox(Vector2 mousePosition)
+        private Bounds ResizeSelectionBox(Vector2 mousePosition)
         {
             float width = mousePosition.x - startingMousePosition.x;
             float height = mousePosition.y - startingMousePosition.y;
 
             selectionBox.anchoredPosition = startingMousePosition + new Vector2(width / 2, height / 2);
             selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
-        }
 
+            Bounds selectionBoxBounds = new Bounds(selectionBox.anchoredPosition, selectionBox.sizeDelta);
+            return selectionBoxBounds;
+        }
+        #endregion
+
+        #region HelperMethods
         private void ClearSelectedUnits()
         {
-            List<ISelectable> currentSelectedUnits = new List<ISelectable>(selectedUnits);
+            ISelectable[] currentSelectedUnits = selectedUnits.ToArray();
             foreach (ISelectable selectedUnit in currentSelectedUnits)
             {
                 selectedUnit.Deselect();
             }
         }
+        #endregion
     }
 }

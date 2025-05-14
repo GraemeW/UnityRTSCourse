@@ -26,6 +26,16 @@ namespace GameDevTV.RTS.Units
             targetPosition = transform.position;
         }
 
+        private void Start()
+        {
+            Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDespawnEvent>.Raise(new UnitDespawnEvent(this));
+        }
+
         private void Update()
         {
             if (target != null)
