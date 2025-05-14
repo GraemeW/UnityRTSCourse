@@ -4477,6 +4477,8 @@ MonoBehaviour:
     <zoomSpeed>k__BackingField: 1
     <rotationSpeed>k__BackingField: 1
   maxUnitCount: 100
+  complexMoveBehaviour: 1
+  complexMoveRadiusExpansion: 3.5
   selectableUnitsLayers:
     serializedVersion: 2
     m_Bits: 192

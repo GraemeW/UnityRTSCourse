@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,6 +23,8 @@ namespace GameDevTV.RTS
         [SerializeField] private CameraConfig cameraConfig;
         [Header("Game Behaviour")]
         [SerializeField] private int maxUnitCount = 100;
+        [SerializeField] private bool complexMoveBehaviour = true;
+        [SerializeField] private float complexMoveRadiusExpansion = 3.5f;
         [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask floorLayers;
@@ -248,14 +251,18 @@ namespace GameDevTV.RTS
                 }
                 else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, floorLayers))
                 {
-                    foreach (ISelectable selectedUnit in selectedUnits)
+                    if (!complexMoveBehaviour)
                     {
-                        if (selectedUnit is not IMoveable moveable) { continue; }
-                        moveable.MoveTo(terrainHit.point);
+                        MoveSelectedUnitsSimple(terrainHit);
+                    }
+                    else
+                    {
+                        MoveSelectedUnitsComplex(terrainHit);
                     }
                 }
             }
         }
+
         private void HandleDragSelect()
         {
             if (selectionBox == null) { return; }
@@ -345,6 +352,51 @@ namespace GameDevTV.RTS
             foreach (ISelectable selectedUnit in currentSelectedUnits)
             {
                 selectedUnit.Deselect();
+            }
+        }
+
+        private void MoveSelectedUnitsSimple(RaycastHit terrainHit)
+        {
+            foreach (ISelectable selectedUnit in selectedUnits)
+            {
+                if (selectedUnit is not IMoveable moveable) { continue; }
+                moveable.MoveTo(terrainHit.point);
+            }
+        }
+
+        private void MoveSelectedUnitsComplex(RaycastHit terrainHit)
+        {
+            List<AbstractUnit> abstractUnits = new List<AbstractUnit>(selectedUnits.Count);
+            foreach (ISelectable selectedUnit in selectedUnits)
+            {
+                if (selectedUnit is not AbstractUnit abstractUnit) { continue; }
+                abstractUnits.Add(abstractUnit);
+            }
+
+            int unitsOnLayer = 0;
+            int maxUnitsOnLayer = 1;
+            float circleRadius = 0;
+            float radialOffset = 0;
+            foreach (AbstractUnit abstractUnit in abstractUnits)
+            {
+                if (abstractUnit is not IMoveable moveable) { continue; }
+
+                Vector3 targetPosition = new Vector3(
+                    terrainHit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
+                    terrainHit.point.y,
+                    terrainHit.point.z + circleRadius * Mathf.Sin(radialOffset * unitsOnLayer)
+                    );
+
+                moveable.MoveTo(targetPosition);
+                unitsOnLayer++;
+
+                if (unitsOnLayer >= maxUnitsOnLayer)
+                {
+                    unitsOnLayer = 0;
+                    circleRadius += abstractUnit.agentRadius * complexMoveRadiusExpansion;
+                    maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (abstractUnit.agentRadius * 2));
+                    radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+                }
             }
         }
         #endregion
