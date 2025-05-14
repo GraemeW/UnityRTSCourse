@@ -292,7 +292,8 @@ namespace GameDevTV.RTS
 
         private void HandleMouseUp()
         {
-            ClearSelectedUnits();
+            if (!Keyboard.current.shiftKey.isPressed) { ClearSelectedUnits(); }
+
             HandleLeftClick();
 
             foreach (AbstractUnit unit in addedUnits)
