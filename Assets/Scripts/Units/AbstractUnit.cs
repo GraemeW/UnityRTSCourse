@@ -9,8 +9,10 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(NavMeshAgent))]
     public abstract class AbstractUnit : MonoBehaviour, ISelectable, IMoveable
     {
-        // Tunables
+        [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
+        [Header("Game Properties")]
+        [field: SerializeField] public int health { get; private set; }
 
         // State
         private Transform target;
