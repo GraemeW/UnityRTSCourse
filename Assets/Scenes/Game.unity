@@ -574,7 +574,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 3.5, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 256
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -4229,6 +4229,7 @@ MonoBehaviour:
     <minZoomDistance>k__BackingField: 5
     <zoomSpeed>k__BackingField: 1
     <rotationSpeed>k__BackingField: 1
+  maxUnitCount: 100
   selectableUnitsLayers:
     serializedVersion: 2
     m_Bits: 192
@@ -4236,6 +4237,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   selectionBox: {fileID: 13369786}
+  maxSelectionCount: 12
 --- !u!1001 &332197402
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4665,6 +4667,14 @@ PrefabInstance:
     - target: {fileID: 1715156035423810196, guid: 72cd382a2944ed14486d3a00a5e1cedc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811558950817910702, guid: 72cd382a2944ed14486d3a00a5e1cedc, type: 3}
+      propertyPath: m_Extents.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811558950817910702, guid: 72cd382a2944ed14486d3a00a5e1cedc, type: 3}
+      propertyPath: m_Extents.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2281804471223176727, guid: 72cd382a2944ed14486d3a00a5e1cedc, type: 3}
       propertyPath: m_Name
