@@ -7,13 +7,8 @@ using UnityEngine.Rendering.Universal;
 namespace GameDevTV.RTS.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public abstract class AbstractUnit : MonoBehaviour, ISelectable, IMoveable
+    public abstract class AbstractUnit : AbstractCommandable, IMoveable
     {
-        [Header("Hookups")]
-        [SerializeField] private DecalProjector decalProjector;
-        [Header("Game Properties")]
-        [field: SerializeField] public int health { get; private set; }
-
         // State
         private Transform target;
         private Vector3 targetPosition;
@@ -48,28 +43,6 @@ namespace GameDevTV.RTS.Units
             }
 
             if (navMeshAgent.isStopped) { targetPosition = transform.position; }
-        }
-        #endregion
-
-        #region Selection
-        public void Deselect()
-        {
-            if (decalProjector != null)
-            {
-                decalProjector.gameObject.SetActive(false);
-            }
-
-            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
-        }
-
-        public void Select()
-        {
-            if (decalProjector != null)
-            {
-                decalProjector.gameObject.SetActive(true);
-            }
-
-            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
         #endregion
 
