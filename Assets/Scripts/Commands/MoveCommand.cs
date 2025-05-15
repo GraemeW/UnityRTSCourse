@@ -12,7 +12,10 @@ namespace GameDevTV.RTS.Commands
         [SerializeField] private float complexMoveRadiusExpansion = 3.5f;
 
         // State
-        
+        private int unitsOnLayer = 0;
+        private int maxUnitsOnLayer = 1;
+        private float circleRadius = 0;
+        private float radialOffset = 0;
 
         public override bool CanHandle(ref CommandContext commandContext)
         {
@@ -28,11 +31,34 @@ namespace GameDevTV.RTS.Commands
             IMoveable moveable = (IMoveable)commandContext.commandable;
 
             // Simple Move
-            bool isAbstractUnit = commandContext.commandable is AbstractUnit abstractUnit;
-            if (!isComplexMoveBehaviour || !isAbstractUnit) { moveable.MoveTo(commandContext.hit.point); }
+            AbstractUnit abstractUnit = (AbstractUnit)commandContext.commandable;
+            if (!isComplexMoveBehaviour || abstractUnit == null) { moveable.MoveTo(commandContext.hit.point); }
 
-            // Temp Dumb Behaviour -- TODO:  Port over complex, need to pass struct w/ data
-            moveable.MoveTo(commandContext.hit.point);
+            // Complex move (spread move target radially around click point)
+            if (commandContext.unitIndex == 0)
+            {
+                unitsOnLayer = 0;
+                maxUnitsOnLayer = 1;
+                circleRadius = 0;
+                radialOffset = 0;
+            }
+
+            Vector3 targetPosition = new Vector3(
+                commandContext.hit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
+                commandContext.hit.point.y,
+                commandContext.hit.point.z + circleRadius * Mathf.Sin(radialOffset * unitsOnLayer)
+                );
+
+            moveable.MoveTo(targetPosition);
+            unitsOnLayer++;
+
+            if (unitsOnLayer >= maxUnitsOnLayer)
+            {
+                unitsOnLayer = 0;
+                circleRadius += abstractUnit.agentRadius * complexMoveRadiusExpansion;
+                maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (abstractUnit.agentRadius * 2));
+                radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+            }
         }
     }
 }

@@ -340,9 +340,10 @@ namespace GameDevTV.RTS
             }
 
             // Check and execute command
+            int unitIndex = 0;
             foreach (AbstractUnit abstractUnit in abstractUnits)
             {
-                CommandContext commandContext = new CommandContext(abstractUnit, cameraRay);
+                CommandContext commandContext = new CommandContext(abstractUnit, cameraRay, unitIndex);
 
                 foreach (ICommand command in abstractUnit.availableCommands)
                 {
@@ -352,35 +353,8 @@ namespace GameDevTV.RTS
                         break;
                     }
                 }
+                unitIndex++;
             }
-
-            // TODO:  Port over to MoveCommand
-            // Complex move (spread move target radially around click point)
-            //int unitsOnLayer = 0;
-            //int maxUnitsOnLayer = 1;
-            //float circleRadius = 0;
-            //float radialOffset = 0;
-            //foreach (AbstractUnit abstractUnit in abstractUnits)
-            //{
-            //    if (abstractUnit is not IMoveable moveable) { continue; }
-
-            //    Vector3 targetPosition = new Vector3(
-            //        hit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
-            //        hit.point.y,
-            //        hit.point.z + circleRadius * Mathf.Sin(radialOffset * unitsOnLayer)
-            //        );
-
-            //    moveable.MoveTo(targetPosition);
-            //    unitsOnLayer++;
-
-            //    if (unitsOnLayer >= maxUnitsOnLayer)
-            //    {
-            //        unitsOnLayer = 0;
-            //        circleRadius += abstractUnit.agentRadius * complexMoveRadiusExpansion;
-            //        maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (abstractUnit.agentRadius * 2));
-            //        radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
-            //    }
-            //}
         }
         #endregion
     }
