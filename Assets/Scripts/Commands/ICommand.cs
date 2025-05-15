@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Commands
 {
     public interface ICommand
     {
-        bool CanHandle(AbstractCommandable commandable, Ray cameraRay, out RaycastHit hit);
-        void Handle(AbstractCommandable commandable, RaycastHit hit);
+        bool CanHandle(ref CommandContext commandContext);
+        void Handle(CommandContext commandContext);
     }
 }

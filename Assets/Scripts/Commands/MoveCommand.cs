@@ -6,28 +6,33 @@ namespace GameDevTV.RTS.Commands
     [CreateAssetMenu(fileName = "MoveAction", menuName = "AI/Actions/Move")]
     public class MoveCommand : ActionBase
     {
+        // Tunables
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private bool isComplexMoveBehaviour = true;
         [SerializeField] private float complexMoveRadiusExpansion = 3.5f;
 
-        public override bool CanHandle(AbstractCommandable commandable, Ray cameraRay, out RaycastHit hit)
+        // State
+        
+
+        public override bool CanHandle(ref CommandContext commandContext)
         {
-            bool canMove = commandable is IMoveable;
-            bool isFloor = Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers);
+            bool canMove = commandContext.commandable is IMoveable;
+            bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, floorLayers);
+            commandContext.hit = hit;
 
             return canMove && isFloor;
         }
 
-        public override void Handle(AbstractCommandable commandable, RaycastHit hit)
+        public override void Handle(CommandContext commandContext)
         {
-            IMoveable moveable = (IMoveable)commandable;
+            IMoveable moveable = (IMoveable)commandContext.commandable;
 
             // Simple Move
-            bool isAbstractUnit = commandable is AbstractUnit abstractUnit;
-            if (!isComplexMoveBehaviour || !isAbstractUnit) { moveable.MoveTo(hit.point); }
+            bool isAbstractUnit = commandContext.commandable is AbstractUnit abstractUnit;
+            if (!isComplexMoveBehaviour || !isAbstractUnit) { moveable.MoveTo(commandContext.hit.point); }
 
             // Temp Dumb Behaviour -- TODO:  Port over complex, need to pass struct w/ data
-            moveable.MoveTo(hit.point);
+            moveable.MoveTo(commandContext.hit.point);
         }
     }
 }

@@ -342,11 +342,13 @@ namespace GameDevTV.RTS
             // Check and execute command
             foreach (AbstractUnit abstractUnit in abstractUnits)
             {
+                CommandContext commandContext = new CommandContext(abstractUnit, cameraRay);
+
                 foreach (ICommand command in abstractUnit.availableCommands)
                 {
-                    if (command.CanHandle(abstractUnit, cameraRay, out RaycastHit hit))
+                    if (command.CanHandle(ref commandContext))
                     {
-                        command.Handle(abstractUnit, hit);
+                        command.Handle(commandContext);
                         break;
                     }
                 }

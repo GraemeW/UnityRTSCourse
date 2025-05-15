@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Commands
 {
     public abstract class ActionBase : ScriptableObject, ICommand
     {
-        public abstract bool CanHandle(AbstractCommandable commandable, Ray cameraRay, out RaycastHit hit);
-        public abstract void Handle(AbstractCommandable commandable, RaycastHit hit);
+        public abstract bool CanHandle(ref CommandContext commandContext);
+        public abstract void Handle(CommandContext commandContext);
     }
 }
