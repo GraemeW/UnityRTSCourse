@@ -6,6 +6,9 @@ using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Commands;
+using UnityEngine.EventSystems;
+using System.Linq;
+using Unity.VisualScripting;
 
 namespace GameDevTV.RTS
 {
@@ -32,9 +35,12 @@ namespace GameDevTV.RTS
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
         private Vector2 startingMousePosition;
+        [SerializeField] private bool wasMouseDownOnUI;
+
         private HashSet<AbstractUnit> aliveUnits;
         private HashSet<AbstractUnit> addedUnits;
         private List<ISelectable> selectedUnits;
+        private ActionBase queuedCommand;
 
         #region UnitMethods
         private void Awake()
@@ -49,6 +55,7 @@ namespace GameDevTV.RTS
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
             Bus<UnitDespawnEvent>.OnEvent += HandleUnitDespawned;
+            Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
         }
 
         private void OnDestroy()
@@ -57,6 +64,7 @@ namespace GameDevTV.RTS
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
             Bus<UnitDespawnEvent>.OnEvent -= HandleUnitDespawned;
+            Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
         }
 
         private void Update()
@@ -66,7 +74,7 @@ namespace GameDevTV.RTS
             HandlePanning();
             HandleZooming();
             HandleRotation();
-            HandleDragSelect();
+            HandleLeftClick();
             HandleRightClick();
         }
         #endregion
@@ -93,6 +101,8 @@ namespace GameDevTV.RTS
             ISelectable selectableUnit = unitDespawnEvent.unit as ISelectable;
             selectedUnits.Remove(selectableUnit);
         }
+
+        private void HandleActionSelected(ActionSelectedEvent actionSelectedEvent) => queuedCommand = actionSelectedEvent.action;
         #endregion
 
         #region CameraControls
@@ -226,14 +236,21 @@ namespace GameDevTV.RTS
         #region SelectionControls
         private void HandleRightClick()
         {
-            if (camera == null) { return; }
-            if (selectedUnits == null || selectedUnits.Count == 0) { return; }
-
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
-                ExecuteCommands(cameraRay);
+                ExecuteCommands();
+            }
+        }
+
+        private void HandleLeftClick()
+        {
+            if (queuedCommand == null)
+            {
+                HandleDragSelect();
+            }
+            else
+            {
+                HandleQueuedCommandExecution();
             }
         }
 
@@ -260,10 +277,19 @@ namespace GameDevTV.RTS
             selectionBox.gameObject.SetActive(true);
             startingMousePosition = Mouse.current.position.ReadValue();
             addedUnits.Clear();
+
+            wasMouseDownOnUI = EventSystem.current.IsPointerOverGameObject();
+            if (wasMouseDownOnUI)
+            {
+                selectionBox.sizeDelta = Vector2.zero;
+                selectionBox.gameObject.SetActive(false);
+            }
         }
 
         private void HandleMouseDrag()
         {
+            if (queuedCommand != null || wasMouseDownOnUI) { return; }
+
             Vector2 mousePosition = Mouse.current.position.ReadValue();
             Bounds selectionBoxBounds = ResizeSelectionBox(mousePosition);
             foreach (AbstractUnit unit in aliveUnits)
@@ -280,10 +306,11 @@ namespace GameDevTV.RTS
 
         private void HandleMouseUp()
         {
-            if (!Keyboard.current.shiftKey.isPressed) { ClearSelectedUnits(); }
+            if (wasMouseDownOnUI) { return; }
 
-            HandleLeftClick();
+            if (queuedCommand == null && !Keyboard.current.shiftKey.isPressed) { ClearSelectedUnits(); }
 
+            HandlePointSelect();
             foreach (AbstractUnit unit in addedUnits)
             {
                 if (unit is not ISelectable selectableUnit) { continue; }
@@ -306,13 +333,13 @@ namespace GameDevTV.RTS
             return selectionBoxBounds;
         }
 
-        private void HandleLeftClick()
+        private void HandlePointSelect()
         {
             if (camera == null) { return; }
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
-            && hit.collider.TryGetComponent(out ISelectable selectable))
+                && hit.collider.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
             }
@@ -329,28 +356,47 @@ namespace GameDevTV.RTS
             }
         }
 
-        private void ExecuteCommands(Ray cameraRay)
+        private void HandleQueuedCommandExecution()
         {
-            // Cast to abstract unit
-            List<AbstractUnit> abstractUnits = new List<AbstractUnit>(selectedUnits.Count);
-            foreach (ISelectable selectedUnit in selectedUnits)
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                if (selectedUnit is not AbstractUnit abstractUnit) { continue; }
-                abstractUnits.Add(abstractUnit);
+                if (EventSystem.current.IsPointerOverGameObject()) { return; }
+
+                ExecuteCommands(true);
+                queuedCommand = null;
             }
+        }
+
+        private void ExecuteCommands(bool useQueuedCommand = false)
+        {
+            if (camera == null) { return; }
+            if (selectedUnits.Count == 0) { return; }
+
+            // Cast to abstract unit
+            List<AbstractUnit> abstractUnits = selectedUnits.Where((unit) => unit is AbstractUnit).Cast<AbstractUnit>().ToList();
 
             // Check and execute command
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
             int unitIndex = 0;
             foreach (AbstractUnit abstractUnit in abstractUnits)
             {
                 CommandContext commandContext = new CommandContext(abstractUnit, cameraRay, unitIndex);
 
-                foreach (ICommand command in abstractUnit.availableCommands)
+                if (useQueuedCommand && queuedCommand != null)
                 {
-                    if (command.CanHandle(ref commandContext))
+                    if (queuedCommand.CanHandle(ref commandContext)) { queuedCommand.Handle(commandContext); }
+                }
+                else
+                {
+                    // Default: find first viable action
+                    foreach (ICommand command in abstractUnit.availableCommands)
                     {
-                        command.Handle(commandContext);
-                        break;
+                        if (command.CanHandle(ref commandContext))
+                        {
+                            command.Handle(commandContext);
+                            break;
+                        }
                     }
                 }
                 unitIndex++;

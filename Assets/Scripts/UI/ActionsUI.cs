@@ -2,8 +2,10 @@ using GameDevTV.RTS.Commands;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Units;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameDevTV.RTS.UI
 {
@@ -61,8 +63,7 @@ namespace GameDevTV.RTS.UI
         {
             foreach (ActionButtonUI actionButton in actionButtons)
             {
-                actionButton.icon.sprite = null;
-                actionButton.gameObject.SetActive(false);
+                actionButton.Disable();
             }
         }
 
@@ -71,22 +72,26 @@ namespace GameDevTV.RTS.UI
             availableCommands.Clear();
             foreach (AbstractCommandable commandableUnit in commandableUnits)
             {
-                foreach (ActionBase actionBase in commandableUnit.availableCommands)
+                foreach (ActionBase action in commandableUnit.availableCommands)
                 {
-                    availableCommands.Add(actionBase);
+                    availableCommands.Add(action);
                 }
             }
         }
 
         private void DrawActionButtons()
         {
-            foreach (ActionBase actionBase in availableCommands)
+            foreach (ActionBase action in availableCommands)
             {
-                if (actionBase.slot >= actionButtons.Length) { continue; }
+                if (action.slot >= actionButtons.Length) { continue; }
 
-                actionButtons[actionBase.slot].icon.sprite = actionBase.icon;
-                actionButtons[actionBase.slot].gameObject.SetActive(true);
+                actionButtons[action.slot].EnableFor(action, HandleClick(action));
             }
+        }
+
+        private UnityAction HandleClick(ActionBase action)
+        {
+            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
         }
         #endregion
     }

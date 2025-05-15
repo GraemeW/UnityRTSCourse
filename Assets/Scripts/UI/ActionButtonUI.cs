@@ -1,4 +1,6 @@
+using GameDevTV.RTS.Commands;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace GameDevTV.RTS.UI
@@ -7,14 +9,30 @@ namespace GameDevTV.RTS.UI
     public class ActionButtonUI : MonoBehaviour
     {
         // Hookups
-        [field: SerializeField] public Image icon { get; set; }
+        [SerializeField] private Image icon;
 
         // Cached References
-        Button button;
+        private Button button;
 
         private void Awake()
         {
             button = GetComponent<Button>();
+        }
+
+        public void EnableFor(ActionBase action, UnityAction onClick)
+        {
+            icon.gameObject.SetActive(true);
+            icon.sprite = action.icon;
+            button.interactable = true;
+            button.onClick.AddListener(onClick);
+        }
+
+        public void Disable()
+        {
+            icon.sprite = null;
+            icon.gameObject.SetActive(false);
+            button.interactable = false;
+            button.onClick.RemoveAllListeners();
         }
     }
 }
