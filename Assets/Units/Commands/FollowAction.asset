@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e54a074ff6d8b1f45a72c16567be41d8, type: 3}
   m_Name: FollowAction
   m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 21300000, guid: dd2886383de883c448b002edab7b5a06, type: 3}
+  <slot>k__BackingField: 1
+  <requiresClickToActivate>k__BackingField: 1
   selectableLayers:
     serializedVersion: 2
     m_Bits: 192
