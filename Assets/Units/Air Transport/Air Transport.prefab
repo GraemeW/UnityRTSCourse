@@ -144,10 +144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb5a45b711769924388293122d2d1691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  decalProjector: {fileID: 6185970725219423034}
-  unitSO: {fileID: 11400000, guid: 9e47eae9aa0922f45ae6ac79df5748aa, type: 2}
   <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
+  <availableCommands>k__BackingField:
+  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
+  decalProjector: {fileID: 6185970725219423034}
+  unitSO: {fileID: 11400000, guid: 9e47eae9aa0922f45ae6ac79df5748aa, type: 2}
 --- !u!1 &3008828906968547231
 GameObject:
   m_ObjectHideFlags: 0

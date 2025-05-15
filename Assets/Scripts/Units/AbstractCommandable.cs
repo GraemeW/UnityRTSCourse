@@ -1,5 +1,6 @@
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
+using GameDevTV.RTS.Commands;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -7,13 +8,14 @@ namespace GameDevTV.RTS.Units
 {
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
+        [field: SerializeField] public int currentHealth { get; private set; }
+        [field: SerializeField] public int maxHealth { get; private set; }
+        [field: SerializeField] public ActionBase[] availableCommands { get; private set; }
+
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
         [Header("Unit Properties")]
         [SerializeField] private UnitSO unitSO;
-        [Header("State")]
-        [field: SerializeField] public int currentHealth { get; private set; }
-        [field: SerializeField] public int maxHealth { get; private set; }
 
         #region UnityMethods
         protected virtual void Start()

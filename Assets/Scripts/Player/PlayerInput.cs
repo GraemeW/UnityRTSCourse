@@ -1,15 +1,11 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.Cinemachine;
+using UnityEngine.InputSystem;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Units;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using GameDevTV.RTS.Commands;
 
 namespace GameDevTV.RTS
 {
@@ -23,11 +19,8 @@ namespace GameDevTV.RTS
         [SerializeField] private CameraConfig cameraConfig;
         [Header("Game Behaviour")]
         [SerializeField] private int maxUnitCount = 100;
-        [SerializeField] private bool complexMoveBehaviour = true;
-        [SerializeField] private float complexMoveRadiusExpansion = 3.5f;
         [Header("SelectionBehaviour")]
-        [SerializeField] private LayerMask selectableUnitsLayers;
-        [SerializeField] private LayerMask floorLayers;
+        [SerializeField] private LayerMask selectableLayers;
         [SerializeField] private RectTransform selectionBox;
         [SerializeField] private int maxSelectionCount = 12;
 
@@ -240,26 +233,7 @@ namespace GameDevTV.RTS
 
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
-                if (Physics.Raycast(cameraRay, out RaycastHit targetHit, float.MaxValue, selectableUnitsLayers) 
-                    && targetHit.collider.TryGetComponent(out ISelectable selectable))
-                {
-                    foreach (ISelectable selectedUnit in selectedUnits)
-                    {
-                        if (selectedUnit is not IMoveable moveable) { continue; }
-                        moveable.SetMoveTarget(targetHit.transform);
-                    }
-                }
-                else if (Physics.Raycast(cameraRay, out RaycastHit terrainHit, float.MaxValue, floorLayers))
-                {
-                    if (!complexMoveBehaviour)
-                    {
-                        MoveSelectedUnitsSimple(terrainHit);
-                    }
-                    else
-                    {
-                        MoveSelectedUnitsComplex(terrainHit);
-                    }
-                }
+                ExecuteCommands(cameraRay);
             }
         }
 
@@ -337,7 +311,7 @@ namespace GameDevTV.RTS
             if (camera == null) { return; }
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
             && hit.collider.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
@@ -355,17 +329,9 @@ namespace GameDevTV.RTS
             }
         }
 
-        private void MoveSelectedUnitsSimple(RaycastHit terrainHit)
+        private void ExecuteCommands(Ray cameraRay)
         {
-            foreach (ISelectable selectedUnit in selectedUnits)
-            {
-                if (selectedUnit is not IMoveable moveable) { continue; }
-                moveable.MoveTo(terrainHit.point);
-            }
-        }
-
-        private void MoveSelectedUnitsComplex(RaycastHit terrainHit)
-        {
+            // Cast to abstract unit
             List<AbstractUnit> abstractUnits = new List<AbstractUnit>(selectedUnits.Count);
             foreach (ISelectable selectedUnit in selectedUnits)
             {
@@ -373,31 +339,46 @@ namespace GameDevTV.RTS
                 abstractUnits.Add(abstractUnit);
             }
 
-            int unitsOnLayer = 0;
-            int maxUnitsOnLayer = 1;
-            float circleRadius = 0;
-            float radialOffset = 0;
+            // Check and execute command
             foreach (AbstractUnit abstractUnit in abstractUnits)
             {
-                if (abstractUnit is not IMoveable moveable) { continue; }
-
-                Vector3 targetPosition = new Vector3(
-                    terrainHit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
-                    terrainHit.point.y,
-                    terrainHit.point.z + circleRadius * Mathf.Sin(radialOffset * unitsOnLayer)
-                    );
-
-                moveable.MoveTo(targetPosition);
-                unitsOnLayer++;
-
-                if (unitsOnLayer >= maxUnitsOnLayer)
+                foreach (ICommand command in abstractUnit.availableCommands)
                 {
-                    unitsOnLayer = 0;
-                    circleRadius += abstractUnit.agentRadius * complexMoveRadiusExpansion;
-                    maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (abstractUnit.agentRadius * 2));
-                    radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+                    if (command.CanHandle(abstractUnit, cameraRay, out RaycastHit hit))
+                    {
+                        command.Handle(abstractUnit, hit);
+                        break;
+                    }
                 }
             }
+
+            // TODO:  Port over to MoveCommand
+            // Complex move (spread move target radially around click point)
+            //int unitsOnLayer = 0;
+            //int maxUnitsOnLayer = 1;
+            //float circleRadius = 0;
+            //float radialOffset = 0;
+            //foreach (AbstractUnit abstractUnit in abstractUnits)
+            //{
+            //    if (abstractUnit is not IMoveable moveable) { continue; }
+
+            //    Vector3 targetPosition = new Vector3(
+            //        hit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
+            //        hit.point.y,
+            //        hit.point.z + circleRadius * Mathf.Sin(radialOffset * unitsOnLayer)
+            //        );
+
+            //    moveable.MoveTo(targetPosition);
+            //    unitsOnLayer++;
+
+            //    if (unitsOnLayer >= maxUnitsOnLayer)
+            //    {
+            //        unitsOnLayer = 0;
+            //        circleRadius += abstractUnit.agentRadius * complexMoveRadiusExpansion;
+            //        maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (abstractUnit.agentRadius * 2));
+            //        radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+            //    }
+            //}
         }
         #endregion
     }

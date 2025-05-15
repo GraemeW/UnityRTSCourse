@@ -149,10 +149,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb5a45b711769924388293122d2d1691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  decalProjector: {fileID: 8330919918598534545}
-  unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
   <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
+  <availableCommands>k__BackingField:
+  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
+  decalProjector: {fileID: 8330919918598534545}
+  unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
 --- !u!136 &5751534426758041788
 CapsuleCollider:
   m_ObjectHideFlags: 0
