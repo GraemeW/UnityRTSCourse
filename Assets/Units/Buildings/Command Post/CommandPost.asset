@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0eac701cd71d8d644bbdef41744d6107, type: 3}
-  m_Name: SupplyHut
+  m_Name: CommandPost
   m_EditorClassIdentifier: 
-  <health>k__BackingField: 150
+  <health>k__BackingField: 350
