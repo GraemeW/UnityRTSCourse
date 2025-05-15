@@ -35,6 +35,11 @@ namespace GameDevTV.RTS.Commands
             if (!isComplexMoveBehaviour || abstractUnit == null) { moveable.MoveTo(commandContext.hit.point); }
 
             // Complex move (spread move target radially around click point)
+            ComplexRadialMove(commandContext, moveable, abstractUnit);
+        }
+
+        private void ComplexRadialMove(CommandContext commandContext, IMoveable moveable, AbstractUnit abstractUnit)
+        {
             if (commandContext.unitIndex == 0)
             {
                 unitsOnLayer = 0;
