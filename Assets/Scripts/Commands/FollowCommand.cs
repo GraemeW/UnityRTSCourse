@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "FollowAction", menuName = "AI/Actions/Follow")]
+    [CreateAssetMenu(fileName = "Follow", menuName = "AI/Commands/Follow")]
     public class FollowCommand : ActionBase
     {
         [SerializeField] private LayerMask selectableLayers;

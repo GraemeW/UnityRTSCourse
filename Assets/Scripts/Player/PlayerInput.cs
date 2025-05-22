@@ -102,7 +102,15 @@ namespace GameDevTV.RTS
             selectedUnits.Remove(selectableUnit);
         }
 
-        private void HandleActionSelected(ActionSelectedEvent actionSelectedEvent) => queuedCommand = actionSelectedEvent.action;
+        private void HandleActionSelected(ActionSelectedEvent actionSelectedEvent)
+        {
+            queuedCommand = actionSelectedEvent.action;
+            if (!actionSelectedEvent.action.requiresClickToActivate)
+            {
+                ActivateCommand(true);
+                queuedCommand = null;
+            }
+        }
         #endregion
 
         #region CameraControls
@@ -238,7 +246,7 @@ namespace GameDevTV.RTS
         {
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
-                ExecuteCommands();
+                ActivateCommand();
             }
         }
 
@@ -362,24 +370,21 @@ namespace GameDevTV.RTS
             {
                 if (EventSystem.current.IsPointerOverGameObject()) { return; }
 
-                ExecuteCommands(true);
+                ActivateCommand(true);
                 queuedCommand = null;
             }
         }
 
-        private void ExecuteCommands(bool useQueuedCommand = false)
+        private void ActivateCommand(bool useQueuedCommand = false)
         {
             if (camera == null) { return; }
             if (selectedUnits.Count == 0) { return; }
 
-            // Cast to abstract unit
-            List<AbstractUnit> abstractUnits = selectedUnits.Where((unit) => unit is AbstractUnit).Cast<AbstractUnit>().ToList();
-
-            // Check and execute command
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
+            List<AbstractCommandable> abstractUnits = selectedUnits.Where((unit) => unit is AbstractCommandable).Cast<AbstractCommandable>().ToList();
             int unitIndex = 0;
-            foreach (AbstractUnit abstractUnit in abstractUnits)
+            foreach (AbstractCommandable abstractUnit in abstractUnits)
             {
                 CommandContext commandContext = new CommandContext(abstractUnit, cameraRay, unitIndex);
 
@@ -389,17 +394,21 @@ namespace GameDevTV.RTS
                 }
                 else
                 {
-                    // Default: find first viable action
-                    foreach (ICommand command in abstractUnit.availableCommands)
-                    {
-                        if (command.CanHandle(ref commandContext))
-                        {
-                            command.Handle(commandContext);
-                            break;
-                        }
-                    }
+                    ExecuteFirstViableCommand(abstractUnit, ref commandContext);
                 }
                 unitIndex++;
+            }
+        }
+
+        private void ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
+        {
+            foreach (ICommand command in abstractUnit.availableCommands)
+            {
+                if (command.CanHandle(ref commandContext))
+                {
+                    command.Handle(commandContext);
+                    break;
+                }
             }
         }
         #endregion

@@ -47,6 +47,11 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region Movement
+        public void WarpTo(Vector3 position)
+        {
+            navMeshAgent.Warp(position);
+        }
+
         public void MoveTo(Vector3 position)
         {
             if (target != null) { target = null; }
