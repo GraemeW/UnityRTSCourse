@@ -92,6 +92,10 @@ PrefabInstance:
       propertyPath: m_TargetGraphic
       value: 
       objectReference: {fileID: 7215100462488919615}
+    - target: {fileID: 7491524773744182549, guid: 059f940466acbb14788d1893d17779c9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8962091619614495752, guid: 059f940466acbb14788d1893d17779c9, type: 3}
       propertyPath: m_Name
       value: Building Queue Button Variant

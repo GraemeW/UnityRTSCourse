@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace GameDevTV.RTS.UI
+namespace GameDevTV.RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class ActionButtonUI : MonoBehaviour
+    public class ActionButtonUI : MonoBehaviour, IUIElement<ActionBase, UnityAction>
     {
         // Hookups
         [SerializeField] private Image icon;
@@ -36,4 +36,3 @@ namespace GameDevTV.RTS.UI
         }
     }
 }
-

@@ -25,7 +25,7 @@ namespace GameDevTV.RTS
         [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableLayers;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private int maxSelectionCount = 12;
+        [field: SerializeField] public static int MAX_SELECTION_COUNT { get; private set; } = 12;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -47,8 +47,8 @@ namespace GameDevTV.RTS
         {
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
             startingFollowOffset = cinemachineFollow.FollowOffset;
-            selectedUnits = new List<ISelectable>(maxSelectionCount);
-            addedUnits = new HashSet<AbstractUnit>(maxSelectionCount);
+            selectedUnits = new List<ISelectable>(MAX_SELECTION_COUNT);
+            addedUnits = new HashSet<AbstractUnit>(MAX_SELECTION_COUNT);
             aliveUnits = new HashSet<AbstractUnit>(maxUnitCount);
 
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
@@ -82,7 +82,7 @@ namespace GameDevTV.RTS
         #region EventHandlers
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
-            if (selectedUnits.Count < maxSelectionCount)
+            if (selectedUnits.Count < MAX_SELECTION_COUNT)
             { 
                 selectedUnits.Add(unitSelectedEvent.unit); 
             }
@@ -308,7 +308,7 @@ namespace GameDevTV.RTS
                 {
                     addedUnits.Add(unit);
                 }
-                if (addedUnits.Count == maxSelectionCount) { break; }
+                if (addedUnits.Count == MAX_SELECTION_COUNT) { break; }
             }
         }
 
