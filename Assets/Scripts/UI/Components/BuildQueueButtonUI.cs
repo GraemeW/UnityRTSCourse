@@ -1,4 +1,3 @@
-using GameDevTV.RTS.Commands;
 using GameDevTV.RTS.Units;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,7 +6,7 @@ using UnityEngine.UI;
 namespace GameDevTV.RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class ActionButtonUI : MonoBehaviour, IUIElement<ActionBase, UnityAction>
+    public class BuildQueueButtonUI : MonoBehaviour, IUIElement<UnitSO, UnityAction>
     {
         // Hookups
         [SerializeField] private Image icon;
@@ -20,10 +19,10 @@ namespace GameDevTV.RTS.UI.Components
             button = GetComponent<Button>();
         }
 
-        public void EnableFor(ActionBase action, UnityAction onClick)
+        public void EnableFor(UnitSO unit, UnityAction onClick)
         {
             icon.gameObject.SetActive(true);
-            icon.sprite = action.icon;
+            icon.sprite = unit.icon;
             button.interactable = true;
             button.onClick.AddListener(onClick);
         }

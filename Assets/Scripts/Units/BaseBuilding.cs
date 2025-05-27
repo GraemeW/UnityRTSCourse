@@ -15,24 +15,31 @@ namespace GameDevTV.RTS.Units
 
         // Expression Properties
         public int queueSize => buildingQueue.Count;
+        public UnitSO[] buildingQueueSnapshot => buildingQueue.ToArray();
 
         // State
-        private Queue<UnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
+        private List<UnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
         private float currentQueueStartTime;
         private UnitSO buildingUnit;
+        private Coroutine buildCoroutine = null;
 
         // Events
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent onQueueUpdated;
 
+        #region GettersSetters
+        public float GetBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+        #endregion
+
+        #region PublicMethods
         public void BuildUnit(UnitSO unitSO)
         {
             if (buildingQueue.Count == MAX_QUEUE_SIZE) { return; }
 
-            buildingQueue.Enqueue(unitSO);
-            if (buildingQueue.Count == 1)
+            buildingQueue.Add(unitSO);
+            if (buildCoroutine == null)
             {
-                StartCoroutine(DoBuildUnits());
+                buildCoroutine = StartCoroutine(DoBuildUnits());
             }
             else
             {
@@ -40,28 +47,43 @@ namespace GameDevTV.RTS.Units
             }
         }
 
-        public float GetBuildProgress()
+        public void CancelBuildUnit(int index)
         {
-            return Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
-        }
+            if (index < 0 || index >= buildingQueue.Count) { return; }
 
+            if (index == 0)
+            {
+                StopCoroutine(buildCoroutine);
+                buildingQueue.RemoveAt(0);
+                buildCoroutine = StartCoroutine(DoBuildUnits());
+            }
+            else
+            {
+                buildingQueue.RemoveAt(index);
+                onQueueUpdated?.Invoke(buildingQueue.ToArray());
+            }
+        }
+        #endregion
+
+        #region HelperMethods
         private IEnumerator DoBuildUnits()
         {
             while (buildingQueue.Count > 0)
             {
                 // Peek
                 currentQueueStartTime = Time.time;
-                buildingUnit = buildingQueue.Peek();
+                buildingUnit = buildingQueue[0];
                 onQueueUpdated?.Invoke(buildingQueue.ToArray());
 
                 // Build
                 yield return new WaitForSeconds(buildingUnit.buildTime);
 
                 // Spawn
-                buildingQueue.Dequeue();
+                buildingQueue.RemoveAt(0);
                 SpawnUnit();
             }
             onQueueUpdated?.Invoke(buildingQueue.ToArray());
+            buildCoroutine = null;
         }
 
         private void SpawnUnit()
@@ -89,5 +111,6 @@ namespace GameDevTV.RTS.Units
                 abstractUnit.MoveTo(walkPosition);
             }
         }
+        #endregion
     }
 }

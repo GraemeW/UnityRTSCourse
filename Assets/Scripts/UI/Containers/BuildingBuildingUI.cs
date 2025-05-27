@@ -2,6 +2,7 @@ using GameDevTV.RTS.UI.Components;
 using GameDevTV.RTS.Units;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameDevTV.RTS.UI.Containers
 {
@@ -10,6 +11,7 @@ namespace GameDevTV.RTS.UI.Containers
         // Tunables
         [Header("Hookups")]
         [SerializeField] private ProgressBar progressBar;
+        [SerializeField] private BuildQueueButtonUI[] unitButtons;
         [Header("Properties")]
         [SerializeField] private float timeStep = 0.1f;
 
@@ -19,11 +21,14 @@ namespace GameDevTV.RTS.UI.Containers
 
         public void EnableFor(BaseBuilding baseBuilding)
         {
+            if (baseBuilding == null) { return; }
+
             gameObject.SetActive(true);
             this.baseBuilding = baseBuilding;
             baseBuilding.onQueueUpdated += HandleQueueUpdated;
 
             HandleQueueUpdated(null);
+            RefreshUnitButtons(baseBuilding.buildingQueueSnapshot);
         }
 
         public void Disable()
@@ -37,6 +42,7 @@ namespace GameDevTV.RTS.UI.Containers
         private void HandleQueueUpdated(UnitSO[] unitsInQueue)
         {
             if (buildCoroutine == null) { buildCoroutine = StartCoroutine(UpdateUnitProgress()); }
+            RefreshUnitButtons(unitsInQueue);
         }
 
         private IEnumerator UpdateUnitProgress()
@@ -48,6 +54,36 @@ namespace GameDevTV.RTS.UI.Containers
             }
             buildCoroutine = null;
             progressBar.SetProgress(0);
+        }
+
+        private void RefreshUnitButtons(UnitSO[] unitsInQueue)
+        {
+            ClearUnitButtons();
+            SetUnitButtons(unitsInQueue);
+        }
+
+        private void SetUnitButtons(UnitSO[] unitsInQueue)
+        {
+            if (unitsInQueue == null) { return; }
+            if (baseBuilding == null) { return; }
+
+            for(int i = 0; i < unitsInQueue.Length; i++)
+            {
+                unitButtons[i].EnableFor(unitsInQueue[i], HandleCancelBuildUnit(i));
+            }
+        }
+
+        private void ClearUnitButtons()
+        {
+            foreach (BuildQueueButtonUI queuedUnitButton in unitButtons)
+            {
+                queuedUnitButton.Disable();
+            }
+        }
+
+        private UnityAction HandleCancelBuildUnit(int unitIndex)
+        {
+            return () => baseBuilding.CancelBuildUnit(unitIndex);
         }
     }
 }
