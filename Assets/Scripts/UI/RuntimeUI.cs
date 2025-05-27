@@ -3,6 +3,7 @@ using GameDevTV.RTS.Events;
 using GameDevTV.RTS.UI.Containers;
 using GameDevTV.RTS.Units;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameDevTV.RTS.UI
@@ -30,6 +31,12 @@ namespace GameDevTV.RTS.UI
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
 
         }
+
+        private void Start()
+        {
+            actionsUI.Disable();
+            buildingBuildingUI.Disable();
+        }
         #endregion
 
         #region EventHandlers
@@ -38,7 +45,8 @@ namespace GameDevTV.RTS.UI
             if (unitSelectedEvent.unit is not AbstractCommandable commandableUnit) { return; }
             selectedUnits.Add(commandableUnit);
 
-            if (actionsUI != null) { actionsUI.EnableFor(selectedUnits); }
+            actionsUI.EnableFor(selectedUnits);
+            if (selectedUnits.Count == 1 && unitSelectedEvent.unit is BaseBuilding baseBuilding) { buildingBuildingUI.EnableFor(baseBuilding); }
         }
 
         private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent)
@@ -46,8 +54,17 @@ namespace GameDevTV.RTS.UI
             if (unitDeselectedEvent.unit is not AbstractCommandable commandableUnit) { return; }
             selectedUnits.Remove(commandableUnit);
 
-            if (actionsUI != null && selectedUnits.Count > 0) { actionsUI.EnableFor(selectedUnits); }
-            else { actionsUI.Disable(); }
+            if (selectedUnits.Count > 0)
+            {
+                actionsUI.EnableFor(selectedUnits);
+                if (selectedUnits.Count == 1 && selectedUnits.First() is BaseBuilding baseBuilding) { buildingBuildingUI.EnableFor(baseBuilding); }
+                else { buildingBuildingUI.Disable(); }
+            }
+            else
+            {
+                actionsUI.Disable();
+                buildingBuildingUI.Disable();
+            }
         }
         #endregion
     }

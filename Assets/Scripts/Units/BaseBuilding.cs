@@ -13,8 +13,17 @@ namespace GameDevTV.RTS.Units
         [field: SerializeField] public Transform spawnLocation { get; private set; }
         [field: SerializeField] public float spawnWalkDistance { get; private set; }
 
+        // Expression Properties
+        public int queueSize => buildingQueue.Count;
+
         // State
         private Queue<UnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
+        private float currentQueueStartTime;
+        private UnitSO buildingUnit;
+
+        // Events
+        public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
+        public event QueueUpdatedEvent onQueueUpdated;
 
         public void BuildUnit(UnitSO unitSO)
         {
@@ -25,22 +34,39 @@ namespace GameDevTV.RTS.Units
             {
                 StartCoroutine(DoBuildUnits());
             }
+            else
+            {
+                onQueueUpdated?.Invoke(buildingQueue.ToArray());
+            }
+        }
+
+        public float GetBuildProgress()
+        {
+            return Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
         }
 
         private IEnumerator DoBuildUnits()
         {
             while (buildingQueue.Count > 0)
             {
-                UnitSO unitSO = buildingQueue.Peek();
-                yield return new WaitForSeconds(unitSO.buildTime);
+                // Peek
+                currentQueueStartTime = Time.time;
+                buildingUnit = buildingQueue.Peek();
+                onQueueUpdated?.Invoke(buildingQueue.ToArray());
+
+                // Build
+                yield return new WaitForSeconds(buildingUnit.buildTime);
+
+                // Spawn
                 buildingQueue.Dequeue();
-                SpawnUnit(unitSO);
+                SpawnUnit();
             }
+            onQueueUpdated?.Invoke(buildingQueue.ToArray());
         }
 
-        private void SpawnUnit(UnitSO unitSO)
+        private void SpawnUnit()
         {
-            GameObject spawnedUnit = Instantiate(unitSO.prefab);
+            GameObject spawnedUnit = Instantiate(buildingUnit.prefab);
 
             if (spawnedUnit.TryGetComponent(out AbstractUnit abstractUnit))
             {
