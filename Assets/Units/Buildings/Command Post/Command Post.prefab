@@ -35,7 +35,6 @@ Transform:
   - {fileID: 1330340021324047117}
   - {fileID: 5902895496490668234}
   - {fileID: 307210441530905105}
-  - {fileID: 280130695592347058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8954186936418030536
@@ -91,10 +90,11 @@ MonoBehaviour:
   <maxHealth>k__BackingField: 0
   <availableCommands>k__BackingField:
   - {fileID: 11400000, guid: 69d065b5a4704d443a5cfdd9b0bbd81d, type: 2}
+  - {fileID: 11400000, guid: a03f3a7cbc8d11047b51b14944746fda, type: 2}
   decalProjector: {fileID: 3157794677805099551}
   unitSO: {fileID: 11400000, guid: a68dc2d121ceeea4380a547077b40460, type: 2}
   <spawnLocation>k__BackingField: {fileID: 307210441530905105}
-  <spawnWalkTo>k__BackingField: {fileID: 280130695592347058}
+  <spawnWalkDistance>k__BackingField: 2
 --- !u!1 &6189350992743450096
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,37 +182,6 @@ MonoBehaviour:
   m_Offset: {x: 0, y: 0, z: 4}
   m_Size: {x: 4, y: 4, z: 8}
   m_FadeFactor: 1
---- !u!1 &7672220417763495216
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 280130695592347058}
-  m_Layer: 7
-  m_Name: SpawnWalkTo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &280130695592347058
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7672220417763495216}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6018277380246554126}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6224525886635980577
 PrefabInstance:
   m_ObjectHideFlags: 0
