@@ -1,26 +1,30 @@
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
+using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace GameDevTV.RTS.Units
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
     public abstract class AbstractUnit : AbstractCommandable, IMoveable
     {
-        // State
-        private Transform target;
-        private Vector3 targetPosition;
+        // Static Behavior References
+        // Note:  These MUST match the variables in the behavior tree blackboard
+        public static string targetLocationRef = "TargetLocation";
+        public static string targetRef = "Target";
 
         // Cached References
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
+        private BehaviorGraphAgent behaviorAgent;
 
         #region UnityMethods
         private void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
-            targetPosition = transform.position;
+            behaviorAgent = GetComponent<BehaviorGraphAgent>();
+            MoveTo(transform.position);
         }
 
         protected override void Start()
@@ -33,17 +37,6 @@ namespace GameDevTV.RTS.Units
         {
             Bus<UnitDespawnEvent>.Raise(new UnitDespawnEvent(this));
         }
-
-        private void Update()
-        {
-            if (target != null)
-            {
-                targetPosition = target.position;
-                navMeshAgent.SetDestination(targetPosition);
-            }
-
-            if (navMeshAgent.isStopped) { targetPosition = transform.position; }
-        }
         #endregion
 
         #region Movement
@@ -54,15 +47,12 @@ namespace GameDevTV.RTS.Units
 
         public void MoveTo(Vector3 position)
         {
-            if (target != null) { target = null; }
-            targetPosition = position;
-            navMeshAgent.SetDestination(targetPosition);
+            behaviorAgent.SetVariableValue(targetLocationRef, position);
         }
 
         public void SetMoveTarget(Transform target)
         {
-            if (target == null) { return; }
-            this.target = target;
+            behaviorAgent.SetVariableValue(targetRef, target);
         }
         #endregion
     }
