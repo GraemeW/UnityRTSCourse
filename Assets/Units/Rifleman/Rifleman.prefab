@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 7460751793657957332}
   - component: {fileID: 3416511532907368207}
   - component: {fileID: 4509029832073132137}
+  - component: {fileID: 1219862349958267509}
   m_Layer: 6
   m_Name: Rifleman
   m_TagString: Untagged
@@ -137,6 +138,7 @@ MonoBehaviour:
   <availableCommands>k__BackingField:
   - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
   - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
   decalProjector: {fileID: 8025365949431547780}
   unitSO: {fileID: 11400000, guid: 44bfc9e4a35609949bb27f53843b77b6, type: 2}
 --- !u!136 &4509029832073132137
@@ -162,6 +164,25 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1219862349958267509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931094961596098796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &8161413780469437227
 GameObject:
   m_ObjectHideFlags: 0

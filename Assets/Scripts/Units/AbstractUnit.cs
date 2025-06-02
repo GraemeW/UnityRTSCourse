@@ -11,6 +11,7 @@ namespace GameDevTV.RTS.Units
     {
         // Static Behavior References
         // Note:  These MUST match the variables in the behavior tree blackboard
+        public static string commandRef { get; private set; } = "Command";
         public static string targetLocationRef { get; private set; } = "TargetLocation";
         public static string targetRef { get; private set; } = "Target";
 
@@ -24,7 +25,7 @@ namespace GameDevTV.RTS.Units
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             behaviorAgent = GetComponent<BehaviorGraphAgent>();
-            MoveTo(transform.position);
+            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Stop);
         }
 
         protected override void Start()
@@ -48,11 +49,18 @@ namespace GameDevTV.RTS.Units
         public void MoveTo(Vector3 position)
         {
             behaviorAgent.SetVariableValue(targetLocationRef, position);
+            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);
         }
 
         public void SetMoveTarget(Transform target)
         {
             behaviorAgent.SetVariableValue(targetRef, target);
+            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);
+        }
+
+        public void Stop()
+        {
+            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Stop);
         }
         #endregion
     }

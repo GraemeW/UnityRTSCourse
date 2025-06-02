@@ -793,6 +793,7 @@ GameObject:
   - component: {fileID: 6847901949003260881}
   - component: {fileID: 9085990032264575114}
   - component: {fileID: 911212785119481167}
+  - component: {fileID: 4413471402850268908}
   m_Layer: 6
   m_Name: Engineer_1
   m_TagString: Untagged
@@ -879,6 +880,7 @@ MonoBehaviour:
   <availableCommands>k__BackingField:
   - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
   - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
   decalProjector: {fileID: 4752806030668615140}
   unitSO: {fileID: 11400000, guid: a6c4543b59bc38843a1435a1212db270, type: 2}
 --- !u!136 &911212785119481167
@@ -904,6 +906,25 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4413471402850268908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3226995718862172680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3397965674737790768
 GameObject:
   m_ObjectHideFlags: 0
