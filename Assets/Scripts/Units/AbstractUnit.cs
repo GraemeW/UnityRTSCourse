@@ -11,8 +11,8 @@ namespace GameDevTV.RTS.Units
     {
         // Static Behavior References
         // Note:  These MUST match the variables in the behavior tree blackboard
-        public static string targetLocationRef = "TargetLocation";
-        public static string targetRef = "Target";
+        public static string targetLocationRef { get; private set; } = "TargetLocation";
+        public static string targetRef { get; private set; } = "Target";
 
         // Cached References
         private NavMeshAgent navMeshAgent;
