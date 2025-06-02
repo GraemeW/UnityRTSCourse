@@ -12,10 +12,10 @@ namespace GameDevTV.RTS.Units
         [field: SerializeField] public int maxHealth { get; private set; }
         [field: SerializeField] public ActionBase[] availableCommands { get; private set; }
 
+        [field: SerializeField] public UnitSO unitSO { get; private set; }
+
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
-        [Header("Unit Properties")]
-        [SerializeField] private UnitSO unitSO;
 
         #region UnityMethods
         protected virtual void Start()

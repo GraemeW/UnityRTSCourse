@@ -91,8 +91,8 @@ MonoBehaviour:
   <availableCommands>k__BackingField:
   - {fileID: 11400000, guid: 69d065b5a4704d443a5cfdd9b0bbd81d, type: 2}
   - {fileID: 11400000, guid: a03f3a7cbc8d11047b51b14944746fda, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: a68dc2d121ceeea4380a547077b40460, type: 2}
   decalProjector: {fileID: 3157794677805099551}
-  unitSO: {fileID: 11400000, guid: a68dc2d121ceeea4380a547077b40460, type: 2}
   <spawnLocation>k__BackingField: {fileID: 307210441530905105}
   <spawnWalkDistance>k__BackingField: 2
 --- !u!1 &6189350992743450096

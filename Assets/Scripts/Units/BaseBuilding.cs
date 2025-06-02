@@ -8,6 +8,7 @@ namespace GameDevTV.RTS.Units
     {
         // Fixed
         private const int MAX_QUEUE_SIZE = 5;
+        public static string buildingsLayerMaskRef = "Buildings";
 
         // Tunables
         [field: SerializeField] public Transform spawnLocation { get; private set; }
