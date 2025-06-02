@@ -21,6 +21,7 @@ namespace GameDevTV.RTS
         [SerializeField] private new Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
         [Header("Game Behaviour")]
+        [SerializeField] private bool enableEdgePan = true;
         [SerializeField] private int maxUnitCount = 100;
         [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableLayers;
@@ -117,7 +118,7 @@ namespace GameDevTV.RTS
         private void HandlePanning()
         {
             Vector3 moveAmount = GetKeyboardMoveAmount();
-            moveAmount += GetMouseMoveAmount();
+            if (enableEdgePan) { moveAmount += GetMouseMoveAmount(); }
 
             cameraTarget.linearVelocity = moveAmount;
         }

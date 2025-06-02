@@ -4857,7 +4857,7 @@ GameObject:
   - component: {fileID: 4859880167833556}
   - component: {fileID: 198938402097657526}
   - component: {fileID: 199945756000676788}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PoisonGas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

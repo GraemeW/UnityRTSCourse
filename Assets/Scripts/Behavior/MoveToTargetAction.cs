@@ -6,13 +6,12 @@ using Unity.Properties;
 using UnityEngine.AI;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "FollowTarget", story: "[Agent] follows [Target]", category: "Action", id: "d49bfa35417b5afb5c87429dfab334ca")]
-public partial class FollowTargetAction : Action
+[NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action", id: "d49bfa35417b5afb5c87429dfab334ca")]
+public partial class MoveToTargetAction : Action
 {
-    // Behavior Properties
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<Transform> Target;
-
+    // Behavior Properties
     // Cached References
     private NavMeshAgent navMeshAgent;
 

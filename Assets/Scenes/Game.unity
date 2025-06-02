@@ -4259,6 +4259,7 @@ MonoBehaviour:
     <minZoomDistance>k__BackingField: 5
     <zoomSpeed>k__BackingField: 1
     <rotationSpeed>k__BackingField: 1
+  enableEdgePan: 0
   maxUnitCount: 100
   selectableLayers:
     serializedVersion: 2

@@ -11,8 +11,6 @@ namespace GameDevTV.RTS.Commands
         public RaycastHit hit { get; set; }
         public int unitIndex { get; set; }
 
-
-
         // Constructors
         // Default -- have ray, need to derive hit
         public CommandContext(AbstractCommandable commandable, Ray cameraRay, int unitIndex = 0)

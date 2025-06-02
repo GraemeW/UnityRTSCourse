@@ -18,7 +18,7 @@ namespace GameDevTV.RTS.Units
         // Cached References
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
-        private BehaviorGraphAgent behaviorAgent;
+        protected BehaviorGraphAgent behaviorAgent;
 
         #region UnityMethods
         private void Awake()

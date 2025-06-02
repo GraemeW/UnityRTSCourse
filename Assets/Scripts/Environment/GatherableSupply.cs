@@ -1,13 +1,14 @@
+using GameDevTV.RTS.Units;
 using UnityEngine;
 
 namespace GameDevTV.RTS.Environment
 {
-    public class GatherableSupply : MonoBehaviour, IGatherable
+    public class GatherableSupply : MonoBehaviour, IGatherable, ISelectable
     {
         #region Interface
         [field: SerializeField] public SupplySO supply {  get; private set; }
-        public int amount { get; private set; }
-        public bool isBusy { get; private set; }
+        [field: SerializeField] public int amount { get; private set; }
+        [field: SerializeField] public bool isBusy { get; private set; }
 
         public bool BeginGather()
         {
@@ -19,15 +20,26 @@ namespace GameDevTV.RTS.Environment
 
         public int EndGather()
         {
+            isBusy = false;
+
             if (supply == null) { return 0; }
 
-            isBusy = false;
             int amountGathered = Mathf.Min(amount, supply.amountPerGather);
             amount -= amountGathered;
 
             if (amount <= 0) { Destroy(gameObject); }
 
             return amountGathered;
+        }
+
+        public void Select()
+        {
+            
+        }
+
+        public void Deselect()
+        {
+            
         }
         #endregion
 
