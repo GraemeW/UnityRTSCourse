@@ -46,6 +46,18 @@ namespace GameDevTV.RTS.Units
             navMeshAgent.Warp(position);
         }
 
+        public void ToggleAvoidance(bool enable)
+        {
+            if (enable)
+            {
+                navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            }
+            else
+            {
+                navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            }
+        }
+
         public void MoveTo(Vector3 position)
         {
             behaviorAgent.SetVariableValue(targetLocationRef, position);
