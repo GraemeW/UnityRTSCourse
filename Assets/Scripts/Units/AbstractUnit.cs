@@ -64,7 +64,7 @@ namespace GameDevTV.RTS.Units
             behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);
         }
 
-        public void SetMoveTarget(Transform target)
+        public void SetMoveTarget(GameObject target)
         {
             behaviorAgent.SetVariableValue(targetRef, target);
             behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);

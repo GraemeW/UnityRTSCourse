@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b38ef7e9e4391264689dd3e4d324ee3e, type: 3}
   m_Name: Minerals
   m_EditorClassIdentifier: 
-  <maxAmount>k__BackingField: 1500
+  <maxAmount>k__BackingField: 100
   <amountPerGather>k__BackingField: 8
   <baseGatherTime>k__BackingField: 1.5

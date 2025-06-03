@@ -10,12 +10,14 @@ namespace GameDevTV.RTS.Units
         // Static Behavior References
         // Note:  These MUST match the variables in the behavior tree blackboard
         public static string supplyRef { get; private set; } = "Supply";
+        public static string supplyTypeRef { get; private set; } = "SupplyType";
 
         #region PublicMethods
         public void Gather(GatherableSupply gatherableSupply)
         {
             behaviorAgent.SetVariableValue(supplyRef, gatherableSupply);
-            behaviorAgent.SetVariableValue(targetRef, gatherableSupply.transform);
+            behaviorAgent.SetVariableValue(supplyTypeRef, gatherableSupply.supplySO);
+            behaviorAgent.SetVariableValue(targetRef, gatherableSupply.gameObject);
             behaviorAgent.SetVariableValue(AbstractUnit.commandRef, UnitCommands.Gather);
         }
         #endregion

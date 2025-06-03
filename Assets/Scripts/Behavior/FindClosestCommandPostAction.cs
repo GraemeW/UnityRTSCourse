@@ -21,7 +21,7 @@ namespace GameDevTV.RTS.Behavior
         {
             Collider[] colliders = Physics.OverlapSphere(
                 Agent.Value.transform.position, 
-                SearchRadius, 
+                SearchRadius.Value, 
                 LayerMask.GetMask(BaseBuilding.buildingsLayerMaskRef));
 
             List<BaseBuilding> nearbyCommandPosts = new List<BaseBuilding>();

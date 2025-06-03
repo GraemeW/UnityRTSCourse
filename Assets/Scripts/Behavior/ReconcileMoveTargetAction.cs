@@ -13,10 +13,10 @@ public partial class ReconcileMoveTargetAction : Action
     // Behavior Properties
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
-    [SerializeReference] public BlackboardVariable<Transform> Target;
+    [SerializeReference] public BlackboardVariable<GameObject> Target;
 
     // State
-    Transform currentTarget;
+    GameObject currentTarget;
     Vector3 currentTargetLocation;
 
     // Cached References

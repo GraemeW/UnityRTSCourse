@@ -21,7 +21,7 @@ namespace GameDevTV.RTS.Commands
         public override void Handle(CommandContext commandContext)
         {
             IMoveable moveable = (IMoveable)commandContext.commandable;
-            moveable.SetMoveTarget(commandContext.hit.transform);
+            moveable.SetMoveTarget(commandContext.hit.collider.gameObject);
         }
     }
 }
