@@ -32,7 +32,7 @@ public partial class MoveToTargetAction : Action
     {
         if (Target.Value == null) { return Status.Failure; }
 
-        Vector3 targetLocation = Target.Value.position;
+        Vector3 targetLocation = GetTargetPosition();
         if (earlyCheckCriteria)
         {
             if (Vector3.Distance(navMeshAgent.transform.position, targetLocation) <= navMeshAgent.stoppingDistance) { return Status.Success; }
@@ -40,5 +40,16 @@ public partial class MoveToTargetAction : Action
         navMeshAgent.SetDestination(targetLocation);
 
         return Status.Running;
+    }
+
+    private Vector3 GetTargetPosition()
+    {
+        Vector3 targetLocation = Target.Value.position;
+        if (Target.Value.TryGetComponent(out Collider targetCollider))
+        {
+            targetLocation = targetCollider.ClosestPoint(Agent.Value.transform.position);
+        }
+
+        return targetLocation;
     }
 }
