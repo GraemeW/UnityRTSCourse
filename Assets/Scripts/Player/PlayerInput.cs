@@ -8,7 +8,6 @@ using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
 using System.Linq;
-using Unity.VisualScripting;
 
 namespace GameDevTV.RTS
 {

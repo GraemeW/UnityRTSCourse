@@ -29,7 +29,7 @@ namespace GameDevTV.RTS.Units
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             Bus<UnitDespawnEvent>.Raise(new UnitDespawnEvent(this));
         }

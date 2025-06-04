@@ -12,20 +12,27 @@ namespace GameDevTV.RTS.Units
     public class Worker : AbstractUnit
     {
         #region UnityMethods
-        protected void OnEnable()
+        protected override void Start()
         {
-            if (behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
+            base.Start();
+   
+            if (behaviorAgent.BlackboardReference != null && behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
             {
-                //gatherSuppliesEventChannel.Value.Event += HandleGatherSupplies;
+                gatherSuppliesEventChannel.Value.Event += HandleGatherSupplies;
             }
         }
 
+        protected override void OnDestroy()
+        {
+            if (behaviorAgent.BlackboardReference != null && behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
+            {
+                gatherSuppliesEventChannel.Value.Event -= HandleGatherSupplies;
+            }
+            base.OnDestroy();
+        } 
+
         protected void OnDisable()
         {
-            if (behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
-            {
-                //gatherSuppliesEventChannel.Value.Event -= HandleGatherSupplies;
-            }
 
         }
         #endregion
