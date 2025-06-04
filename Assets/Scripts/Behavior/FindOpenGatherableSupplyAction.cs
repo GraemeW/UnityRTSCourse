@@ -44,14 +44,13 @@ public partial class FindOpenGatherableSupplyAction : Action
     {
         if (Agent.Value == null) { return Status.Failure; }
 
-        if (CheckNearbySupplies()) { return Status.Success; }
-        return Status.Running;
+        return CheckNearbySupplies();
     }
 
-    private bool CheckNearbySupplies()
+    private Status CheckNearbySupplies()
     {
         GatherableSupply[] sortedSupplies = nearbySupplies.Where(sortedSupply => sortedSupply != null).ToArray();
-        if (sortedSupplies.Length == 0) { return false; }
+        if (sortedSupplies.Length == 0) { return Status.Failure; }
 
         Array.Sort(sortedSupplies, new ClosestSupplyComparator(Agent.Value.transform.position));
         foreach (GatherableSupply gatherableSupply in sortedSupplies)
@@ -60,10 +59,10 @@ public partial class FindOpenGatherableSupplyAction : Action
             {
                 Supply.Value = gatherableSupply;
                 Target.Value = gatherableSupply.gameObject;
-                return true;
+                return Status.Success;
             }
         }
-        return false;
+        return Status.Running;
     }
 
     private int FindNearbySupplies()

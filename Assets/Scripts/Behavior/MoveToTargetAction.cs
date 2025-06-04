@@ -17,7 +17,7 @@ public partial class MoveToTargetAction : Action
 
     protected override Status OnStart()
     {
-        if (!Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
+        if (Agent.Value == null || !Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
         if (Target.Value == null) { return Status.Failure; }
 
         Vector3 targetLocation = GetTargetPosition();
@@ -29,7 +29,7 @@ public partial class MoveToTargetAction : Action
 
     protected override Status OnUpdate()
     {
-        if (Target.Value == null) { return Status.Failure; }
+        if (Agent.Value == null || Target.Value == null) { return Status.Failure; }
 
         // Insane number of checks to verify arrival -- vetted, this is awful but necessary
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)

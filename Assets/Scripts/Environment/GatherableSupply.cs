@@ -34,7 +34,7 @@ namespace GameDevTV.RTS.Environment
             return amountGathered;
         }
 
-        public void ResetGather() => isBusy = false;
+        public void AbortGather() => isBusy = false;
 
         public void Select()
         {

@@ -14,7 +14,7 @@ public partial class ResetGatherParametersAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> CommandPost;
     protected override Status OnStart()
     {
-        if (Supply.Value != null) { Supply.Value.ResetGather(); }
+        if (Supply.Value != null) { Supply.Value.AbortGather(); }
         Supply.Value = null;
         SupplyType.Value = null;
         CommandPost.Value = null;
