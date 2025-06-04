@@ -4,6 +4,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using GameDevTV.RTS.Units;
 
 [Serializable, GeneratePropertyBag]
 [NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action", id: "d49bfa35417b5afb5c87429dfab334ca")]
@@ -11,7 +12,10 @@ public partial class MoveToTargetAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<GameObject> Target;
-    // Behavior Properties
+
+    // State
+    bool isTargetMoveable = false;
+
     // Cached References
     private NavMeshAgent navMeshAgent;
 
@@ -19,6 +23,8 @@ public partial class MoveToTargetAction : Action
     {
         if (Agent.Value == null || !Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
         if (Target.Value == null) { return Status.Failure; }
+
+        isTargetMoveable = (Target.Value.TryGetComponent(out AbstractUnit _));
 
         Vector3 targetLocation = GetTargetPosition();
         navMeshAgent.ResetPath();
@@ -40,8 +46,12 @@ public partial class MoveToTargetAction : Action
             }
         }
 
-        Vector3 targetLocation = GetTargetPosition();
-        navMeshAgent.SetDestination(targetLocation);
+        if (isTargetMoveable)
+        {
+            Vector3 targetLocation = GetTargetPosition();
+            navMeshAgent.SetDestination(targetLocation);
+        }
+
         return Status.Running;
     }
 
