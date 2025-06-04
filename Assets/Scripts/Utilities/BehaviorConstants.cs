@@ -12,5 +12,7 @@ namespace GameDevTV.RTS.Utilities
 
         public static string supplyRef { get; private set; } = "Supply";
         public static string supplyTypeRef { get; private set; } = "SupplyType";
+
+        public static string gatherSuppliesEventRef { get; private set; } = "GatherSuppliesEventChannel";
     }
 }

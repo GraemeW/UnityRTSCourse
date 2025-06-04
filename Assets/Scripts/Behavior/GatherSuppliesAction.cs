@@ -17,7 +17,8 @@ namespace GameDevTV.RTS.Behavior
         [SerializeReference] public BlackboardVariable<GameObject> Agent;
         [SerializeReference] public BlackboardVariable<int> Amount;
         [SerializeReference] public BlackboardVariable<GatherableSupply> Supply;
-        
+        [SerializeReference] public BlackboardVariable<SupplySO> SupplyType;
+
         // State
         private float enterTime;
         bool thisSupplyMined;
@@ -41,6 +42,7 @@ namespace GameDevTV.RTS.Behavior
             {
                 enterTime = Time.time;
                 AnimationConstants.AnimateGathering(animator, true);
+                SupplyType.Value = Supply.Value.supplySO;
                 Supply.Value.BeginGather();
                 return Status.Running;
             }
@@ -73,7 +75,7 @@ namespace GameDevTV.RTS.Behavior
             }
 
             // Early exit, e.g. due to new command issued
-            Supply.Value.AbortGather();
+            if (CurrentStatus == Status.Interrupted) { Supply.Value.AbortGather(); }
         }
     }
 }
