@@ -1,5 +1,6 @@
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
+using GameDevTV.RTS.Utilities;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,12 +10,6 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
     public abstract class AbstractUnit : AbstractCommandable, IMoveable
     {
-        // Static Behavior References
-        // Note:  These MUST match the variables in the behavior tree blackboard
-        public static string commandRef { get; private set; } = "Command";
-        public static string targetLocationRef { get; private set; } = "TargetLocation";
-        public static string targetRef { get; private set; } = "Target";
-
         // Cached References
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
@@ -25,7 +20,7 @@ namespace GameDevTV.RTS.Units
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             behaviorAgent = GetComponent<BehaviorGraphAgent>();
-            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Stop);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Stop);
         }
 
         protected override void Start()
@@ -60,19 +55,19 @@ namespace GameDevTV.RTS.Units
 
         public void MoveTo(Vector3 position)
         {
-            behaviorAgent.SetVariableValue(targetLocationRef, position);
-            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);
+            behaviorAgent.SetVariableValue(BehaviorConstants.targetLocationRef, position);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Move);
         }
 
         public void SetMoveTarget(GameObject target)
         {
-            behaviorAgent.SetVariableValue(targetRef, target);
-            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Move);
+            behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, target);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Move);
         }
 
         public void Stop()
         {
-            behaviorAgent.SetVariableValue(commandRef, UnitCommands.Stop);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Stop);
         }
         #endregion
     }

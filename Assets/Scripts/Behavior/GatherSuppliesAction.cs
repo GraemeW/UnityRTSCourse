@@ -5,6 +5,8 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using GameDevTV.RTS.Units;
+using UnityEngine.AI;
+using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Behavior
 {
@@ -20,10 +22,15 @@ namespace GameDevTV.RTS.Behavior
         private float enterTime;
         bool thisSupplyMined;
 
+        // Cached References
+        private Animator animator;
+
         protected override Status OnStart()
         {
             if (!Agent.Value.TryGetComponent(out Worker worker)) { return Status.Failure; }
             if (Supply.Value == null) { return Status.Failure; }
+
+            Agent.Value.TryGetComponent(out animator);
 
             // Check if already has resources on unit -- return them first
             thisSupplyMined = false;
@@ -33,6 +40,7 @@ namespace GameDevTV.RTS.Behavior
             if (!Supply.Value.isBusy)
             {
                 enterTime = Time.time;
+                AnimationConstants.AnimateGathering(animator, true);
                 Supply.Value.BeginGather();
                 return Status.Running;
             }
@@ -55,8 +63,9 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (Supply.Value == null) { return; }
+            AnimationConstants.AnimateGathering(animator, false);
 
+            if (Supply.Value == null) { return; }
             if (CurrentStatus == Status.Success && thisSupplyMined)
             {
                 Amount.Value = Supply.Value.EndGather();

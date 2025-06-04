@@ -4,6 +4,8 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using GameDevTV.RTS.Units;
+using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Behavior
 {
@@ -17,11 +19,14 @@ namespace GameDevTV.RTS.Behavior
 
         // Cached References
         private NavMeshAgent navMeshAgent;
+        private Animator animator;
 
         protected override Status OnStart()
         {
             if (!Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
             if (Vector3.Distance(navMeshAgent.transform.position, TargetLocation.Value) <= navMeshAgent.stoppingDistance) { return Status.Success; }
+
+            Agent.Value.TryGetComponent(out animator);
 
             navMeshAgent.SetDestination(TargetLocation.Value);
 
@@ -32,7 +37,14 @@ namespace GameDevTV.RTS.Behavior
         {
             if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance) { return Status.Success; }
 
+            AnimationConstants.AnimateMovement(animator, navMeshAgent.velocity.magnitude);
+
             return Status.Running;
+        }
+
+        protected override void OnEnd()
+        {
+            AnimationConstants.AnimateMovement(animator, 0.0f);
         }
     }
 }

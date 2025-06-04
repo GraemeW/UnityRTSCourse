@@ -5,6 +5,7 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
 using GameDevTV.RTS.Units;
+using GameDevTV.RTS.Utilities;
 
 [Serializable, GeneratePropertyBag]
 [NodeDescription(name: "ReconcileMoveTarget", story: "Reset [Agent] [TargetLocation] for no [Target]", category: "Action/Navigation", id: "52432eb6f0eef23cdfe6e4d42a007081")]
@@ -43,7 +44,7 @@ public partial class ReconcileMoveTargetAction : Action
         {
             currentTargetLocation = TargetLocation.Value;
             currentTarget = null;
-            behaviorAgent.SetVariableValue(AbstractUnit.targetRef, currentTarget);
+            behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, currentTarget);
         }
         return Status.Success;
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Behavior
 {
@@ -20,6 +21,7 @@ namespace GameDevTV.RTS.Behavior
         protected override Status OnStart()
         {
             if (!Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
+            if (Agent.Value.TryGetComponent(out Animator animator)) { AnimationConstants.AnimateMovement(animator, 0.0f); }
 
             navMeshAgent.ResetPath();
             return Status.Success;

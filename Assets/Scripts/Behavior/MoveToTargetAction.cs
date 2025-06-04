@@ -5,6 +5,7 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
 using GameDevTV.RTS.Units;
+using GameDevTV.RTS.Utilities;
 
 [Serializable, GeneratePropertyBag]
 [NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action", id: "d49bfa35417b5afb5c87429dfab334ca")]
@@ -18,6 +19,7 @@ public partial class MoveToTargetAction : Action
 
     // Cached References
     private NavMeshAgent navMeshAgent;
+    private Animator animator;
 
     protected override Status OnStart()
     {
@@ -25,6 +27,7 @@ public partial class MoveToTargetAction : Action
         if (Target.Value == null) { return Status.Failure; }
 
         isTargetMoveable = (Target.Value.TryGetComponent(out AbstractUnit _));
+        Agent.Value.TryGetComponent(out animator);
 
         Vector3 targetLocation = GetTargetPosition();
         navMeshAgent.ResetPath();
@@ -52,7 +55,14 @@ public partial class MoveToTargetAction : Action
             navMeshAgent.SetDestination(targetLocation);
         }
 
+        AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
+
         return Status.Running;
+    }
+
+    protected override void OnEnd()
+    {
+        AnimationConstants.AnimateMovement(animator, 0.0f);
     }
 
     private Vector3 GetTargetPosition()
