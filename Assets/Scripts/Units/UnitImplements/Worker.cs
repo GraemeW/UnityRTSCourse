@@ -11,6 +11,17 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(BehaviorGraphAgent))]
     public class Worker : AbstractUnit
     {
+        #region ComputedProperties
+        public bool HasSupplies 
+        { 
+            get 
+            {
+                behaviorAgent.GetVariable(BehaviorConstants.gatherAmountRef, out BlackboardVariable<int> heldVariable);
+                return heldVariable.Value > 0;
+            }
+        }
+        #endregion
+
         #region UnityMethods
         protected override void Start()
         {
