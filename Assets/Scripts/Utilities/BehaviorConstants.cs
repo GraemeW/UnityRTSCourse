@@ -14,6 +14,8 @@ namespace GameDevTV.RTS.Utilities
         public static string supplyTypeRef { get; private set; } = "SupplyType";
         public static string nearbySupplyCountRef { get; private set; } = "NearbySupplyCount";
 
+        public static string commandPostRef { get; private set; } = "CommandPost";
+
         public static string gatherSuppliesEventRef { get; private set; } = "GatherSuppliesEvent";
     }
 }

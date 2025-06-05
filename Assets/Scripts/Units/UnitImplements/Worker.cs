@@ -41,10 +41,15 @@ namespace GameDevTV.RTS.Units
         public void Gather(GatherableSupply gatherableSupply)
         {
             behaviorAgent.SetVariableValue(BehaviorConstants.supplyRef, gatherableSupply);
-            behaviorAgent.SetVariableValue(BehaviorConstants.supplyTypeRef, gatherableSupply.supplySO);
             behaviorAgent.SetVariableValue(BehaviorConstants.nearbySupplyCountRef, 1);
             behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, gatherableSupply.gameObject);
             behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Gather);
+        }
+
+        public void ReturnSupplies(CommandPost commandPost)
+        {
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandPostRef, commandPost.gameObject);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.ReturnSupplies);
         }
         #endregion
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6018277380246554126}
   - component: {fileID: 8954186936418030536}
   - component: {fileID: 7391351083741371992}
-  - component: {fileID: 5733772685594461396}
+  - component: {fileID: 4111206010722160055}
   m_Layer: 7
   m_Name: Command Post
   m_TagString: Home
@@ -74,7 +74,7 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
---- !u!114 &5733772685594461396
+--- !u!114 &4111206010722160055
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589499662120937400}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a3aef258b22f2849a84e52680c49acc, type: 3}
+  m_Script: {fileID: 11500000, guid: 69b4aaa7636cbed44802bfe5e9815ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <currentHealth>k__BackingField: 0

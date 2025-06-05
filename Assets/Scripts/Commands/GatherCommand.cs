@@ -13,7 +13,7 @@ namespace GameDevTV.RTS.Commands
         {
             bool isWorker = commandContext.commandable is Worker;
             bool validSupply = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
-                &&  (hit.collider.TryGetComponent(out GatherableSupply _));
+                &&  ((hit.collider.TryGetComponent(out GatherableSupply _) || hit.collider.TryGetComponent(out CommandPost _)));
             commandContext.hit = hit;
 
             return isWorker && validSupply;
@@ -22,8 +22,14 @@ namespace GameDevTV.RTS.Commands
         public override void Handle(CommandContext commandContext)
         {
             Worker worker = (Worker)commandContext.commandable;
-            GatherableSupply gatherableSupply = commandContext.hit.collider.GetComponent<GatherableSupply>();
-            worker.Gather(gatherableSupply);
+            if (commandContext.hit.collider.TryGetComponent(out GatherableSupply gatherableSupply))
+            {
+                worker.Gather(gatherableSupply);
+            }
+            else if (commandContext.hit.collider.TryGetComponent(out CommandPost commandPost))
+            {
+                worker.ReturnSupplies(commandPost);
+            }
         }
     }
 }

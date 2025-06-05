@@ -7,6 +7,7 @@ namespace GameDevTV.RTS.Units
     {
         Stop,
         Move,
-        Gather
+        Gather,
+        ReturnSupplies
     }
 }
