@@ -18,6 +18,7 @@ public partial class FindOpenGatherableSupplyAction : Action
     [SerializeReference] public BlackboardVariable<SupplySO> SupplyType;
     [SerializeReference] public BlackboardVariable<GameObject> Target;
     [SerializeReference] public BlackboardVariable<float> SearchRadius = new(10.0f);
+    [SerializeReference] public BlackboardVariable<int> nearbySupplyCount;
 
     // State
     List<GatherableSupply> nearbySupplies = new List<GatherableSupply>();
@@ -35,7 +36,8 @@ public partial class FindOpenGatherableSupplyAction : Action
         }
 
         // Otherwise populate supplies for checking
-        if (FindNearbySupplies() == 0) { return Status.Failure; }
+        FindNearbySupplies();
+        if (nearbySupplyCount == 0) { return Status.Failure; }
 
         return Status.Running;
     }
@@ -65,7 +67,7 @@ public partial class FindOpenGatherableSupplyAction : Action
         return Status.Running;
     }
 
-    private int FindNearbySupplies()
+    private void FindNearbySupplies()
     {
         nearbySupplies.Clear();
         Vector3 searchPosition = Agent.Value.transform.position;
@@ -84,7 +86,7 @@ public partial class FindOpenGatherableSupplyAction : Action
                 nearbySupplies.Add(gatherableSupply);
             }
         }
-        return nearbySupplies.Count;
+        nearbySupplyCount.Value = nearbySupplies.Count;
     }
 
     private bool ReckonSupplyType()

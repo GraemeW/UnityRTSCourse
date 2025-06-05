@@ -9,7 +9,7 @@ using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
 using System.Linq;
 
-namespace GameDevTV.RTS
+namespace GameDevTV.RTS.Player
 {
     public class PlayerInput : MonoBehaviour
     {

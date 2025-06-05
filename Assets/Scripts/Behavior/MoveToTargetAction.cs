@@ -8,12 +8,11 @@ using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Utilities;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action", id: "d49bfa35417b5afb5c87429dfab334ca")]
+[NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action/Navigation", id: "d49bfa35417b5afb5c87429dfab334ca")]
 public partial class MoveToTargetAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<GameObject> Target;
-
     // State
     bool isTargetMoveable = false;
 

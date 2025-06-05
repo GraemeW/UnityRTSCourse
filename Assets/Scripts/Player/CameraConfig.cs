@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameDevTV.RTS
+namespace GameDevTV.RTS.Player
 {
     [System.Serializable]
     public class CameraConfig
