@@ -22,6 +22,8 @@ namespace GameDevTV.RTS.UI.Components
 
         public void EnableFor(ActionBase action, UnityAction onClick)
         {
+            button.onClick.RemoveAllListeners();
+
             icon.gameObject.SetActive(true);
             icon.sprite = action.icon;
             button.interactable = true;

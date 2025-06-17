@@ -135,12 +135,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
-  <availableCommands>k__BackingField:
-  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
-  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
-  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
   <unitSO>k__BackingField: {fileID: 11400000, guid: 44bfc9e4a35609949bb27f53843b77b6, type: 2}
   decalProjector: {fileID: 8025365949431547780}
+  availableCommands:
+  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
+  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
 --- !u!136 &4509029832073132137
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "TestAction", menuName = "AI/Commands/Test")]
+    [CreateAssetMenu(fileName = "TestAction", menuName = "Units/Commands/Test")]
     public class TestCommand : ActionBase
     {
         public override bool CanHandle(ref CommandContext commandContext)

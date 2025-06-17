@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "GatherAction", menuName = "AI/Commands/Gather", order = 105)]
+    [CreateAssetMenu(fileName = "GatherAction", menuName = "Units/Commands/Gather", order = 105)]
     public class GatherCommand : ActionBase
     {
         [SerializeField] private LayerMask selectableLayers;

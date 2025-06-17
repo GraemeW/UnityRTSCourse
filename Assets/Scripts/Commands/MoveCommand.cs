@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "Move", menuName = "AI/Commands/Move")]
+    [CreateAssetMenu(fileName = "Move", menuName = "Units/Commands/Move")]
     public class MoveCommand : ActionBase
     {
         // Tunables

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "StopAction", menuName = "AI/Commands/Stop")]
+    [CreateAssetMenu(fileName = "StopAction", menuName = "Units/Commands/Stop")]
     public class StopCommand : ActionBase
     {
         public override bool CanHandle(ref CommandContext commandContext)

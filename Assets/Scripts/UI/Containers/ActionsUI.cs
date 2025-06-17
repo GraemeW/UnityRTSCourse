@@ -42,7 +42,7 @@ namespace GameDevTV.RTS.UI.Containers
             HashSet<ActionBase> availableCommands = new HashSet<ActionBase>();
             foreach (AbstractCommandable commandableUnit in commandableUnits)
             {
-                foreach (ActionBase action in commandableUnit.availableCommands)
+                foreach (ActionBase action in commandableUnit.currentCommands)
                 {
                     availableCommands.Add(action);
                 }

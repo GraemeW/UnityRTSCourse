@@ -83,8 +83,11 @@ namespace GameDevTV.RTS.Player
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
             if (selectedUnits.Count < MAX_SELECTION_COUNT)
-            { 
-                selectedUnits.Add(unitSelectedEvent.unit); 
+            {
+                if (!selectedUnits.Contains(unitSelectedEvent.unit)) // Explicitly separate logic, do not enter else/deselect
+                {
+                    selectedUnits.Add(unitSelectedEvent.unit);
+                }
             }
             else 
             {
@@ -402,7 +405,7 @@ namespace GameDevTV.RTS.Player
 
         private void ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
         {
-            foreach (ICommand command in abstractUnit.availableCommands)
+            foreach (ICommand command in abstractUnit.currentCommands)
             {
                 if (command.CanHandle(ref commandContext))
                 {
