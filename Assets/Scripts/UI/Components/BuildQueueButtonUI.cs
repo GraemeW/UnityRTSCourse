@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace GameDevTV.RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class BuildQueueButtonUI : MonoBehaviour, IUIElement<UnitSO, UnityAction>
+    public class BuildQueueButtonUI : MonoBehaviour, IUIElement<AbstractUnitSO, UnityAction>
     {
         // Hookups
         [SerializeField] private Image icon;
@@ -19,7 +19,7 @@ namespace GameDevTV.RTS.UI.Components
             button = GetComponent<Button>();
         }
 
-        public void EnableFor(UnitSO unit, UnityAction onClick)
+        public void EnableFor(AbstractUnitSO unit, UnityAction onClick)
         {
             icon.gameObject.SetActive(true);
             icon.sprite = unit.icon;

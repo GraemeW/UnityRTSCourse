@@ -119,10 +119,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
-  <availableCommands>k__BackingField:
-  - {fileID: 11400000, guid: 4b8f2ab1a6553c84b9f936edf684bbb1, type: 2}
   <unitSO>k__BackingField: {fileID: 11400000, guid: c5896adc98c879c4b9322fd0d0e313d0, type: 2}
   decalProjector: {fileID: 3786807994018986406}
+  availableCommands:
+  - {fileID: 11400000, guid: 4b8f2ab1a6553c84b9f936edf684bbb1, type: 2}
   <spawnLocation>k__BackingField: {fileID: 22577199022783794}
   <spawnWalkDistance>k__BackingField: 2
 --- !u!1 &9086359035790929766

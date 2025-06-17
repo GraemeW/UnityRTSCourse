@@ -6,7 +6,7 @@ namespace GameDevTV.RTS.Commands
     [CreateAssetMenu(fileName = "BuildAction", menuName = "Buildings/Commands/Build", order = 120)]
     public class BuildCommand : ActionBase
     {
-        [SerializeField] private UnitSO unitSO;
+        [SerializeField] private AbstractUnitSO unitSO;
 
         public override bool CanHandle(ref CommandContext commandContext)
         {

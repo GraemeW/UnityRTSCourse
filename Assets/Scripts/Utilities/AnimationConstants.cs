@@ -15,13 +15,13 @@ namespace GameDevTV.RTS.Utilities
 
         public static void AnimateMovement(Animator animator, float speed)
         {
-            if (animator == null) { return; }
+            if (animator == null || animator.runtimeAnimatorController == null) { return; }
             animator.SetFloat(AnimationConstants.speedRef, speed);
         }
 
         public static void AnimateGathering(Animator animator, bool isGathering)
         {
-            if (animator == null) { return; }
+            if (animator == null || animator.runtimeAnimatorController == null) { return; }
             animator.SetBool(AnimationConstants.isGatheringRef, isGathering);
         }
     }

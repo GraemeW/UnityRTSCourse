@@ -16,16 +16,16 @@ namespace GameDevTV.RTS.Units
 
         // Expression Properties
         public int queueSize => buildingQueue.Count;
-        public UnitSO[] buildingQueueSnapshot => buildingQueue.ToArray();
+        public AbstractUnitSO[] buildingQueueSnapshot => buildingQueue.ToArray();
 
         // State
-        private List<UnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
+        private List<AbstractUnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
         private float currentQueueStartTime;
-        private UnitSO buildingUnit;
+        private AbstractUnitSO buildingUnit;
         private Coroutine buildCoroutine = null;
 
         // Events
-        public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
+        public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
         public event QueueUpdatedEvent onQueueUpdated;
 
         #region GettersSetters
@@ -33,7 +33,7 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region PublicMethods
-        public void BuildUnit(UnitSO unitSO)
+        public void BuildUnit(AbstractUnitSO unitSO)
         {
             if (buildingQueue.Count == MAX_QUEUE_SIZE) { return; }
 

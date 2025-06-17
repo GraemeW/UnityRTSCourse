@@ -10,7 +10,7 @@ namespace GameDevTV.RTS.Units
     {
         [field: SerializeField] public int currentHealth { get; private set; }
         [field: SerializeField] public int maxHealth { get; private set; }
-        [field: SerializeField] public UnitSO unitSO { get; private set; }
+        [field: SerializeField] public AbstractUnitSO unitSO { get; private set; }
 
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
@@ -55,9 +55,9 @@ namespace GameDevTV.RTS.Units
         #region Commands
         public void SetCommandOverrides(ActionBase[] commandOverrides)
         {
-            if (commandOverrides == null || commandOverrides.Length == 0) { currentCommands = availableCommands; }
-            else { currentCommands = commandOverrides; }
+            if (commandOverrides == null || commandOverrides.Length == 0) { currentCommands = availableCommands; return; }
 
+            currentCommands = commandOverrides;
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
         #endregion

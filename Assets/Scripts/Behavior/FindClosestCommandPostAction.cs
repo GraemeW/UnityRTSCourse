@@ -15,7 +15,6 @@ namespace GameDevTV.RTS.Behavior
         [SerializeReference] public BlackboardVariable<GameObject> Agent;
         [SerializeReference] public BlackboardVariable<GameObject> CommandPost;
         [SerializeReference] public BlackboardVariable<float> SearchRadius = new(10.0f);
-        [SerializeReference] public BlackboardVariable<UnitSO> CommandPostBuilding;
 
         protected override Status OnStart()
         {
@@ -24,13 +23,12 @@ namespace GameDevTV.RTS.Behavior
                 SearchRadius.Value, 
                 LayerMask.GetMask(BaseBuilding.buildingsLayerMaskRef));
 
-            List<BaseBuilding> nearbyCommandPosts = new List<BaseBuilding>();
+            List<CommandPost> nearbyCommandPosts = new List<CommandPost>();
             foreach (Collider collider in colliders)
             {
-                if (collider.TryGetComponent(out BaseBuilding baseBuilding)
-                        && baseBuilding.unitSO.Equals(CommandPostBuilding.Value))
+                if (collider.TryGetComponent(out CommandPost commandPost))
                 {
-                    nearbyCommandPosts.Add(baseBuilding);
+                    nearbyCommandPosts.Add(commandPost);
                 }
             }
             
@@ -44,8 +42,8 @@ namespace GameDevTV.RTS.Behavior
 
             // Find best post otherwise
             float minimumDistance = Mathf.Infinity;
-            BaseBuilding closestCommandPost = null;
-            foreach (BaseBuilding commandPost in nearbyCommandPosts)
+            CommandPost closestCommandPost = null;
+            foreach (CommandPost commandPost in nearbyCommandPosts)
             {
                 float checkDistance = Vector3.Distance(commandPost.transform.position, Agent.Value.transform.position);
                 if (checkDistance < minimumDistance)

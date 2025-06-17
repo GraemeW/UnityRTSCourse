@@ -25,7 +25,7 @@ namespace GameDevTV.RTS.UI.Containers
 
             gameObject.SetActive(true);
             this.baseBuilding = baseBuilding;
-            baseBuilding.onQueueUpdated += HandleQueueUpdated;
+            this.baseBuilding.onQueueUpdated += HandleQueueUpdated;
 
             HandleQueueUpdated(null);
             RefreshUnitButtons(baseBuilding.buildingQueueSnapshot);
@@ -34,12 +34,14 @@ namespace GameDevTV.RTS.UI.Containers
         public void Disable()
         {
             if (baseBuilding != null) { baseBuilding.onQueueUpdated -= HandleQueueUpdated; }
+            if (buildCoroutine != null) { StopCoroutine(buildCoroutine); }
+
             buildCoroutine = null;
             baseBuilding = null;
             gameObject.SetActive(false);
         }
 
-        private void HandleQueueUpdated(UnitSO[] unitsInQueue)
+        private void HandleQueueUpdated(AbstractUnitSO[] unitsInQueue)
         {
             if (buildCoroutine == null) { buildCoroutine = StartCoroutine(UpdateUnitProgress()); }
             RefreshUnitButtons(unitsInQueue);
@@ -56,13 +58,13 @@ namespace GameDevTV.RTS.UI.Containers
             progressBar.SetProgress(0);
         }
 
-        private void RefreshUnitButtons(UnitSO[] unitsInQueue)
+        private void RefreshUnitButtons(AbstractUnitSO[] unitsInQueue)
         {
             ClearUnitButtons();
             SetUnitButtons(unitsInQueue);
         }
 
-        private void SetUnitButtons(UnitSO[] unitsInQueue)
+        private void SetUnitButtons(AbstractUnitSO[] unitsInQueue)
         {
             if (unitsInQueue == null) { return; }
             if (baseBuilding == null) { return; }

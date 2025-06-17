@@ -58,8 +58,9 @@ namespace GameDevTV.RTS.UI
             if (selectedUnits.Count > 0)
             {
                 actionsUI.EnableFor(selectedUnits);
+                buildingBuildingUI.Disable();
+
                 if (selectedUnits.Count == 1 && selectedUnits.First() is BaseBuilding baseBuilding) { buildingBuildingUI.EnableFor(baseBuilding); }
-                else { buildingBuildingUI.Disable(); }
             }
             else
             {
