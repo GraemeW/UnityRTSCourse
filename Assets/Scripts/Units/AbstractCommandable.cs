@@ -31,7 +31,7 @@ namespace GameDevTV.RTS.Units
         #region Selection
         public void Deselect()
         {
-            SetCommandOverrides(null);
+            SetCommandOverrides(null, false);
 
             if (decalProjector != null)
             {
@@ -53,12 +53,12 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region Commands
-        public void SetCommandOverrides(ActionBase[] commandOverrides)
+        public void SetCommandOverrides(ActionBase[] commandOverrides, bool callUnitSelectedEvent = true)
         {
-            if (commandOverrides == null || commandOverrides.Length == 0) { currentCommands = availableCommands; return; }
+            if (commandOverrides == null || commandOverrides.Length == 0) { currentCommands = availableCommands; }
+            else { currentCommands = commandOverrides; }
 
-            currentCommands = commandOverrides;
-            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
         }
         #endregion
     }

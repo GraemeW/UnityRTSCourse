@@ -8,6 +8,7 @@ using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
 using System.Linq;
+using UnityEngine.AI;
 
 namespace GameDevTV.RTS.Player
 {
@@ -24,6 +25,7 @@ namespace GameDevTV.RTS.Player
         [SerializeField] private int maxUnitCount = 100;
         [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableLayers;
+        [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
         [field: SerializeField] public static int MAX_SELECTION_COUNT { get; private set; } = 12;
 
@@ -40,7 +42,9 @@ namespace GameDevTV.RTS.Player
         private HashSet<AbstractUnit> aliveUnits;
         private HashSet<AbstractUnit> addedUnits;
         private List<ISelectable> selectedUnits;
+
         private ActionBase queuedCommand;
+        private GameObject ghostInstance;
 
         #region UnitMethods
         private void Awake()
@@ -76,6 +80,7 @@ namespace GameDevTV.RTS.Player
             HandleRotation();
             HandleLeftClick();
             HandleRightClick();
+            HandleGhost();
         }
         #endregion
 
@@ -112,6 +117,10 @@ namespace GameDevTV.RTS.Player
             {
                 ActivateCommand(true);
                 queuedCommand = null;
+            }
+            else if (queuedCommand.ghostPrefab != null)
+            {
+                SetupGhostVisuals(true);
             }
         }
         #endregion
@@ -382,6 +391,7 @@ namespace GameDevTV.RTS.Player
         {
             if (camera == null) { return; }
             if (selectedUnits.Count == 0) { return; }
+            SetupGhostVisuals(false);
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -412,6 +422,32 @@ namespace GameDevTV.RTS.Player
                     command.Handle(commandContext);
                     break;
                 }
+            }
+        }
+
+        private void SetupGhostVisuals(bool enable)
+        {
+            if (enable)
+            {
+                ghostInstance = Instantiate(queuedCommand.ghostPrefab);
+            }
+            else
+            {
+                if (ghostInstance != null) { Destroy(ghostInstance); }
+                ghostInstance = null;
+            }
+        }
+
+        private void HandleGhost()
+        {
+            if (ghostInstance == null) { return; }
+            if (Keyboard.current.escapeKey.wasReleasedThisFrame) { SetupGhostVisuals(false); queuedCommand = null; return; }
+
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers))
+            {
+                ghostInstance.transform.position = hit.point;
             }
         }
         #endregion

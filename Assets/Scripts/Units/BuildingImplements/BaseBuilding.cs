@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace GameDevTV.RTS.Units
 {
@@ -18,6 +20,10 @@ namespace GameDevTV.RTS.Units
         public int queueSize => buildingQueue.Count;
         public AbstractUnitSO[] buildingQueueSnapshot => buildingQueue.ToArray();
 
+        // Cached References
+        private BuildingSO buildingSO;
+        private Dictionary<MeshRenderer, Material> rendererLookup = new Dictionary<MeshRenderer, Material>();
+
         // State
         private List<AbstractUnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
         private float currentQueueStartTime;
@@ -28,11 +34,22 @@ namespace GameDevTV.RTS.Units
         public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
         public event QueueUpdatedEvent onQueueUpdated;
 
-        #region GettersSetters
-        public float GetBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+        #region UnityMethods
+        private void Awake()
+        {
+            foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
+            {
+                rendererLookup[meshRenderer] = meshRenderer.material;
+            }
+
+            buildingSO = unitSO as BuildingSO;
+            if (buildingSO == null) { UnityEngine.Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
+        }
         #endregion
 
         #region PublicMethods
+        public float GetBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+
         public void BuildUnit(AbstractUnitSO unitSO)
         {
             if (buildingQueue.Count == MAX_QUEUE_SIZE) { return; }
@@ -62,6 +79,18 @@ namespace GameDevTV.RTS.Units
             {
                 buildingQueue.RemoveAt(index);
                 onQueueUpdated?.Invoke(buildingQueue.ToArray());
+            }
+        }
+
+        public void ShowGhostVisuals(bool enable)
+        {
+            if (buildingSO == null) { return; }
+
+            Material ghostMaterial = buildingSO.placementMaterial;
+            foreach (var (renderer, initialMaterial) in rendererLookup)
+            {
+                if (enable) { renderer.material = ghostMaterial; }
+                else { renderer.material = initialMaterial; }
             }
         }
         #endregion

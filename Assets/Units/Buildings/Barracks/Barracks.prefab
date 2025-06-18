@@ -126,6 +126,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1b6d8f52e81e74d438c3b7cbe019f63a, type: 2}
   <spawnLocation>k__BackingField: {fileID: 724751403682613717}
   <spawnWalkDistance>k__BackingField: 2
+  buildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  transparentLayerMask:
+    serializedVersion: 2
+    m_Bits: 2
 --- !u!1 &7635689992347543738
 GameObject:
   m_ObjectHideFlags: 0

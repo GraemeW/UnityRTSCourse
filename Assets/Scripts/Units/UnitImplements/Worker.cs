@@ -9,7 +9,7 @@ using UnityEngine;
 namespace GameDevTV.RTS.Units
 {
     [RequireComponent(typeof(BehaviorGraphAgent))]
-    public class Worker : AbstractUnit
+    public class Worker : AbstractUnit, IBuildingBuilder
     {
         #region ComputedProperties
         public bool HasSupplies 
@@ -61,6 +61,18 @@ namespace GameDevTV.RTS.Units
         {
             behaviorAgent.SetVariableValue(BehaviorConstants.commandPostRef, commandPost.gameObject);
             behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.ReturnSupplies);
+        }
+
+        public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
+        {
+            GameObject buildingInstance = Instantiate(buildingSO.prefab, targetLocation, Quaternion.identity);
+            if (!buildingInstance.TryGetComponent(out BaseBuilding baseBuilding)) { return null; }
+
+            baseBuilding.ShowGhostVisuals(true);
+
+            // setup blackboard to build
+
+            return buildingInstance;
         }
         #endregion
 

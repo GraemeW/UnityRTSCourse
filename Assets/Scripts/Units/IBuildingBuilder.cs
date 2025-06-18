@@ -1,0 +1,9 @@
+using UnityEngine;
+
+namespace GameDevTV.RTS.Units
+{
+    public interface IBuildingBuilder
+    {
+        public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation);
+    }
+}

@@ -124,6 +124,12 @@ MonoBehaviour:
   availableCommands: []
   <spawnLocation>k__BackingField: {fileID: 3020511902234002704}
   <spawnWalkDistance>k__BackingField: 2
+  buildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  transparentLayerMask:
+    serializedVersion: 2
+    m_Bits: 2
 --- !u!1 &7102095582909159618
 GameObject:
   m_ObjectHideFlags: 0
