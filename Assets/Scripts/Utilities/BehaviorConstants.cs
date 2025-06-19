@@ -18,5 +18,8 @@ namespace GameDevTV.RTS.Utilities
         public static string commandPostRef { get; private set; } = "CommandPost";
 
         public static string gatherSuppliesEventRef { get; private set; } = "GatherSuppliesEvent";
+
+        public static string ghostBuildingRef { get; private set; } = "Ghost";
+        public static string buildingSORef { get; private set; } = "BuildingSO";
     }
 }

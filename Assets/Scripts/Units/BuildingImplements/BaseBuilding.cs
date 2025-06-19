@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,6 +21,7 @@ namespace GameDevTV.RTS.Units
         public AbstractUnitSO[] buildingQueueSnapshot => buildingQueue.ToArray();
 
         // Cached References
+        private NavMeshObstacle navMeshObstacle;
         private BuildingSO buildingSO;
         private Dictionary<MeshRenderer, Material> rendererLookup = new Dictionary<MeshRenderer, Material>();
 
@@ -37,6 +38,8 @@ namespace GameDevTV.RTS.Units
         #region UnityMethods
         private void Awake()
         {
+            navMeshObstacle = GetComponent<NavMeshObstacle>();
+
             foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
             {
                 rendererLookup[meshRenderer] = meshRenderer.material;
@@ -45,10 +48,17 @@ namespace GameDevTV.RTS.Units
             buildingSO = unitSO as BuildingSO;
             if (buildingSO == null) { UnityEngine.Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
         }
+
+        protected override void Start()
+        {
+            base.Start();
+            if (navMeshObstacle != null) { navMeshObstacle.enabled = true; }
+        }
         #endregion
 
         #region PublicMethods
         public float GetBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+        public MeshRenderer GetRenderer() => rendererLookup.FirstOrDefault().Key;
 
         public void BuildUnit(AbstractUnitSO unitSO)
         {

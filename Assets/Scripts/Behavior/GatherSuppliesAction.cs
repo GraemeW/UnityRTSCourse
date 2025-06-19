@@ -5,7 +5,6 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using GameDevTV.RTS.Units;
-using UnityEngine.AI;
 using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Behavior

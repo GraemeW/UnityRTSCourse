@@ -70,7 +70,9 @@ namespace GameDevTV.RTS.Units
 
             baseBuilding.ShowGhostVisuals(true);
 
-            // setup blackboard to build
+            behaviorAgent.SetVariableValue(BehaviorConstants.ghostBuildingRef, buildingInstance);
+            behaviorAgent.SetVariableValue(BehaviorConstants.buildingSORef, buildingSO);
+            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.BuildBuilding);
 
             return buildingInstance;
         }

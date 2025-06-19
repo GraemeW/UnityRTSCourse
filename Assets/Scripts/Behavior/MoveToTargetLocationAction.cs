@@ -4,7 +4,6 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
-using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Behavior
@@ -35,7 +34,14 @@ namespace GameDevTV.RTS.Behavior
 
         protected override Status OnUpdate()
         {
-            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance) { return Status.Success; }
+            // Insane number of checks to verify arrival -- vetted, this is awful but necessary
+            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                {
+                    return Status.Success;
+                }
+            }
 
             AnimationConstants.AnimateMovement(animator, navMeshAgent.velocity.magnitude);
 

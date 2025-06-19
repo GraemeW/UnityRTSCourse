@@ -8,6 +8,7 @@ namespace GameDevTV.RTS.Units
         Stop,
         Move,
         Gather,
-        ReturnSupplies
+        ReturnSupplies,
+        BuildBuilding
     }
 }

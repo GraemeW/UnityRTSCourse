@@ -4,97 +4,99 @@ using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
-using GameDevTV.RTS.Units;
 using System.Collections.Generic;
 using GameDevTV.RTS.Utilities;
 using System.Linq;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "FindOpenGatherableSupply", story: "[Agent] finds unoccupied [Supply] of [SupplyType] near [Target]", category: "Action/Units", id: "21eca44fe1bb9e3b80588c5a202e0331")]
-public partial class FindOpenGatherableSupplyAction : Action
+namespace GameDevTV.RTS.Behavior
 {
-    [SerializeReference] public BlackboardVariable<GameObject> Agent;
-    [SerializeReference] public BlackboardVariable<GatherableSupply> Supply;
-    [SerializeReference] public BlackboardVariable<SupplySO> SupplyType;
-    [SerializeReference] public BlackboardVariable<GameObject> Target;
-    [SerializeReference] public BlackboardVariable<float> SearchRadius = new(10.0f);
-    [SerializeReference] public BlackboardVariable<int> nearbySupplyCount;
-
-    // State
-    List<GatherableSupply> nearbySupplies = new List<GatherableSupply>();
-
-    protected override Status OnStart()
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "FindOpenGatherableSupply", story: "[Agent] finds unoccupied [Supply] of [SupplyType] near [Target]", category: "Action/Units", id: "21eca44fe1bb9e3b80588c5a202e0331")]
+    public partial class FindOpenGatherableSupplyAction : Action
     {
-        if (Agent.Value == null) { return Status.Failure; }
-        if (!ReckonSupplyType()) { return Status.Failure; }
+        [SerializeReference] public BlackboardVariable<GameObject> Agent;
+        [SerializeReference] public BlackboardVariable<GatherableSupply> Supply;
+        [SerializeReference] public BlackboardVariable<SupplySO> SupplyType;
+        [SerializeReference] public BlackboardVariable<GameObject> Target;
+        [SerializeReference] public BlackboardVariable<float> SearchRadius = new(10.0f);
+        [SerializeReference] public BlackboardVariable<int> nearbySupplyCount;
 
-        // Simple check if clicked supply available
-        if (Supply.Value != null && !Supply.Value.isBusy)
+        // State
+        List<GatherableSupply> nearbySupplies = new List<GatherableSupply>();
+
+        protected override Status OnStart()
         {
-            Target.Value = Supply.Value.gameObject;
-            return Status.Success; 
-        }
+            if (Agent.Value == null) { return Status.Failure; }
+            if (!ReckonSupplyType()) { return Status.Failure; }
 
-        // Otherwise populate supplies for checking
-        FindNearbySupplies();
-        if (nearbySupplyCount == 0) { return Status.Failure; }
-
-        return Status.Running;
-    }
-
-    protected override Status OnUpdate()
-    {
-        if (Agent.Value == null) { return Status.Failure; }
-
-        return CheckNearbySupplies();
-    }
-
-    private Status CheckNearbySupplies()
-    {
-        GatherableSupply[] sortedSupplies = nearbySupplies.Where(sortedSupply => sortedSupply != null).ToArray();
-        if (sortedSupplies.Length == 0) { return Status.Failure; }
-
-        Array.Sort(sortedSupplies, new ClosestSupplyComparator(Agent.Value.transform.position));
-        foreach (GatherableSupply gatherableSupply in sortedSupplies)
-        {
-            if (!gatherableSupply.isBusy)
+            // Simple check if clicked supply available
+            if (Supply.Value != null && !Supply.Value.isBusy)
             {
-                Supply.Value = gatherableSupply;
-                Target.Value = gatherableSupply.gameObject;
+                Target.Value = Supply.Value.gameObject;
                 return Status.Success;
             }
+
+            // Otherwise populate supplies for checking
+            FindNearbySupplies();
+            if (nearbySupplyCount == 0) { return Status.Failure; }
+
+            return Status.Running;
         }
-        return Status.Running;
-    }
 
-    private void FindNearbySupplies()
-    {
-        nearbySupplies.Clear();
-        Vector3 searchPosition = Agent.Value.transform.position;
-        if (Supply.Value != null) { searchPosition = Supply.Value.transform.position; }
-
-        Collider[] colliders = Physics.OverlapSphere(
-            searchPosition,
-            SearchRadius.Value,
-            LayerMask.GetMask(GatherableSupply.suppliesLayerMaskRef));
-
-        foreach (Collider collider in colliders)
+        protected override Status OnUpdate()
         {
-            if (collider.TryGetComponent(out GatherableSupply gatherableSupply)
-                    && gatherableSupply.supplySO.Equals(SupplyType.Value))
-            {
-                nearbySupplies.Add(gatherableSupply);
-            }
+            if (Agent.Value == null) { return Status.Failure; }
+
+            return CheckNearbySupplies();
         }
-        nearbySupplyCount.Value = nearbySupplies.Count;
-    }
 
-    private bool ReckonSupplyType()
-    {
-        if (SupplyType.Value != null) { return true; } // Already reckoned
-        if (Supply.Value == null) { return false; }
+        private Status CheckNearbySupplies()
+        {
+            GatherableSupply[] sortedSupplies = nearbySupplies.Where(sortedSupply => sortedSupply != null).ToArray();
+            if (sortedSupplies.Length == 0) { return Status.Failure; }
 
-        SupplyType.Value = Supply.Value.supplySO;
-        return true;
+            Array.Sort(sortedSupplies, new ClosestSupplyComparator(Agent.Value.transform.position));
+            foreach (GatherableSupply gatherableSupply in sortedSupplies)
+            {
+                if (!gatherableSupply.isBusy)
+                {
+                    Supply.Value = gatherableSupply;
+                    Target.Value = gatherableSupply.gameObject;
+                    return Status.Success;
+                }
+            }
+            return Status.Running;
+        }
+
+        private void FindNearbySupplies()
+        {
+            nearbySupplies.Clear();
+            Vector3 searchPosition = Agent.Value.transform.position;
+            if (Supply.Value != null) { searchPosition = Supply.Value.transform.position; }
+
+            Collider[] colliders = Physics.OverlapSphere(
+                searchPosition,
+                SearchRadius.Value,
+                LayerMask.GetMask(GatherableSupply.suppliesLayerMaskRef));
+
+            foreach (Collider collider in colliders)
+            {
+                if (collider.TryGetComponent(out GatherableSupply gatherableSupply)
+                        && gatherableSupply.supplySO.Equals(SupplyType.Value))
+                {
+                    nearbySupplies.Add(gatherableSupply);
+                }
+            }
+            nearbySupplyCount.Value = nearbySupplies.Count;
+        }
+
+        private bool ReckonSupplyType()
+        {
+            if (SupplyType.Value != null) { return true; } // Already reckoned
+            if (Supply.Value == null) { return false; }
+
+            SupplyType.Value = Supply.Value.supplySO;
+            return true;
+        }
     }
 }

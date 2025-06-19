@@ -7,72 +7,75 @@ using UnityEngine.AI;
 using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Utilities;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action/Navigation", id: "d49bfa35417b5afb5c87429dfab334ca")]
-public partial class MoveToTargetAction : Action
+namespace GameDevTV.RTS.Behavior
 {
-    [SerializeReference] public BlackboardVariable<GameObject> Agent;
-    [SerializeReference] public BlackboardVariable<GameObject> Target;
-    // State
-    bool isTargetMoveable = false;
-
-    // Cached References
-    private NavMeshAgent navMeshAgent;
-    private Animator animator;
-
-    protected override Status OnStart()
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "MoveToTarget", story: "[Agent] moves to [Target]", category: "Action/Navigation", id: "d49bfa35417b5afb5c87429dfab334ca")]
+    public partial class MoveToTargetAction : Action
     {
-        if (Agent.Value == null || !Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
-        if (Target.Value == null) { return Status.Failure; }
+        [SerializeReference] public BlackboardVariable<GameObject> Agent;
+        [SerializeReference] public BlackboardVariable<GameObject> Target;
+        // State
+        bool isTargetMoveable = false;
 
-        isTargetMoveable = (Target.Value.TryGetComponent(out AbstractUnit _));
-        Agent.Value.TryGetComponent(out animator);
+        // Cached References
+        private NavMeshAgent navMeshAgent;
+        private Animator animator;
 
-        Vector3 targetLocation = GetTargetPosition();
-        navMeshAgent.ResetPath();
-        navMeshAgent.SetDestination(targetLocation);
-
-        return Status.Running;
-    }
-
-    protected override Status OnUpdate()
-    {
-        if (Agent.Value == null || Target.Value == null) { return Status.Failure; }
-
-        // Insane number of checks to verify arrival -- vetted, this is awful but necessary
-        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        protected override Status OnStart()
         {
-            if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
-            {
-                return Status.Success;
-            }
-        }
+            if (Agent.Value == null || !Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
+            if (Target.Value == null) { return Status.Failure; }
 
-        if (isTargetMoveable)
-        {
+            isTargetMoveable = (Target.Value.TryGetComponent(out AbstractUnit _));
+            Agent.Value.TryGetComponent(out animator);
+
             Vector3 targetLocation = GetTargetPosition();
+            navMeshAgent.ResetPath();
             navMeshAgent.SetDestination(targetLocation);
+
+            return Status.Running;
         }
 
-        AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
-
-        return Status.Running;
-    }
-
-    protected override void OnEnd()
-    {
-        AnimationConstants.AnimateMovement(animator, 0.0f);
-    }
-
-    private Vector3 GetTargetPosition()
-    {
-        Vector3 targetLocation = Target.Value.transform.position;
-
-        if (Target.Value.TryGetComponent(out Collider targetCollider))
+        protected override Status OnUpdate()
         {
-            targetLocation = targetCollider.ClosestPoint(Agent.Value.transform.position);
+            if (Agent.Value == null || Target.Value == null) { return Status.Failure; }
+
+            // Insane number of checks to verify arrival -- vetted, this is awful but necessary
+            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                {
+                    return Status.Success;
+                }
+            }
+
+            if (isTargetMoveable)
+            {
+                Vector3 targetLocation = GetTargetPosition();
+                navMeshAgent.SetDestination(targetLocation);
+            }
+
+            AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
+
+            return Status.Running;
         }
 
-        return targetLocation;
+        protected override void OnEnd()
+        {
+            AnimationConstants.AnimateMovement(animator, 0.0f);
+        }
+
+        private Vector3 GetTargetPosition()
+        {
+            Vector3 targetLocation = Target.Value.transform.position;
+
+            if (Target.Value.TryGetComponent(out Collider targetCollider))
+            {
+                targetLocation = targetCollider.ClosestPoint(Agent.Value.transform.position);
+            }
+
+            return targetLocation;
+        }
     }
 }
