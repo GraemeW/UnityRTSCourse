@@ -28,9 +28,8 @@ namespace GameDevTV.RTS.Behavior
         protected override Status OnStart()
         {
             if (!Agent.Value.TryGetComponent(out Worker worker)) { return Status.Failure; }
+            if (!Agent.Value.TryGetComponent(out animator)) { return Status.Failure; }
             if (Supply.Value == null) { return Status.Failure; }
-
-            Agent.Value.TryGetComponent(out animator);
 
             // Check if already has resources on unit -- return them first
             thisSupplyMined = false;

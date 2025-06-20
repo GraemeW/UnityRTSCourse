@@ -8,19 +8,19 @@ using Unity.Properties;
 namespace GameDevTV.RTS.Behavior
 {
     [Serializable, GeneratePropertyBag]
-    [NodeDescription(name: "BuildBuilding", story: "[Agent] builds [BuildingSO] at [TargetLocation]", category: "Action/Units", id: "504bbb9f3e439b5ced98912b920ec6d2")]
+    [NodeDescription(name: "BuildBuilding", story: "[Agent] uses [BuildingSO] for [BuildingUnderConstruction] at [TargetLocation]", category: "Action/Units", id: "504bbb9f3e439b5ced98912b920ec6d2")]
     public partial class BuildBuildingAction : Action
     {
+    [SerializeReference] public BlackboardVariable<GameObject> Agent;
+    [SerializeReference] public BlackboardVariable<BuildingSO> BuildingSO;
+    [SerializeReference] public BlackboardVariable<BaseBuilding> BuildingUnderConstruction;
+    [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
         // Tunables
-        [SerializeReference] public BlackboardVariable<GameObject> Agent;
-        [SerializeReference] public BlackboardVariable<BuildingSO> BuildingSO;
-        [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
-
         // State
         private float startBuildTime;
         private float buildTime;
-        private BaseBuilding buildingInProgress;
         private Vector3 startPosition;
+        private Vector3 endPosition;
 
         protected override Status OnStart()
         {
@@ -33,7 +33,7 @@ namespace GameDevTV.RTS.Behavior
         protected override Status OnUpdate()
         {
             float normalizedTime = Mathf.Clamp01((Time.time - startBuildTime) / buildTime);
-            buildingInProgress.transform.position = Vector3.Lerp(startPosition, TargetLocation.Value, normalizedTime);
+            BuildingUnderConstruction.Value.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
             return (normalizedTime >= 1.0) ? Status.Success : Status.Running;
         }
 
@@ -41,11 +41,11 @@ namespace GameDevTV.RTS.Behavior
         {
             if (CurrentStatus == Status.Success)
             { 
-                buildingInProgress.enabled = true; 
+                BuildingUnderConstruction.Value.enabled = true; 
             }
             else
             {
-                if (buildingInProgress != null) { GameObject.Destroy(buildingInProgress); }
+                if (BuildingUnderConstruction != null) { GameObject.Destroy(BuildingUnderConstruction); }
             }
         }
 
@@ -54,12 +54,16 @@ namespace GameDevTV.RTS.Behavior
         private Status MakeBuildingInstance()
         {
             GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
-            if (!building.TryGetComponent(out buildingInProgress)) { return Status.Failure; }
+            if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
+            BuildingUnderConstruction.Value = newBuilding;
 
-            Renderer buildingRenderer = buildingInProgress.GetRenderer();
+            Renderer buildingRenderer = BuildingUnderConstruction.Value.GetRenderer();
+            if (buildingRenderer == null) { return Status.Failure; }
+
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
+            endPosition = TargetLocation.Value;
 
-            buildingInProgress.transform.position = startPosition;
+            BuildingUnderConstruction.Value.transform.position = startPosition;
 
             return Status.Running;
         }
