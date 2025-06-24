@@ -11,36 +11,40 @@ namespace GameDevTV.RTS.Behavior
     [NodeDescription(name: "BuildBuilding", story: "[Agent] uses [BuildingSO] for [BuildingUnderConstruction] at [TargetLocation]", category: "Action/Units", id: "504bbb9f3e439b5ced98912b920ec6d2")]
     public partial class BuildBuildingAction : Action
     {
-    [SerializeReference] public BlackboardVariable<GameObject> Agent;
-    [SerializeReference] public BlackboardVariable<BuildingSO> BuildingSO;
-    [SerializeReference] public BlackboardVariable<BaseBuilding> BuildingUnderConstruction;
-    [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
-        // Tunables
+        [SerializeReference] public BlackboardVariable<GameObject> Agent;
+        [SerializeReference] public BlackboardVariable<BuildingSO> BuildingSO;
+        [SerializeReference] public BlackboardVariable<BaseBuilding> BuildingUnderConstruction;
+        [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
+        
         // State
         private float startBuildTime;
         private float buildTime;
         private Vector3 startPosition;
         private Vector3 endPosition;
 
+        // Cached References
+        Renderer buildingRenderer;
+
         protected override Status OnStart()
         {
             if (!HasValidInputs()) { return Status.Failure; }
+
             startBuildTime = Time.time;
             buildTime = (BuildingSO.Value.buildTime > 0.0f) ? BuildingSO.Value.buildTime : 0.1f;
+
             return MakeBuildingInstance();
         }
 
         protected override Status OnUpdate()
         {
-            float normalizedTime = Mathf.Clamp01((Time.time - startBuildTime) / buildTime);
-            BuildingUnderConstruction.Value.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
-            return (normalizedTime >= 1.0) ? Status.Success : Status.Running;
+            return UpdateRendererPosition();
         }
 
         protected override void OnEnd()
         {
             if (CurrentStatus == Status.Success)
-            { 
+            {
+                BuildingUnderConstruction.Value.ShowGhostVisuals(false);
                 BuildingUnderConstruction.Value.enabled = true; 
             }
             else
@@ -56,16 +60,29 @@ namespace GameDevTV.RTS.Behavior
             GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
             if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
             BuildingUnderConstruction.Value = newBuilding;
+            BuildingUnderConstruction.Value.transform.position = TargetLocation.Value;
 
-            Renderer buildingRenderer = BuildingUnderConstruction.Value.GetRenderer();
+            buildingRenderer = BuildingUnderConstruction.Value.GetRenderer();
             if (buildingRenderer == null) { return Status.Failure; }
+            InitializeRendererPosition();
 
-            startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
-            endPosition = TargetLocation.Value;
-
-            BuildingUnderConstruction.Value.transform.position = startPosition;
+            BuildingUnderConstruction.Value.ShowGhostVisuals(true);
 
             return Status.Running;
+        }
+
+        private Status UpdateRendererPosition()
+        {
+            float normalizedTime = Mathf.Clamp01((Time.time - startBuildTime) / buildTime);
+            buildingRenderer.transform.SetLocalPositionAndRotation(Vector3.Lerp(startPosition, endPosition, normalizedTime), Quaternion.identity);
+            return (normalizedTime >= 1.0) ? Status.Success : Status.Running;
+        }
+
+        private void InitializeRendererPosition()
+        {
+            startPosition = -Vector3.up * buildingRenderer.bounds.size.y;
+            endPosition = Vector3.zero;
+            buildingRenderer.transform.SetLocalPositionAndRotation(startPosition, Quaternion.identity);
         }
     }
 }
