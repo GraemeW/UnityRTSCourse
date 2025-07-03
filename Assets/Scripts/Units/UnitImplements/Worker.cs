@@ -6,6 +6,7 @@ using GameDevTV.RTS.Events;
 using Unity.Behavior;
 using UnityEngine;
 using GameDevTV.RTS.Commands;
+using NUnit.Framework.Internal.Commands;
 
 namespace GameDevTV.RTS.Units
 {
@@ -19,8 +20,7 @@ namespace GameDevTV.RTS.Units
         { 
             get 
             {
-                behaviorAgent.GetVariable(BehaviorConstants.gatherAmountRef, out BlackboardVariable<int> heldVariable);
-                return heldVariable.Value > 0;
+                return BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
             }
         }
 
@@ -28,8 +28,7 @@ namespace GameDevTV.RTS.Units
         {
             get
             {
-                behaviorAgent.GetVariable(BehaviorConstants.commandRef, out BlackboardVariable<UnitCommands> command);
-                return command.Value == UnitCommands.BuildBuilding;
+                return BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
             }
         }
         #endregion
@@ -39,40 +38,37 @@ namespace GameDevTV.RTS.Units
         {
             base.Start();
    
-            if (behaviorAgent.BlackboardReference != null && behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
+            if (behaviorAgent.BlackboardReference != null)
             {
-                gatherSuppliesEventChannel.Value.Event += HandleGatherSupplies;
+                GatherSuppliesEventChannel gatherSuppliesEventChannel = BehaviorConstants.GetGatherSuppliesEventChannel(behaviorAgent);
+                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event += HandleGatherSupplies; }
             }
         }
 
         protected override void OnDestroy()
         {
-            if (behaviorAgent.BlackboardReference != null && behaviorAgent.GetVariable(BehaviorConstants.gatherSuppliesEventRef, out BlackboardVariable<GatherSuppliesEventChannel> gatherSuppliesEventChannel))
+            if (behaviorAgent.BlackboardReference != null)
             {
-                gatherSuppliesEventChannel.Value.Event -= HandleGatherSupplies;
+                GatherSuppliesEventChannel gatherSuppliesEventChannel = BehaviorConstants.GetGatherSuppliesEventChannel(behaviorAgent);
+                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event -= HandleGatherSupplies; }
             }
             base.OnDestroy();
         } 
-
-        protected void OnDisable()
-        {
-
-        }
         #endregion
 
         #region PublicMethods
         public void Gather(GatherableSupply gatherableSupply)
         {
-            behaviorAgent.SetVariableValue(BehaviorConstants.supplyRef, gatherableSupply);
-            behaviorAgent.SetVariableValue(BehaviorConstants.nearbySupplyCountRef, 1);
-            behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, gatherableSupply.gameObject);
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Gather);
+            BehaviorConstants.SetSupply(behaviorAgent, gatherableSupply);
+            BehaviorConstants.SetNearbySupplyCount(behaviorAgent, 1);
+            BehaviorConstants.SetTarget(behaviorAgent, gatherableSupply.gameObject);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Gather);
         }
 
         public void ReturnSupplies(CommandPost commandPost)
         {
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandPostRef, commandPost.gameObject);
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.ReturnSupplies);
+            BehaviorConstants.SetCommandPost(behaviorAgent, commandPost.gameObject);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.ReturnSupplies);
         }
 
         public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
@@ -82,9 +78,9 @@ namespace GameDevTV.RTS.Units
 
             baseBuilding.ShowGhostVisuals(true);
 
-            behaviorAgent.SetVariableValue(BehaviorConstants.ghostBuildingRef, buildingInstance);
-            behaviorAgent.SetVariableValue(BehaviorConstants.buildingSORef, buildingSO);
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.BuildBuilding);
+            BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
+            BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
 
             SetCommandOverrides(new ActionBase[] {CancelBuildingCommand});
 
@@ -93,11 +89,11 @@ namespace GameDevTV.RTS.Units
 
         public void CancelBuilding()
         {
-            behaviorAgent.GetVariable(BehaviorConstants.ghostBuildingRef, out BlackboardVariable<GameObject> ghostBuilding);
-            if (ghostBuilding.Value != null) { Destroy(ghostBuilding.Value); }
+            GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
+            if (ghostBuilding != null) { Destroy(ghostBuilding); }
 
-            behaviorAgent.GetVariable(BehaviorConstants.buildingUnderConstructionRef, out BlackboardVariable<BaseBuilding> baseBuilding);
-            if (baseBuilding.Value != null) { Destroy(baseBuilding.Value.gameObject); }
+            BaseBuilding baseBuilding = BehaviorConstants.GetBaseBuilding(behaviorAgent);
+            if (baseBuilding != null) { Destroy(baseBuilding.gameObject); }
 
             SetCommandOverrides(null);
             Stop();

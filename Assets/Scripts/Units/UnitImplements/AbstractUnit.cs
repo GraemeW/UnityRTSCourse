@@ -20,7 +20,7 @@ namespace GameDevTV.RTS.Units
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             behaviorAgent = GetComponent<BehaviorGraphAgent>();
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Stop);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Stop);
         }
 
         protected override void Start()
@@ -55,19 +55,19 @@ namespace GameDevTV.RTS.Units
 
         public void MoveTo(Vector3 position)
         {
-            behaviorAgent.SetVariableValue(BehaviorConstants.targetLocationRef, position);
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Move);
+            BehaviorConstants.SetTargetLocation(behaviorAgent, position);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Move);
         }
 
         public void SetMoveTarget(GameObject target)
         {
-            behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, target);
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Move);
+            BehaviorConstants.SetTarget(behaviorAgent, target);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Move);
         }
 
         public void Stop()
         {
-            behaviorAgent.SetVariableValue(BehaviorConstants.commandRef, UnitCommands.Stop);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Stop);
         }
         #endregion
     }

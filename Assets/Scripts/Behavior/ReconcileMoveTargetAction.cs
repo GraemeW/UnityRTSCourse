@@ -44,7 +44,7 @@ namespace GameDevTV.RTS.Behavior
             {
                 currentTargetLocation = TargetLocation.Value;
                 currentTarget = null;
-                behaviorAgent.SetVariableValue(BehaviorConstants.targetRef, currentTarget);
+                BehaviorConstants.SetTarget(behaviorAgent, currentTarget);
             }
             return Status.Success;
         }
