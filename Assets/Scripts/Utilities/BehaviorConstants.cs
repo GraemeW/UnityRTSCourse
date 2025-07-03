@@ -21,5 +21,6 @@ namespace GameDevTV.RTS.Utilities
 
         public static string ghostBuildingRef { get; private set; } = "Ghost";
         public static string buildingSORef { get; private set; } = "BuildingSO";
+        public static string buildingUnderConstructionRef { get; private set; } = "BuildingUnderConstruction";
     }
 }
