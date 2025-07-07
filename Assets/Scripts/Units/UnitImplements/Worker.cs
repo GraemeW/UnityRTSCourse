@@ -76,7 +76,7 @@ namespace GameDevTV.RTS.Units
             GameObject buildingInstance = Instantiate(buildingSO.prefab, targetLocation, Quaternion.identity);
             if (!buildingInstance.TryGetComponent(out BaseBuilding baseBuilding)) { return null; }
 
-            baseBuilding.ShowGhostVisuals(true);
+            baseBuilding.StartBuilding(this);
 
             BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);

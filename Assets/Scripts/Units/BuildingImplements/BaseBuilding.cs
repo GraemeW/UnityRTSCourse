@@ -1,3 +1,5 @@
+using GameDevTV.RTS.EventBus;
+using GameDevTV.RTS.Events;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,8 @@ namespace GameDevTV.RTS.Units
         private float currentQueueStartTime;
         private AbstractUnitSO buildingUnit;
         private Coroutine buildCoroutine = null;
+        private BuildingProgress progress = new BuildingProgress(BuildingProgress.BuildingState.Destroyed, 0.0f, 0.0f);
+        private IBuildingBuilder unitBuildingThis;
 
         // Events
         public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
@@ -53,6 +57,18 @@ namespace GameDevTV.RTS.Units
         {
             base.Start();
             if (navMeshObstacle != null) { navMeshObstacle.enabled = true; }
+        }
+
+        private void OnEnable()
+        {
+            unitBuildingThis = null;
+            progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, 0.0f, 1.0f);
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
         #endregion
 
@@ -90,6 +106,22 @@ namespace GameDevTV.RTS.Units
                 buildingQueue.RemoveAt(index);
                 onQueueUpdated?.Invoke(buildingQueue.ToArray());
             }
+        }
+
+        public void StartBuilding(IBuildingBuilder buildingBuilder)
+        {
+            unitBuildingThis = buildingBuilder;
+            ShowGhostVisuals(true);
+            this.enabled = false;
+
+            progress = new BuildingProgress(
+                BuildingProgress.BuildingState.Building, 
+                Time.time - buildingSO.buildTime * progress.progress,
+                progress.progress
+            );
+
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
         }
 
         public void ShowGhostVisuals(bool enable)
@@ -150,6 +182,20 @@ namespace GameDevTV.RTS.Units
                 Vector3 walkPosition = spawnLocation.position + baseToSpawnDelta * spawnWalkDistance;
                 abstractUnit.MoveTo(walkPosition);
             }
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent unitDeathEvent)
+        {
+            if (!unitDeathEvent.unit.TryGetComponent(out IBuildingBuilder buildingBuilder)) { return; } 
+            if (buildingBuilder != unitBuildingThis) { return; }
+
+            progress = new BuildingProgress(
+                BuildingProgress.BuildingState.Paused, 
+                progress.startTime, 
+                Mathf.Clamp01((Time.time - progress.startTime) / buildingSO.buildTime)
+            );
+
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
         #endregion
     }

@@ -57,8 +57,11 @@ namespace GameDevTV.RTS.Behavior
 
         private Status MakeBuildingInstance()
         {
+            if (!Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { return Status.Failure; }
+
             GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
             if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
+
             BuildingUnderConstruction.Value = newBuilding;
             BuildingUnderConstruction.Value.transform.position = TargetLocation.Value;
 
@@ -66,7 +69,7 @@ namespace GameDevTV.RTS.Behavior
             if (buildingRenderer == null) { return Status.Failure; }
             InitializeRendererPosition();
 
-            BuildingUnderConstruction.Value.ShowGhostVisuals(true);
+            BuildingUnderConstruction.Value.StartBuilding(builder);
 
             return Status.Running;
         }
