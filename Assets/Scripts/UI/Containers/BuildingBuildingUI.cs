@@ -51,7 +51,7 @@ namespace GameDevTV.RTS.UI.Containers
         {
             while (baseBuilding != null && baseBuilding.queueSize > 0)
             {
-                progressBar.SetProgress(baseBuilding.GetBuildProgress());
+                progressBar.SetProgress(baseBuilding.GetUnitBuildProgress());
                 yield return new WaitForSeconds(timeStep);
             }
             buildCoroutine = null;

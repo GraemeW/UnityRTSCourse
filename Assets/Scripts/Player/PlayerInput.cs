@@ -415,14 +415,34 @@ namespace GameDevTV.RTS.Player
 
         private void ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
         {
-            foreach (ICommand command in abstractUnit.currentCommands)
+            foreach (ICommand command in GetAvailableCommands(abstractUnit))
             {
-                if (command.CanHandle(ref commandContext))
+                if (command.CanHandle(ref commandContext, true))
                 {
                     command.Handle(commandContext);
                     break;
                 }
             }
+        }
+
+        private List<ActionBase> GetAvailableCommands(AbstractCommandable abstractUnit)
+        {
+            OverrideCommandsCommand[] overrideCommandsCommands = abstractUnit.currentCommands
+                .Where(command => command is OverrideCommandsCommand)
+                .Cast<OverrideCommandsCommand>()
+                .ToArray();
+
+            List<ActionBase> allAvailableCommands = new();
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            {
+                allAvailableCommands.AddRange(overrideCommand.commandOverrides
+                    .Where(command => command is not OverrideCommandsCommand));
+            }
+
+            allAvailableCommands.AddRange(abstractUnit.currentCommands
+                .Where(command => command is not OverrideCommandsCommand));
+
+            return allAvailableCommands;
         }
 
         private void SetupGhostVisuals(bool enable)

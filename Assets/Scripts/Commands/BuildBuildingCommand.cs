@@ -8,20 +8,45 @@ namespace GameDevTV.RTS.Commands
     {
         [field: SerializeField] public BuildingSO buildingSO { get; private set; }
         [SerializeField] private LayerMask floorLayers;
+        [SerializeField] private LayerMask selectableLayers;
 
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             bool isBuilder = commandContext.commandable is IBuildingBuilder;
-            bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, floorLayers);
-            commandContext.hit = hit;
+            if (!isBuilder) { return false; }
 
-            return isBuilder && isFloor;
+            bool isSelectable = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, selectableLayers);
+            if (isSelectable && unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding))
+            {
+                if (baseBuilding.GetBuildingSO() == buildingSO)
+                {
+                    BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
+                    if (buildingProgress.state == BuildingProgress.BuildingState.Paused || buildingProgress.state == BuildingProgress.BuildingState.Destroyed)
+                    {
+                        commandContext.hit = unitHit;
+                        return true;
+                    }
+                }
+            }
+
+            bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
+            if (!skipCondition && isFloor) { commandContext.hit = floorHit; return true; }            
+
+            return false;
         }
 
         public override void Handle(CommandContext commandContext)
         {
             IBuildingBuilder builder = (IBuildingBuilder)commandContext.commandable;
-            builder.Build(buildingSO, commandContext.hit.point);
+
+            if (commandContext.hit.collider.TryGetComponent(out BaseBuilding baseBuilding))
+            {
+                builder.ResumeBuilding(baseBuilding);
+            }
+            else
+            {
+                builder.Build(buildingSO, commandContext.hit.point);
+            }
         }
     }
 }

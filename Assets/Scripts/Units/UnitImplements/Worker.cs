@@ -75,8 +75,7 @@ namespace GameDevTV.RTS.Units
         {
             GameObject buildingInstance = Instantiate(buildingSO.prefab, targetLocation, Quaternion.identity);
             if (!buildingInstance.TryGetComponent(out BaseBuilding baseBuilding)) { return null; }
-
-            baseBuilding.StartBuilding(this);
+            baseBuilding.ShowGhostVisuals(true);
 
             BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
@@ -86,13 +85,22 @@ namespace GameDevTV.RTS.Units
 
             return buildingInstance;
         }
+        public void ResumeBuilding(BaseBuilding baseBuilding)
+        {
+            BehaviorConstants.SetTargetLocation(behaviorAgent, baseBuilding.transform.position);
+            BehaviorConstants.SetBuildingSO(behaviorAgent, baseBuilding.GetBuildingSO());
+            BehaviorConstants.SetBuildingUnderConstruction(behaviorAgent, baseBuilding);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
+
+            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+        }
 
         public void CancelBuilding()
         {
             GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
             if (ghostBuilding != null) { Destroy(ghostBuilding); }
 
-            BaseBuilding baseBuilding = BehaviorConstants.GetBaseBuilding(behaviorAgent);
+            BaseBuilding baseBuilding = BehaviorConstants.GetBuildingUnderConstruction(behaviorAgent);
             if (baseBuilding != null) { Destroy(baseBuilding.gameObject); }
 
             SetCommandOverrides(null);

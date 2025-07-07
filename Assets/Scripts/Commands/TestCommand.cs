@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Commands
     [CreateAssetMenu(fileName = "TestAction", menuName = "Units/Commands/Test")]
     public class TestCommand : ActionBase
     {
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             return true;
         }

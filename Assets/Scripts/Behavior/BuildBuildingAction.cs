@@ -32,7 +32,7 @@ namespace GameDevTV.RTS.Behavior
             startBuildTime = Time.time;
             buildTime = (BuildingSO.Value.buildTime > 0.0f) ? BuildingSO.Value.buildTime : 0.1f;
 
-            return MakeBuildingInstance();
+            return EstablishBuildingInstance();
         }
 
         protected override Status OnUpdate()
@@ -47,29 +47,32 @@ namespace GameDevTV.RTS.Behavior
                 BuildingUnderConstruction.Value.ShowGhostVisuals(false);
                 BuildingUnderConstruction.Value.enabled = true; 
             }
-            else
-            {
-                if (BuildingUnderConstruction != null) { GameObject.Destroy(BuildingUnderConstruction); }
-            }
         }
 
         private bool HasValidInputs() => (Agent.Value != null && BuildingSO.Value != null && BuildingSO.Value.prefab != null);
 
-        private Status MakeBuildingInstance()
+        private Status EstablishBuildingInstance()
         {
             if (!Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { return Status.Failure; }
 
-            GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
-            if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
+            bool isBuildingResumed = true;
+            if (BuildingUnderConstruction.Value == null)
+            {
+                isBuildingResumed = false;
 
-            BuildingUnderConstruction.Value = newBuilding;
-            BuildingUnderConstruction.Value.transform.position = TargetLocation.Value;
+                GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
+                if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
+
+                BuildingUnderConstruction.Value = newBuilding;
+                BuildingUnderConstruction.Value.transform.position = TargetLocation.Value;
+            }
 
             buildingRenderer = BuildingUnderConstruction.Value.GetRenderer();
             if (buildingRenderer == null) { return Status.Failure; }
-            InitializeRendererPosition();
+            InitializeRendererPosition(isBuildingResumed);
 
-            BuildingUnderConstruction.Value.StartBuilding(builder);
+            BuildingUnderConstruction.Value.StartBuilding(builder, !isBuildingResumed);
+            startBuildTime = BuildingUnderConstruction.Value.GetBuildingProgress().startTime;
 
             return Status.Running;
         }
@@ -81,11 +84,11 @@ namespace GameDevTV.RTS.Behavior
             return (normalizedTime >= 1.0) ? Status.Success : Status.Running;
         }
 
-        private void InitializeRendererPosition()
+        private void InitializeRendererPosition(bool isBuildingResumed)
         {
             startPosition = -Vector3.up * buildingRenderer.bounds.size.y;
             endPosition = Vector3.zero;
-            buildingRenderer.transform.SetLocalPositionAndRotation(startPosition, Quaternion.identity);
+            if (!isBuildingResumed) { buildingRenderer.transform.SetLocalPositionAndRotation(startPosition, Quaternion.identity); }
         }
     }
 }

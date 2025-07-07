@@ -8,7 +8,7 @@ namespace GameDevTV.RTS.Commands
     {
         [SerializeField] private AbstractUnitSO unitSO;
 
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             bool hasUnitConfigured = unitSO != null && unitSO.prefab != null;
             bool canSpawnUnit = false;

@@ -70,6 +70,12 @@ namespace GameDevTV.RTS.Utilities
             if (behaviorAgent == null) { return; }
             behaviorAgent.SetVariableValue(buildingSORef, buildingSO);
         }
+
+        public static void SetBuildingUnderConstruction(BehaviorGraphAgent behaviorAgent, BaseBuilding baseBuilding)
+        {
+            if (behaviorAgent == null) { return; }
+            behaviorAgent.SetVariableValue(buildingUnderConstructionRef, baseBuilding);
+        }
         #endregion
 
         #region Getters
@@ -101,7 +107,7 @@ namespace GameDevTV.RTS.Utilities
             return ghostBuilding.Value;
         }
 
-        public static BaseBuilding GetBaseBuilding(BehaviorGraphAgent behaviorAgent)
+        public static BaseBuilding GetBuildingUnderConstruction(BehaviorGraphAgent behaviorAgent)
         {
             if (behaviorAgent == null) { return null; }
             if (!behaviorAgent.GetVariable(buildingUnderConstructionRef, out BlackboardVariable<BaseBuilding> baseBuilding)) { return null; }

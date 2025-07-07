@@ -18,5 +18,4 @@ MonoBehaviour:
   <ghostPrefab>k__BackingField: {fileID: 0}
   <commandOverrides>k__BackingField:
   - {fileID: 11400000, guid: cc3bfb9f92f8b554a9d71c075399c3d5, type: 2}
-  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
   - {fileID: 11400000, guid: 9127ff66c974f6a4c9dbba47454a337c, type: 2}

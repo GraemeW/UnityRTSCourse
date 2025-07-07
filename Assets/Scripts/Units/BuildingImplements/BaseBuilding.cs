@@ -73,7 +73,9 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region PublicMethods
-        public float GetBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+        public BuildingSO GetBuildingSO() => buildingSO;
+        public BuildingProgress GetBuildingProgress() => progress;
+        public float GetUnitBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
         public MeshRenderer GetRenderer() => rendererLookup.FirstOrDefault().Key;
 
         public void BuildUnit(AbstractUnitSO unitSO)
@@ -108,16 +110,17 @@ namespace GameDevTV.RTS.Units
             }
         }
 
-        public void StartBuilding(IBuildingBuilder buildingBuilder)
+        public void StartBuilding(IBuildingBuilder buildingBuilder, bool initializeProgress)
         {
             unitBuildingThis = buildingBuilder;
             ShowGhostVisuals(true);
             this.enabled = false;
 
+            float currentProgress = initializeProgress ? 0.0f : progress.progress;
             progress = new BuildingProgress(
                 BuildingProgress.BuildingState.Building, 
-                Time.time - buildingSO.buildTime * progress.progress,
-                progress.progress
+                Time.time - buildingSO.buildTime * currentProgress,
+                currentProgress
             );
 
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;

@@ -6,7 +6,7 @@ namespace GameDevTV.RTS.Commands
     [CreateAssetMenu(fileName = "StopAction", menuName = "Units/Commands/Stop")]
     public class StopCommand : ActionBase
     {
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             return (commandContext.commandable is AbstractUnit);
         }

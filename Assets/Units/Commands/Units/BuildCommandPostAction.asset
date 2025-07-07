@@ -20,3 +20,6 @@ MonoBehaviour:
   floorLayers:
     serializedVersion: 2
     m_Bits: 256
+  selectableLayers:
+    serializedVersion: 2
+    m_Bits: 128

@@ -9,7 +9,7 @@ namespace GameDevTV.RTS.Commands
     {
         [SerializeField] private LayerMask selectableLayers;
 
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             bool isWorker = commandContext.commandable is Worker;
             bool validSupply = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)

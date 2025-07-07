@@ -7,7 +7,7 @@ namespace GameDevTV.RTS.Units
     [CreateAssetMenu(fileName = "CancelBuilding", menuName = "Units/Commands/CancelBuilding")]
     public class CancelBuilding : ActionBase
     {
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             IBuildingBuilder buildingBuilder = commandContext.commandable as IBuildingBuilder;
             bool isWorker = buildingBuilder != null;

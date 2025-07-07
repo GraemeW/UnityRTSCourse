@@ -17,7 +17,7 @@ namespace GameDevTV.RTS.Commands
         private float circleRadius = 0;
         private float radialOffset = 0;
 
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             bool canMove = commandContext.commandable is IMoveable;
             bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, floorLayers);

@@ -7,7 +7,7 @@ namespace GameDevTV.RTS.Commands
     {
         [field: SerializeField] public ActionBase[] commandOverrides { get; private set; }
 
-        public override bool CanHandle(ref CommandContext commandContext)
+        public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
             return commandContext.commandable != null;
         }
