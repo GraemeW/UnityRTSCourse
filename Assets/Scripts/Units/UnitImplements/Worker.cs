@@ -87,6 +87,7 @@ namespace GameDevTV.RTS.Units
         }
         public void ResumeBuilding(BaseBuilding baseBuilding)
         {
+            BehaviorConstants.SetGhostBuilding(behaviorAgent, null);
             BehaviorConstants.SetTargetLocation(behaviorAgent, baseBuilding.transform.position);
             BehaviorConstants.SetBuildingSO(behaviorAgent, baseBuilding.GetBuildingSO());
             BehaviorConstants.SetBuildingUnderConstruction(behaviorAgent, baseBuilding);

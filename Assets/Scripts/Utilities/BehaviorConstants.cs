@@ -26,55 +26,55 @@ namespace GameDevTV.RTS.Utilities
         public static void SetCommand(BehaviorGraphAgent behaviorAgent, UnitCommands command)
         {
             if  (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(commandRef, command);
+            behaviorAgent.SetVariableValue<UnitCommands>(commandRef, command);
         }
 
         public static void SetTargetLocation(BehaviorGraphAgent behaviorAgent, Vector3 position)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(targetLocationRef, position);
+            behaviorAgent.SetVariableValue<Vector3>(targetLocationRef, position);
         }
 
         public static void SetTarget(BehaviorGraphAgent behaviorAgent, GameObject target)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(targetRef, target);
+            behaviorAgent.SetVariableValue<GameObject>(targetRef, target);
         }
 
         public static void SetSupply(BehaviorGraphAgent behaviorAgent, GatherableSupply gatherableSupply)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(supplyRef, gatherableSupply);
+            behaviorAgent.SetVariableValue<GatherableSupply>(supplyRef, gatherableSupply);
         }
 
         public static void SetNearbySupplyCount(BehaviorGraphAgent behaviorAgent, int nearbySupplyCount)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(nearbySupplyCountRef, nearbySupplyCount);
+            behaviorAgent.SetVariableValue<int>(nearbySupplyCountRef, nearbySupplyCount);
         }
 
         public static void SetCommandPost(BehaviorGraphAgent behaviorAgent, GameObject commandPost)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(commandPostRef, commandPost);
+            behaviorAgent.SetVariableValue<GameObject>(commandPostRef, commandPost);
         }
 
         public static void SetGhostBuilding(BehaviorGraphAgent behaviorAgent, GameObject ghostBuilding)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(ghostBuildingRef, ghostBuilding);
+            behaviorAgent.SetVariableValue<GameObject>(ghostBuildingRef, ghostBuilding);
         }
 
         public static void SetBuildingSO(BehaviorGraphAgent behaviorAgent, BuildingSO buildingSO)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(buildingSORef, buildingSO);
+            behaviorAgent.SetVariableValue<BuildingSO>(buildingSORef, buildingSO);
         }
 
         public static void SetBuildingUnderConstruction(BehaviorGraphAgent behaviorAgent, BaseBuilding baseBuilding)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue(buildingUnderConstructionRef, baseBuilding);
+            behaviorAgent.SetVariableValue<BaseBuilding>(buildingUnderConstructionRef, baseBuilding);
         }
         #endregion
 
