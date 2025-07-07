@@ -3,11 +3,11 @@ using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Events
 {
-    public struct UnitDespawnEvent : IEvent
+    public struct UnitDeathEvent : IEvent
     {
         public AbstractUnit unit { get; private set; }
 
-        public UnitDespawnEvent(AbstractUnit unit)
+        public UnitDeathEvent(AbstractUnit unit)
         {
             this.unit = unit;
         }

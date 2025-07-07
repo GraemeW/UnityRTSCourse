@@ -31,7 +31,7 @@ namespace GameDevTV.RTS.Units
 
         protected virtual void OnDestroy()
         {
-            Bus<UnitDespawnEvent>.Raise(new UnitDespawnEvent(this));
+            Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
         }
         #endregion
 

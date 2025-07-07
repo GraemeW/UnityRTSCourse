@@ -58,7 +58,7 @@ namespace GameDevTV.RTS.Player
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
-            Bus<UnitDespawnEvent>.OnEvent += HandleUnitDespawned;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
             Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
         }
 
@@ -67,7 +67,7 @@ namespace GameDevTV.RTS.Player
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
-            Bus<UnitDespawnEvent>.OnEvent -= HandleUnitDespawned;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
             Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
         }
 
@@ -101,7 +101,7 @@ namespace GameDevTV.RTS.Player
         }
         private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent) => selectedUnits.Remove(unitDeselectedEvent.unit);
         private void HandleUnitSpawned(UnitSpawnEvent unitSpawnEvent) => aliveUnits.Add(unitSpawnEvent.unit);
-        private void HandleUnitDespawned(UnitDespawnEvent unitDespawnEvent)
+        private void HandleUnitDeath(UnitDeathEvent unitDespawnEvent)
         {
             addedUnits.Remove(unitDespawnEvent.unit);
             aliveUnits.Remove(unitDespawnEvent.unit);

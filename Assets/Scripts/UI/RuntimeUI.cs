@@ -24,13 +24,14 @@ namespace GameDevTV.RTS.UI
         {
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
         }
 
         private void OnDisable()
         {
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
 
         private void Start()
@@ -54,7 +55,20 @@ namespace GameDevTV.RTS.UI
         {
             if (unitDeselectedEvent.unit is not AbstractCommandable commandableUnit) { return; }
             selectedUnits.Remove(commandableUnit);
+            RefreshUI();
+        }
 
+        private void HandleUnitDeath(UnitDeathEvent unitDeathEvent)
+        {
+            if (unitDeathEvent.unit is not AbstractCommandable commandableUnit) { return; }
+            selectedUnits.Remove(commandableUnit);
+            RefreshUI();
+        }
+        #endregion
+
+        #region HelperMethods
+        private void RefreshUI()
+        {
             if (selectedUnits.Count > 0)
             {
                 actionsUI.EnableFor(selectedUnits);
