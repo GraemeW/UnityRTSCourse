@@ -78,6 +78,12 @@ namespace GameDevTV.RTS.Units
         public float GetUnitBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
         public MeshRenderer GetRenderer() => rendererLookup.FirstOrDefault().Key;
 
+        public void PauseBuildingProgress()
+        {
+            float currentProgress = progress.progress;
+            progress = new BuildingProgress( BuildingProgress.BuildingState.Paused, 0f, currentProgress);
+        }
+        
         public void BuildUnit(AbstractUnitSO unitToBuild)
         {
             if (buildingQueue.Count == _maxQueueSize) { return; }

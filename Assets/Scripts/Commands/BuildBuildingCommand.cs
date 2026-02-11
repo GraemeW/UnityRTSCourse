@@ -21,6 +21,7 @@ namespace GameDevTV.RTS.Commands
                 if (baseBuilding.GetBuildingSO() == buildingSO)
                 {
                     BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
+                    
                     if (buildingProgress.state is BuildingProgress.BuildingState.Paused or BuildingProgress.BuildingState.Destroyed)
                     {
                         commandContext.hit = unitHit;

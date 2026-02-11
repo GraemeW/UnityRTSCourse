@@ -54,9 +54,9 @@ namespace GameDevTV.RTS.Player
             addedUnits = new HashSet<AbstractUnit>(maxSelectionCount);
             aliveUnits = new HashSet<AbstractUnit>(maxUnitCount);
 
-            UnityEngine.Debug.Log("Clearing All Event Subscriptions");
+            Debug.Log("Clearing All Event Subscriptions");
             Bus<UnitSelectedEvent>.ClearAllSubscriptions();
-            UnityEngine.Debug.Log("Event Subscriptions After Clear, re-subbing");
+            Debug.Log("Event Subscriptions After Clear, re-subbing");
 
 
             Bus<UnitSelectedEvent>.SubscribeToEvent(HandleUnitSelected);
@@ -89,13 +89,13 @@ namespace GameDevTV.RTS.Player
             // Hack code to test event unsub
             if (Keyboard.current.deleteKey.wasReleasedThisFrame)
             {
-                UnityEngine.Debug.Log("Deleting All Events");
-                UnityEngine.Debug.Log("Events Before Deletion:");
+                Debug.Log("Deleting All Events");
+                Debug.Log("Events Before Deletion:");
                 Bus.PrintAllEvents();
                 Bus.DeleteAllEvents();
-                UnityEngine.Debug.Log("Events After Deletion:");
+                Debug.Log("Events After Deletion:");
                 Bus.PrintAllEvents();
-                UnityEngine.Debug.Log("End Deletion Test");
+                Debug.Log("End Deletion Test");
             }
         }
         #endregion
@@ -103,7 +103,7 @@ namespace GameDevTV.RTS.Player
         #region EventHandlers
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
-            UnityEngine.Debug.Log("Unit Selected Event Received");
+            Debug.Log("Unit Selected Event Received");
 
             if (selectedUnits.Count < maxSelectionCount)
             {
@@ -124,7 +124,7 @@ namespace GameDevTV.RTS.Player
             addedUnits.Remove(unitDespawnEvent.unit);
             aliveUnits.Remove(unitDespawnEvent.unit);
 
-            ISelectable selectableUnit = unitDespawnEvent.unit as ISelectable;
+            ISelectable selectableUnit = unitDespawnEvent.unit;
             selectedUnits.Remove(selectableUnit);
         }
 
@@ -445,10 +445,11 @@ namespace GameDevTV.RTS.Player
 
         private List<ActionBase> GetAvailableCommands(AbstractCommandable abstractUnit)
         {
-            OverrideCommandsCommand[] overrideCommandsCommands = abstractUnit.currentCommands
-                .Where(command => command is OverrideCommandsCommand)
-                .Cast<OverrideCommandsCommand>()
-                .ToArray();
+            List<OverrideCommandsCommand> overrideCommandsCommands = new List<OverrideCommandsCommand>();
+            foreach (ActionBase command in abstractUnit.currentCommands)
+            {
+                if (command is OverrideCommandsCommand commandsCommand) { overrideCommandsCommands.Add(commandsCommand); }
+            }
 
             List<ActionBase> allAvailableCommands = new();
             foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
@@ -459,7 +460,7 @@ namespace GameDevTV.RTS.Player
 
             allAvailableCommands.AddRange(abstractUnit.currentCommands
                 .Where(command => command is not OverrideCommandsCommand));
-
+            
             return allAvailableCommands;
         }
 

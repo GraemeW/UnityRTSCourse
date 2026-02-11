@@ -43,7 +43,11 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (CurrentStatus != Status.Success) { return; }
+            if (CurrentStatus != Status.Success)
+            {
+                BuildingUnderConstruction.Value.PauseBuildingProgress();
+                return;
+            }
             
             BuildingUnderConstruction.Value.ShowGhostVisuals(false);
             BuildingUnderConstruction.Value.enabled = true;
@@ -92,8 +96,9 @@ namespace GameDevTV.RTS.Behavior
         private void InitializeRendererPosition(bool isBuildingResumed)
         {
             startPosition = -Vector3.up * buildingRenderer.bounds.size.y;
+            if (isBuildingResumed) { startPosition = buildingRenderer.transform.localPosition; }
             endPosition = Vector3.zero;
-            if (!isBuildingResumed) { buildingRenderer.transform.SetLocalPositionAndRotation(startPosition, Quaternion.identity); }
+            buildingRenderer.transform.SetLocalPositionAndRotation(startPosition, Quaternion.identity);
         }
     }
 }
