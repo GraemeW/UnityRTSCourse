@@ -17,6 +17,8 @@ MonoBehaviour:
   <requiresClickToActivate>k__BackingField: 1
   <ghostPrefab>k__BackingField: {fileID: 2567010447404687281, guid: 5f6400319211bfe4ba0612ef7be20333, type: 3}
   <buildingSO>k__BackingField: {fileID: 11400000, guid: a68dc2d121ceeea4380a547077b40460, type: 2}
+  <buildingRestrictions>k__BackingField:
+  - {fileID: 11400000, guid: 651318c5711274deeb2c45d16f2b9bbb, type: 2}
   floorLayers:
     serializedVersion: 2
     m_Bits: 256

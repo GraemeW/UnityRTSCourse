@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using GameDevTV.RTS.Units;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace GameDevTV.RTS.Commands
     public class BuildBuildingCommand : ActionBase
     {
         [field: SerializeField] public BuildingSO buildingSO { get; private set; }
+        [field: SerializeField] public List<BuildingRestrictionSO> buildingRestrictions { get; private set; } = new();
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private LayerMask selectableLayers;
 
@@ -31,21 +34,23 @@ namespace GameDevTV.RTS.Commands
             }
 
             bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
-            if (!skipCondition && isFloor) { commandContext.hit = floorHit; return true; }            
-
-            return false;
+            if (skipCondition || !isFloor) { return false; }
+            if (buildingRestrictions.Any(restriction => !restriction.CanPlace(floorHit.point))) { return false; }
+            
+            commandContext.hit = floorHit; 
+            return true;
         }
 
         public override void Handle(CommandContext commandContext)
         {
             IBuildingBuilder builder = (IBuildingBuilder)commandContext.commandable;
-
             if (commandContext.hit.collider.TryGetComponent(out BaseBuilding baseBuilding))
             {
                 builder.ResumeBuilding(baseBuilding);
             }
             else
             {
+                if (buildingRestrictions.Any(restriction => !restriction.CanPlace(commandContext.hit.point))) { return; }
                 builder.Build(buildingSO, commandContext.hit.point);
             }
         }

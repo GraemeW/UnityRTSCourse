@@ -435,11 +435,10 @@ namespace GameDevTV.RTS.Player
         {
             foreach (ICommand command in GetAvailableCommands(abstractUnit))
             {
-                if (command.CanHandle(ref commandContext, true))
-                {
-                    command.Handle(commandContext);
-                    break;
-                }
+                if (!command.CanHandle(ref commandContext, true)) { continue; }
+                
+                command.Handle(commandContext);
+                break;
             }
         }
 

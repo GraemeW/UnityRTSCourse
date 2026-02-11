@@ -74,6 +74,8 @@ namespace GameDevTV.RTS.Units
 
         public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
         {
+            if (IsBuilding) { return null; }
+            
             GameObject buildingInstance = Instantiate(buildingSO.prefab, targetLocation, Quaternion.identity);
             if (!buildingInstance.TryGetComponent(out BaseBuilding baseBuilding)) { return null; }
             baseBuilding.ShowGhostVisuals(true);
