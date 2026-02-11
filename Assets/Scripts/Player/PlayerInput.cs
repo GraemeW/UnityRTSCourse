@@ -8,8 +8,6 @@ using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
 using System.Linq;
-using UnityEngine.AI;
-using Unity.VisualScripting;
 
 namespace GameDevTV.RTS.Player
 {
@@ -28,7 +26,7 @@ namespace GameDevTV.RTS.Player
         [SerializeField] private LayerMask selectableLayers;
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
-        [field: SerializeField] public static int MAX_SELECTION_COUNT { get; private set; } = 12;
+        public static int maxSelectionCount { get; private set; } = 12;
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -52,8 +50,8 @@ namespace GameDevTV.RTS.Player
         {
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
             startingFollowOffset = cinemachineFollow.FollowOffset;
-            selectedUnits = new List<ISelectable>(MAX_SELECTION_COUNT);
-            addedUnits = new HashSet<AbstractUnit>(MAX_SELECTION_COUNT);
+            selectedUnits = new List<ISelectable>(maxSelectionCount);
+            addedUnits = new HashSet<AbstractUnit>(maxSelectionCount);
             aliveUnits = new HashSet<AbstractUnit>(maxUnitCount);
 
             UnityEngine.Debug.Log("Clearing All Event Subscriptions");
@@ -107,7 +105,7 @@ namespace GameDevTV.RTS.Player
         {
             UnityEngine.Debug.Log("Unit Selected Event Received");
 
-            if (selectedUnits.Count < MAX_SELECTION_COUNT)
+            if (selectedUnits.Count < maxSelectionCount)
             {
                 if (!selectedUnits.Contains(unitSelectedEvent.unit)) // Explicitly separate logic, do not enter else/deselect
                 {
@@ -340,7 +338,7 @@ namespace GameDevTV.RTS.Player
                 {
                     addedUnits.Add(unit);
                 }
-                if (addedUnits.Count == MAX_SELECTION_COUNT) { break; }
+                if (addedUnits.Count == maxSelectionCount) { break; }
             }
         }
 

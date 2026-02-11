@@ -4,6 +4,7 @@ using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
+using Object = UnityEngine.Object;
 
 namespace GameDevTV.RTS.Behavior
 {
@@ -42,10 +43,14 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (CurrentStatus == Status.Success)
+            if (CurrentStatus != Status.Success) { return; }
+            
+            BuildingUnderConstruction.Value.ShowGhostVisuals(false);
+            BuildingUnderConstruction.Value.enabled = true;
+
+            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder))
             {
-                BuildingUnderConstruction.Value.ShowGhostVisuals(false);
-                BuildingUnderConstruction.Value.enabled = true; 
+                builder.ResetCommandList();
             }
         }
 
@@ -60,7 +65,7 @@ namespace GameDevTV.RTS.Behavior
             {
                 isBuildingResumed = false;
 
-                GameObject building = GameObject.Instantiate(BuildingSO.Value.prefab);
+                GameObject building = Object.Instantiate(BuildingSO.Value.prefab);
                 if (!building.TryGetComponent(out BaseBuilding newBuilding)) { return Status.Failure; }
 
                 BuildingUnderConstruction.Value = newBuilding;

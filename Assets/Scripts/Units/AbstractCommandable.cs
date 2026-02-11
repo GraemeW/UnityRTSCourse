@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Commands;
@@ -14,10 +15,10 @@ namespace GameDevTV.RTS.Units
 
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
-        [SerializeField] private ActionBase[] availableCommands;
+        [SerializeField] private List<ActionBase> availableCommands = new();
 
         // State
-        public ActionBase[] currentCommands { get; private set; }
+        public List<ActionBase> currentCommands { get; private set; }
 
         #region UnityMethods
         protected virtual void Start()
@@ -53,11 +54,29 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region Commands
-        public void SetCommandOverrides(ActionBase[] commandOverrides, bool callUnitSelectedEvent = true)
-        {
-            if (commandOverrides == null || commandOverrides.Length == 0) { currentCommands = availableCommands; }
-            else { currentCommands = commandOverrides; }
 
+        private void ResetCommandOverrides()
+        {
+            currentCommands = new List<ActionBase>(availableCommands);
+        }
+        
+        public void SetCommandOverrides(IList<ActionBase> commandOverrides, bool callUnitSelectedEvent = true)
+        {
+            if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
+            else { currentCommands = new List<ActionBase>(commandOverrides); }
+            if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
+        }
+
+        protected void AppendToCommands(IList<ActionBase> commandOverrides, bool callUnitSelectedEvent = true)
+        {
+            if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
+            else
+            {
+                foreach (ActionBase commandOverride in commandOverrides)
+                {
+                    currentCommands.Add(commandOverride);
+                }
+            }
             if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
         }
         #endregion

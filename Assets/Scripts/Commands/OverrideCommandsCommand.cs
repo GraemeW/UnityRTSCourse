@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameDevTV.RTS.Commands
@@ -5,7 +6,7 @@ namespace GameDevTV.RTS.Commands
     [CreateAssetMenu(fileName = "OverrideCommands", menuName = "Units/Commands/OverrideCommands", order = 110)]
     public class OverrideCommandsCommand : ActionBase
     {
-        [field: SerializeField] public ActionBase[] commandOverrides { get; private set; }
+        [field: SerializeField] public List<ActionBase> commandOverrides { get; private set; } = new();
 
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {

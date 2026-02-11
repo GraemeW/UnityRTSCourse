@@ -11,8 +11,8 @@ namespace GameDevTV.RTS.Units
     public class BaseBuilding : AbstractCommandable
     {
         // Fixed
-        private const int MAX_QUEUE_SIZE = 5;
-        public static string buildingsLayerMaskRef = "Buildings";
+        private const int _maxQueueSize = 5;
+        public const string buildingsLayerMaskRef = "Buildings";
 
         // Tunables
         [field: SerializeField] public Transform spawnLocation { get; private set; }
@@ -25,14 +25,14 @@ namespace GameDevTV.RTS.Units
         // Cached References
         private NavMeshObstacle navMeshObstacle;
         private BuildingSO buildingSO;
-        private Dictionary<MeshRenderer, Material> rendererLookup = new Dictionary<MeshRenderer, Material>();
+        private readonly Dictionary<MeshRenderer, Material> rendererLookup = new();
 
         // State
-        private List<AbstractUnitSO> buildingQueue = new (MAX_QUEUE_SIZE);
+        private readonly List<AbstractUnitSO> buildingQueue = new (_maxQueueSize);
         private float currentQueueStartTime;
         private AbstractUnitSO buildingUnit;
-        private Coroutine buildCoroutine = null;
-        private BuildingProgress progress = new BuildingProgress(BuildingProgress.BuildingState.Destroyed, 0.0f, 0.0f);
+        private Coroutine buildCoroutine;
+        private BuildingProgress progress = new(BuildingProgress.BuildingState.Destroyed, 0.0f, 0.0f);
         private IBuildingBuilder unitBuildingThis;
 
         // Events
@@ -50,7 +50,7 @@ namespace GameDevTV.RTS.Units
             }
 
             buildingSO = unitSO as BuildingSO;
-            if (buildingSO == null) { UnityEngine.Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
+            if (buildingSO == null) { Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
         }
 
         protected override void Start()
@@ -78,11 +78,11 @@ namespace GameDevTV.RTS.Units
         public float GetUnitBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
         public MeshRenderer GetRenderer() => rendererLookup.FirstOrDefault().Key;
 
-        public void BuildUnit(AbstractUnitSO unitSO)
+        public void BuildUnit(AbstractUnitSO unitToBuild)
         {
-            if (buildingQueue.Count == MAX_QUEUE_SIZE) { return; }
+            if (buildingQueue.Count == _maxQueueSize) { return; }
 
-            buildingQueue.Add(unitSO);
+            buildingQueue.Add(unitToBuild);
             if (buildCoroutine == null)
             {
                 buildCoroutine = StartCoroutine(DoBuildUnits());
@@ -132,10 +132,9 @@ namespace GameDevTV.RTS.Units
             if (buildingSO == null) { return; }
 
             Material ghostMaterial = buildingSO.placementMaterial;
-            foreach (var (renderer, initialMaterial) in rendererLookup)
+            foreach ((MeshRenderer setRenderer, Material initialMaterial) in rendererLookup)
             {
-                if (enable) { renderer.material = ghostMaterial; }
-                else { renderer.material = initialMaterial; }
+                setRenderer.material = enable ? ghostMaterial : initialMaterial;
             }
         }
         #endregion
@@ -180,11 +179,10 @@ namespace GameDevTV.RTS.Units
         {
             Vector3 baseToSpawnDelta = (spawnLocation.position - transform.position);
             baseToSpawnDelta.Normalize();
-            if (!Mathf.Approximately(spawnWalkDistance, 0f))
-            {
-                Vector3 walkPosition = spawnLocation.position + baseToSpawnDelta * spawnWalkDistance;
-                abstractUnit.MoveTo(walkPosition);
-            }
+            if (Mathf.Approximately(spawnWalkDistance, 0f)) { return; }
+            
+            Vector3 walkPosition = spawnLocation.position + baseToSpawnDelta * spawnWalkDistance;
+            abstractUnit.MoveTo(walkPosition);
         }
 
         private void HandleUnitDeath(UnitDeathEvent unitDeathEvent)

@@ -17,7 +17,7 @@ namespace GameDevTV.RTS.UI
         [SerializeField] private BuildingBuildingUI buildingBuildingUI;
 
         // State
-        HashSet<AbstractCommandable> selectedUnits = new HashSet<AbstractCommandable>(PlayerInput.MAX_SELECTION_COUNT);
+        HashSet<AbstractCommandable> selectedUnits = new HashSet<AbstractCommandable>(PlayerInput.maxSelectionCount);
 
         #region UnityMethods
         private void OnEnable()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameDevTV.RTS.Behavior;
 using GameDevTV.RTS.Environment;
 using GameDevTV.RTS.Utilities;
@@ -6,7 +7,6 @@ using GameDevTV.RTS.Events;
 using Unity.Behavior;
 using UnityEngine;
 using GameDevTV.RTS.Commands;
-using NUnit.Framework.Internal.Commands;
 
 namespace GameDevTV.RTS.Units
 {
@@ -16,23 +16,18 @@ namespace GameDevTV.RTS.Units
         [SerializeField] private ActionBase CancelBuildingCommand;
 
         #region ComputedProperties
-        public bool HasSupplies 
-        { 
-            get 
-            {
-                return BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
-            }
-        }
+        public bool HasSupplies => BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
 
-        public bool IsBuilding
-        {
-            get
-            {
-                return BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
-            }
-        }
+        public bool IsBuilding => BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
         #endregion
 
+        #region StaticMethods
+        private static void HandleGatherSupplies(GameObject worker, int amount, SupplySO supplyType)
+        {
+            Bus<SupplyEvent>.Raise(new SupplyEvent(supplyType, amount));
+        }
+        #endregion
+        
         #region UnityMethods
         protected override void Start()
         {
@@ -57,6 +52,11 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region PublicMethods
+        public void ResetCommandList()
+        {
+            SetCommandOverrides(null);
+        }
+        
         public void Gather(GatherableSupply gatherableSupply)
         {
             BehaviorConstants.SetSupply(behaviorAgent, gatherableSupply);
@@ -81,7 +81,8 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
 
-            SetCommandOverrides(new ActionBase[] {CancelBuildingCommand});
+            SetCommandOverrides(null);
+            AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
 
             return buildingInstance;
         }
@@ -93,7 +94,8 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetBuildingUnderConstruction(behaviorAgent, baseBuilding);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
 
-            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+            SetCommandOverrides(null);
+            AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
         }
 
         public void CancelBuilding()
@@ -106,13 +108,6 @@ namespace GameDevTV.RTS.Units
 
             SetCommandOverrides(null);
             Stop();
-        }
-        #endregion
-
-        #region PrivateMethods
-        private void HandleGatherSupplies(GameObject worker, int amount, SupplySO supplyType)
-        {
-            Bus<SupplyEvent>.Raise(new SupplyEvent(supplyType, amount));
         }
         #endregion
     }
