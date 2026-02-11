@@ -1,5 +1,6 @@
 using GameDevTV.RTS.Units;
 using System;
+using GameDevTV.RTS.Utilities;
 using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
@@ -43,19 +44,17 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (CurrentStatus != Status.Success)
+            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { builder.ResetCommandList(); }
+            if (!Agent.Value.TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
+            
+            if (CurrentStatus == Status.Success)
             {
-                BuildingUnderConstruction.Value.PauseBuildingProgress();
+                BuildingUnderConstruction.Value.ShowGhostVisuals(false);
+                BuildingUnderConstruction.Value.enabled = true;
                 return;
             }
             
-            BuildingUnderConstruction.Value.ShowGhostVisuals(false);
-            BuildingUnderConstruction.Value.enabled = true;
-
-            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder))
-            {
-                builder.ResetCommandList();
-            }
+            BuildingUnderConstruction.Value.PauseBuildingProgress();
         }
 
         private bool HasValidInputs() => (Agent.Value != null && BuildingSO.Value != null && BuildingSO.Value.prefab != null);

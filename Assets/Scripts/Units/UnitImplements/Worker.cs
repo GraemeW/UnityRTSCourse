@@ -13,6 +13,7 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(BehaviorGraphAgent))]
     public class Worker : AbstractUnit, IBuildingBuilder
     {
+        // Tunables
         [SerializeField] private ActionBase CancelBuildingCommand;
 
         #region ComputedProperties
@@ -80,7 +81,6 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
-
             SetCommandOverrides(null);
             AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
 
@@ -100,11 +100,15 @@ namespace GameDevTV.RTS.Units
             AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
         }
 
-        public void CancelBuilding()
+        public void CancelGhost()
         {
             GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
             if (ghostBuilding != null) { Destroy(ghostBuilding); }
+        }
 
+        public void CancelBuilding()
+        {
+            CancelGhost();
             BaseBuilding baseBuilding = BehaviorConstants.GetBuildingUnderConstruction(behaviorAgent);
             if (baseBuilding != null) { Destroy(baseBuilding.gameObject); }
 
