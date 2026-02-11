@@ -10,7 +10,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 127325
   packageName: Particle Pack
-  packageVersion: 1.7
-  assetPath: Assets/UnityTechnologies/ParticlePack/EffectExamples/Fire & Explosion
-    Effects/Materials/ExplosionDistortion.mat
-  uploadId: 564952
+  packageVersion: 3.1
+  assetPath: Assets/Units/Units/Grenadier/ExplosionDistortion.mat
+  uploadId: 691001

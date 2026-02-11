@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5775f2d8a67d8d44b43d5544ef7752a, type: 3}
   m_Name: BuildWorker
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: 6e40afd6361ffe44a87846d98dd04e7c, type: 3}
+  <icon>k__BackingField: {fileID: 21300000, guid: 9cc8d41a18bc04fc5a62e42344e567d6, type: 3}
   <slot>k__BackingField: 0
   <requiresClickToActivate>k__BackingField: 0
+  <ghostPrefab>k__BackingField: {fileID: 0}
   unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}

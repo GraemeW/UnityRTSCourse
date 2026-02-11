@@ -22,16 +22,16 @@ namespace GameDevTV.RTS.UI
         #region UnityMethods
         private void OnEnable()
         {
-            Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
-            Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
-            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+            Bus<UnitSelectedEvent>.SubscribeToEvent(HandleUnitSelected);
+            Bus<UnitDeselectedEvent>.SubscribeToEvent(HandleUnitDeselected);
+            Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
         }
 
         private void OnDisable()
         {
-            Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-            Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitSelectedEvent>.UnsubscribeFromEvent(HandleUnitSelected);
+            Bus<UnitDeselectedEvent>.UnsubscribeFromEvent(HandleUnitDeselected);
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
         }
 
         private void Start()

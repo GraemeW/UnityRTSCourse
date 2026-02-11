@@ -5,6 +5,8 @@ namespace GameDevTV.RTS.Events
 {
     public struct UnitSpawnEvent : IEvent
     {
+        public EventType EventType => EventType.UnitSpawn;
+
         public AbstractUnit unit { get; private set; }
 
         public UnitSpawnEvent(AbstractUnit unit)

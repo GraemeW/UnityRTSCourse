@@ -42,6 +42,7 @@ namespace GameDevTV.RTS.UI.Containers
             HashSet<ActionBase> availableCommands = new HashSet<ActionBase>();
             foreach (AbstractCommandable commandableUnit in commandableUnits)
             {
+                if (commandableUnit == null)  { continue; }
                 if (!commandableUnit.isActiveAndEnabled) { continue; }
 
                 foreach (ActionBase action in commandableUnit.currentCommands)

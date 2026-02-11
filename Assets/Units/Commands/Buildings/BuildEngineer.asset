@@ -15,4 +15,5 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: e7c49208e47e57c47b55c30f3f47b29d, type: 3}
   <slot>k__BackingField: 1
   <requiresClickToActivate>k__BackingField: 0
+  <ghostPrefab>k__BackingField: {fileID: 0}
   unitSO: {fileID: 11400000, guid: a6c4543b59bc38843a1435a1212db270, type: 2}

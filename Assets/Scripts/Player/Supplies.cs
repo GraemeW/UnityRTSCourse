@@ -31,12 +31,12 @@ namespace GameDevTV.RTS.Player
 
         private void OnEnable()
         {
-            Bus<SupplyEvent>.OnEvent += HandleSupplyEvent;
+            Bus<SupplyEvent>.SubscribeToEvent(HandleSupplyEvent);
         }
 
         private void OnDisable()
         {
-            Bus<SupplyEvent>.OnEvent -= HandleSupplyEvent;
+            Bus<SupplyEvent>.UnsubscribeFromEvent(HandleSupplyEvent);
         }
         #endregion
 

@@ -9,6 +9,7 @@ using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
 using System.Linq;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 namespace GameDevTV.RTS.Player
 {
@@ -55,20 +56,25 @@ namespace GameDevTV.RTS.Player
             addedUnits = new HashSet<AbstractUnit>(MAX_SELECTION_COUNT);
             aliveUnits = new HashSet<AbstractUnit>(maxUnitCount);
 
-            Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
-            Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
-            Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
-            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
-            Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+            UnityEngine.Debug.Log("Clearing All Event Subscriptions");
+            Bus<UnitSelectedEvent>.ClearAllSubscriptions();
+            UnityEngine.Debug.Log("Event Subscriptions After Clear, re-subbing");
+
+
+            Bus<UnitSelectedEvent>.SubscribeToEvent(HandleUnitSelected);
+            Bus<UnitDeselectedEvent>.SubscribeToEvent(HandleUnitDeselected);
+            Bus<UnitSpawnEvent>.SubscribeToEvent(HandleUnitSpawned);
+            Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
+            Bus<ActionSelectedEvent>.SubscribeToEvent(HandleActionSelected);
         }
 
         private void OnDestroy()
         {
-            Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-            Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-            Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
-            Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<UnitSelectedEvent>.UnsubscribeFromEvent(HandleUnitSelected);
+            Bus<UnitDeselectedEvent>.UnsubscribeFromEvent(HandleUnitDeselected);
+            Bus<UnitSpawnEvent>.UnsubscribeFromEvent(HandleUnitSpawned);
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
+            Bus<ActionSelectedEvent>.UnsubscribeFromEvent(HandleActionSelected);
         }
 
         private void Update()
@@ -81,12 +87,26 @@ namespace GameDevTV.RTS.Player
             HandleLeftClick();
             HandleRightClick();
             HandleGhost();
+
+            // Hack code to test event unsub
+            if (Keyboard.current.deleteKey.wasReleasedThisFrame)
+            {
+                UnityEngine.Debug.Log("Deleting All Events");
+                UnityEngine.Debug.Log("Events Before Deletion:");
+                Bus.PrintAllEvents();
+                Bus.DeleteAllEvents();
+                UnityEngine.Debug.Log("Events After Deletion:");
+                Bus.PrintAllEvents();
+                UnityEngine.Debug.Log("End Deletion Test");
+            }
         }
         #endregion
 
         #region EventHandlers
         private void HandleUnitSelected(UnitSelectedEvent unitSelectedEvent)
         {
+            UnityEngine.Debug.Log("Unit Selected Event Received");
+
             if (selectedUnits.Count < MAX_SELECTION_COUNT)
             {
                 if (!selectedUnits.Contains(unitSelectedEvent.unit)) // Explicitly separate logic, do not enter else/deselect
@@ -94,9 +114,9 @@ namespace GameDevTV.RTS.Player
                     selectedUnits.Add(unitSelectedEvent.unit);
                 }
             }
-            else 
+            else
             {
-                unitSelectedEvent.unit.Deselect(); 
+                unitSelectedEvent.unit.Deselect();
             }
         }
         private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent) => selectedUnits.Remove(unitDeselectedEvent.unit);

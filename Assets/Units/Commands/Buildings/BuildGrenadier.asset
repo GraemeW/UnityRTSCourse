@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5775f2d8a67d8d44b43d5544ef7752a, type: 3}
   m_Name: BuildGrenadier
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: 920f021a2d26a374593bb761fa77d29d, type: 3}
+  <icon>k__BackingField: {fileID: 21300000, guid: 8c3d98eaf097e4ef186c8880e40ca3d3, type: 3}
   <slot>k__BackingField: 1
   <requiresClickToActivate>k__BackingField: 0
+  <ghostPrefab>k__BackingField: {fileID: 0}
   unitSO: {fileID: 11400000, guid: 62b644c592d1bde42ad147e706f6d6b1, type: 2}

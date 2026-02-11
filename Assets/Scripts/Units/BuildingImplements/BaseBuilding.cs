@@ -63,12 +63,12 @@ namespace GameDevTV.RTS.Units
         {
             unitBuildingThis = null;
             progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, 0.0f, 1.0f);
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
         }
 
         private void OnDestroy()
         {
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
         }
         #endregion
 
@@ -123,8 +123,8 @@ namespace GameDevTV.RTS.Units
                 currentProgress
             );
 
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
-            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
+            Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
         }
 
         public void ShowGhostVisuals(bool enable)
@@ -198,7 +198,7 @@ namespace GameDevTV.RTS.Units
                 Mathf.Clamp01((Time.time - progress.startTime) / buildingSO.buildTime)
             );
 
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
         }
         #endregion
     }
