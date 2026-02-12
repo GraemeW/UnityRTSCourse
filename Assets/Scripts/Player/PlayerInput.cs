@@ -24,9 +24,16 @@ namespace GameDevTV.RTS.Player
         [SerializeField] private int maxUnitCount = 100;
         [Header("SelectionBehaviour")]
         [SerializeField] private LayerMask selectableLayers;
-        [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField] [ColorUsage(showAlpha:true, hdr:true)] private Color errorTintColor = Color.red;
+        [SerializeField] [ColorUsage(showAlpha:true, hdr:true)] private Color errorFresnelColor = new(4.0f, 1.7f, 0f, 2.0f);
+        [SerializeField] [ColorUsage(showAlpha:true, hdr:true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1.0f, 2.0f);
+        [SerializeField] [ColorUsage(showAlpha:true, hdr:true)] private Color availableToPlaceFresnelColor = new(4.0f, 1.7f, 0f, 2.0f);
+        
+        // Static and Const
         public static int maxSelectionCount { get; private set; } = 12;
+        private static readonly int _tint = Shader.PropertyToID("_Tint");
+        private static readonly int _fresnelColor = Shader.PropertyToID("_FresnelColor");
 
         // Cached References
         private CinemachineFollow cinemachineFollow;
@@ -44,7 +51,31 @@ namespace GameDevTV.RTS.Player
 
         private ActionBase queuedCommand;
         private GameObject ghostInstance;
+        private MeshRenderer ghostRenderer;
 
+        #region StaticMethods
+        private static List<ActionBase> GetAvailableCommands(AbstractCommandable abstractUnit)
+        {
+            var overrideCommandsCommands = new List<OverrideCommandsCommand>();
+            foreach (ActionBase command in abstractUnit.currentCommands)
+            {
+                if (command is OverrideCommandsCommand commandsCommand) { overrideCommandsCommands.Add(commandsCommand); }
+            }
+
+            List<ActionBase> allAvailableCommands = new();
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            {
+                allAvailableCommands.AddRange(overrideCommand.commandOverrides
+                    .Where(command => command is not OverrideCommandsCommand));
+            }
+
+            allAvailableCommands.AddRange(abstractUnit.currentCommands
+                .Where(command => command is not OverrideCommandsCommand));
+            
+            return allAvailableCommands;
+        }
+        #endregion
+        
         #region UnitMethods
         private void Awake()
         {
@@ -410,25 +441,34 @@ namespace GameDevTV.RTS.Player
             if (camera == null) { return; }
             if (selectedUnits.Count == 0) { return; }
             SetupGhostVisuals(false);
-
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            List<AbstractCommandable> abstractUnits = selectedUnits.Where((unit) => unit is AbstractCommandable).Cast<AbstractCommandable>().ToList();
-            int unitIndex = 0;
-            foreach (AbstractCommandable abstractUnit in abstractUnits)
+            
+            foreach (CommandContext commandContext in GetCommandContexts())
             {
-                CommandContext commandContext = new CommandContext(abstractUnit, cameraRay, unitIndex);
-
+                var volatileCommandContext = new CommandContext(commandContext);
                 if (useQueuedCommand && queuedCommand != null)
                 {
-                    if (queuedCommand.CanHandle(ref commandContext)) { queuedCommand.Handle(commandContext); }
+                    if (queuedCommand.CanHandle(ref volatileCommandContext)) { queuedCommand.Handle(volatileCommandContext); }
                 }
                 else
                 {
-                    ExecuteFirstViableCommand(abstractUnit, ref commandContext);
+                    ExecuteFirstViableCommand(volatileCommandContext.commandable, ref volatileCommandContext);
                 }
+            }
+        }
+
+        private List<CommandContext> GetCommandContexts()
+        {
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            
+            var commandContexts = new List<CommandContext>();
+            List<AbstractCommandable> abstractUnits = selectedUnits.Where((unit) => unit is AbstractCommandable).Cast<AbstractCommandable>().ToList();
+            int unitIndex = 0;
+            foreach (CommandContext commandContext in abstractUnits.Select(abstractUnit => new CommandContext(abstractUnit, cameraRay, unitIndex)))
+            {
+                commandContexts.Add(commandContext);
                 unitIndex++;
             }
+            return commandContexts;
         }
 
         private void ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
@@ -442,37 +482,18 @@ namespace GameDevTV.RTS.Player
             }
         }
 
-        private List<ActionBase> GetAvailableCommands(AbstractCommandable abstractUnit)
-        {
-            List<OverrideCommandsCommand> overrideCommandsCommands = new List<OverrideCommandsCommand>();
-            foreach (ActionBase command in abstractUnit.currentCommands)
-            {
-                if (command is OverrideCommandsCommand commandsCommand) { overrideCommandsCommands.Add(commandsCommand); }
-            }
-
-            List<ActionBase> allAvailableCommands = new();
-            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
-            {
-                allAvailableCommands.AddRange(overrideCommand.commandOverrides
-                    .Where(command => command is not OverrideCommandsCommand));
-            }
-
-            allAvailableCommands.AddRange(abstractUnit.currentCommands
-                .Where(command => command is not OverrideCommandsCommand));
-            
-            return allAvailableCommands;
-        }
-
         private void SetupGhostVisuals(bool enable)
         {
             if (enable)
             {
                 ghostInstance = Instantiate(queuedCommand.ghostPrefab);
+                if (ghostInstance != null) { ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>(); }
             }
             else
             {
                 if (ghostInstance != null) { Destroy(ghostInstance); }
                 ghostInstance = null;
+                ghostRenderer = null;
             }
         }
 
@@ -480,13 +501,26 @@ namespace GameDevTV.RTS.Player
         {
             if (ghostInstance == null) { return; }
             if (Keyboard.current.escapeKey.wasReleasedThisFrame) { SetupGhostVisuals(false); queuedCommand = null; return; }
-
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers))
+            
+            if (queuedCommand == null) { return; }
+            bool positionSet = false;
+            foreach (CommandContext commandContext in GetCommandContexts())
             {
-                ghostInstance.transform.position = hit.point;
+                var volatileCommandContext = new CommandContext(commandContext);
+                bool isValidPlacement = queuedCommand.CanHandle(ref volatileCommandContext);
+                SetGhostColor(isValidPlacement);
+                if (positionSet) { continue; }
+                
+                ghostInstance.transform.position = volatileCommandContext.hit.point;
+                positionSet = true;
             }
+        }
+
+        private void SetGhostColor(bool isValidPlacement)
+        {
+            if (ghostRenderer == null) { return; }
+            ghostRenderer.material.SetColor(_tint, isValidPlacement ? availableToPlaceTintColor : errorTintColor);
+            ghostRenderer.material.SetColor(_fresnelColor, isValidPlacement ? availableToPlaceFresnelColor : errorFresnelColor);
         }
         #endregion
     }

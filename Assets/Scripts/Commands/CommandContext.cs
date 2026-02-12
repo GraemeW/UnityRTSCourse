@@ -31,6 +31,14 @@ namespace GameDevTV.RTS.Commands
 
             cameraRay = new Ray(); // Dummy, garbage
         }
+        
+        // Derivative
+        public CommandContext(CommandContext commandContext)
+        {
+            commandable = commandContext.commandable;
+            unitIndex = commandContext.unitIndex;
+            hit = commandContext.hit;
+            cameraRay = commandContext.cameraRay;
+        }
     }
 }
-

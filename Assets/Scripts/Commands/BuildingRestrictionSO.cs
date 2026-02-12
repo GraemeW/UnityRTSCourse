@@ -8,7 +8,7 @@ namespace GameDevTV.RTS.Commands
     {
         [field: SerializeField] public bool MustBeFullyOnNavMesh { get; private set; } = true;
         [field: SerializeField] public int NavMeshAgentTypeID { get; private set; }
-        [field: SerializeField] public float NavMeshTolerance { get; private set; } = 0.1f;
+        [field: SerializeField] public float NavMeshTolerance { get; private set; } = 0.25f;
         [field: SerializeField] public Vector3 Extents { get; private set; } = Vector3.one;
         
         public bool CanPlace(Vector3 position)
@@ -25,7 +25,8 @@ namespace GameDevTV.RTS.Commands
 
         private bool IsFullyOnNavMesh(Vector3 position, NavMeshQueryFilter queryFilter)
         {
-            bool isOnNavMesh = NavMesh.SamplePosition(position + new Vector3(Extents.x, 0, Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
+            bool isOnNavMesh = NavMesh.SamplePosition(position, out NavMeshHit _, NavMeshTolerance, queryFilter);
+            isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(Extents.x, 0, Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
             isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(Extents.x, 0, -Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
             isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(-Extents.x, 0, -Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
             isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(-Extents.x, 0, Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);

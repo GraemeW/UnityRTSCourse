@@ -19,26 +19,22 @@ namespace GameDevTV.RTS.Commands
             if (!isBuilder) { return false; }
 
             bool isSelectable = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, selectableLayers);
-            if (isSelectable && unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding))
+            commandContext.hit = unitHit;
+            
+            if (isSelectable && unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding) && baseBuilding.GetBuildingSO() == buildingSO)
             {
-                if (baseBuilding.GetBuildingSO() == buildingSO)
+                BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
+                if (buildingProgress.state is BuildingProgress.BuildingState.Paused or BuildingProgress.BuildingState.Destroyed)
                 {
-                    BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
-                    
-                    if (buildingProgress.state is BuildingProgress.BuildingState.Paused or BuildingProgress.BuildingState.Destroyed)
-                    {
-                        commandContext.hit = unitHit;
-                        return true;
-                    }
+                    return true;
                 }
             }
 
             bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
-            if (skipCondition || !isFloor) { return false; }
-            if (buildingRestrictions.Any(restriction => !restriction.CanPlace(floorHit.point))) { return false; }
-            
             commandContext.hit = floorHit; 
-            return true;
+            
+            if (skipCondition || !isFloor) { return false; }
+            return buildingRestrictions.All(restriction => restriction.CanPlace(floorHit.point));
         }
 
         public override void Handle(CommandContext commandContext)
