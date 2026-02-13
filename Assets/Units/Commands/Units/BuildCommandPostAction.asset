@@ -19,6 +19,7 @@ MonoBehaviour:
   <buildingSO>k__BackingField: {fileID: 11400000, guid: a68dc2d121ceeea4380a547077b40460, type: 2}
   <buildingRestrictions>k__BackingField:
   - {fileID: 11400000, guid: 651318c5711274deeb2c45d16f2b9bbb, type: 2}
+  - {fileID: 11400000, guid: 4eae40a34a2434b899955fd264ea7e2e, type: 2}
   floorLayers:
     serializedVersion: 2
     m_Bits: 256
