@@ -1,11 +1,11 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 using GameDevTV.RTS.Commands;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.UI.Components;
 using GameDevTV.RTS.Units;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace GameDevTV.RTS.UI.Containers
 {
@@ -15,7 +15,7 @@ namespace GameDevTV.RTS.UI.Containers
         [SerializeField] ActionButtonUI[] actionButtons;
 
         #region Interfaces
-        public void EnableFor(HashSet<AbstractCommandable> commandableUnits) => RefreshButtons(commandableUnits);
+        public void EnableFor(HashSet<AbstractCommandable> setBaseBuilding) => RefreshButtons(setBaseBuilding);
         public void Disable() => RefreshButtons(null);
         #endregion
 

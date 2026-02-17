@@ -2,6 +2,6 @@ namespace GameDevTV.RTS.EventBus
 {
     public interface IEvent
     {
-        public EventType EventType { get; }
+        public EventType eventType { get; }
     }
 }

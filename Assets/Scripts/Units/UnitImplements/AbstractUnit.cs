@@ -1,9 +1,9 @@
-using GameDevTV.RTS.EventBus;
-using GameDevTV.RTS.Events;
-using GameDevTV.RTS.Utilities;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
+using GameDevTV.RTS.EventBus;
+using GameDevTV.RTS.Events;
+using GameDevTV.RTS.Utilities;
 
 namespace GameDevTV.RTS.Units
 {

@@ -1,5 +1,5 @@
-using GameDevTV.RTS.Units;
 using UnityEngine;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Commands
 {
@@ -12,7 +12,7 @@ namespace GameDevTV.RTS.Commands
         {
             bool canMove = commandContext.commandable is IMoveable;
             bool canFollow = Physics.Raycast(commandContext.cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
-                && hit.collider.TryGetComponent(out ISelectable selectable);
+                && hit.collider.TryGetComponent(out ISelectable _);
             commandContext.hit = hit;
 
             return canMove && canFollow;

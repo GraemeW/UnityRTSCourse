@@ -1,7 +1,7 @@
-using GameDevTV.RTS.Units;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.UI.Components
 {

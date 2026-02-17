@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using GameDevTV.RTS.Units;
 using UnityEngine;
+using GameDevTV.RTS.Player;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Commands
 {
@@ -21,17 +22,12 @@ namespace GameDevTV.RTS.Commands
             bool isSelectable = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, selectableLayers);
             commandContext.hit = unitHit;
             
-            if (isSelectable && unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding) && baseBuilding.GetBuildingSO() == buildingSO)
-            {
-                BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
-                if (buildingProgress.state is BuildingProgress.BuildingState.Paused or BuildingProgress.BuildingState.Destroyed)
-                {
-                    return true;
-                }
-            }
-
+            if (isSelectable && IsResumable(unitHit)) { return true; }
+            
             bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
             commandContext.hit = floorHit; 
+            
+            if (!Supplies.HasEnoughSuppliesToBuild(buildingSO)) { return false; }
             
             if (skipCondition || !isFloor) { return false; }
             return buildingRestrictions.All(restriction => restriction.CanPlace(floorHit.point));
@@ -46,9 +42,19 @@ namespace GameDevTV.RTS.Commands
             }
             else
             {
+                if (!Supplies.HasEnoughSuppliesToBuild(buildingSO)) { return; }
+                
                 if (buildingRestrictions.Any(restriction => !restriction.CanPlace(commandContext.hit.point))) { return; }
                 builder.Build(buildingSO, commandContext.hit.point);
             }
+        }
+
+        private bool IsResumable(RaycastHit unitHit)
+        {
+            if (!unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding) || baseBuilding.GetBuildingSO() != buildingSO) { return false; }
+            
+            BuildingProgress buildingProgress = baseBuilding.GetBuildingProgress();
+            return buildingProgress.state is BuildingProgress.BuildingState.Paused or BuildingProgress.BuildingState.Destroyed;
         }
     }
 }

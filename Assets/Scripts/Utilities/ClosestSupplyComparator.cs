@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace GameDevTV.RTS.Utilities
 {
-    public struct ClosestSupplyComparator : IComparer<GatherableSupply>
+    public readonly struct ClosestSupplyComparator : IComparer<GatherableSupply>
     {
-        private Vector3 targetPosition;
+        private readonly Vector3 targetPosition;
 
         public ClosestSupplyComparator(Vector3 position)
         {
@@ -15,6 +15,7 @@ namespace GameDevTV.RTS.Utilities
 
         public int Compare(GatherableSupply x, GatherableSupply y)
         {
+            if (x == null || y == null) { return 0; }
             return (x.gameObject.transform.position - targetPosition).sqrMagnitude
                 .CompareTo((y.gameObject.transform.position - targetPosition).sqrMagnitude);
         }

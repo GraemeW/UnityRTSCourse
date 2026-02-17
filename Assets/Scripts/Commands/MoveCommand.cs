@@ -1,5 +1,5 @@
-using GameDevTV.RTS.Units;
 using UnityEngine;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Commands
 {
@@ -12,10 +12,10 @@ namespace GameDevTV.RTS.Commands
         [SerializeField] private float complexMoveRadiusExpansion = 3.5f;
 
         // State
-        private int unitsOnLayer = 0;
+        private int unitsOnLayer;
         private int maxUnitsOnLayer = 1;
-        private float circleRadius = 0;
-        private float radialOffset = 0;
+        private float circleRadius;
+        private float radialOffset;
 
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {

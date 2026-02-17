@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Events
 {
     public struct SupplyEvent : IEvent
     {
-        public EventType EventType => EventType.Supply;
+        public EventType eventType => EventType.Supply;
 
         public SupplySO supplyType { get; private set; }
         public int amount { get; private set; }

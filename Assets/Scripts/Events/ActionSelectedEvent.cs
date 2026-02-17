@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Events
 {
     public struct ActionSelectedEvent : IEvent
     {
-        public EventType EventType => EventType.ActionSelected;
+        public EventType eventType => EventType.ActionSelected;
 
         public ActionBase action { get; private set; }
 

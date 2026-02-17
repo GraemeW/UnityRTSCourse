@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Events
 {
     public struct UnitSelectedEvent : IEvent
     {
-        public EventType EventType => EventType.UnitSelected;
+        public EventType eventType => EventType.UnitSelected;
 
         public ISelectable unit { get; private set; }
 

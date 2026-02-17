@@ -16,4 +16,5 @@ MonoBehaviour:
   <health>k__BackingField: 150
   <prefab>k__BackingField: {fileID: 6964012305514025925, guid: 60174e2531fe1794a81f4a279e17f61d, type: 3}
   <buildTime>k__BackingField: 5
+  <cost>k__BackingField: {fileID: 11400000, guid: b8a4e6825b14544f88e3bcb616f9f398, type: 2}
   <placementMaterial>k__BackingField: {fileID: 2100000, guid: 1e0c783ee2ac93547b2ee0ab61fe0ea9, type: 2}

@@ -6,13 +6,13 @@ namespace GameDevTV.RTS.UI.Components
     {
         // Tunables
         [SerializeField] private RectTransform mask;
-        [SerializeField] private Vector2 padding = new Vector2(9, 8);
+        [SerializeField] private Vector2 padding = new(9, 8);
 
         // Cached References
         private RectTransform maskParentRectTransform;
 
         // State
-        bool isHookedUp = false;
+        private bool isHookedUp;
 
         #region UnityMethods
         private void Awake()

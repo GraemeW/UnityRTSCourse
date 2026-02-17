@@ -1,14 +1,12 @@
-using GameDevTV.RTS.Units;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Environment
 {
     public class GatherableSupply : MonoBehaviour, IGatherable, ISelectable
     {
         // Fixed
-        public static string suppliesLayerMaskRef = "Supplies";
-
+        public const string suppliesLayerMaskRef = "Supplies";
 
         #region Interface
         [field: SerializeField] public SupplySO supplySO {  get; private set; }

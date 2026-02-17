@@ -1,6 +1,5 @@
-using GameDevTV.RTS.Commands;
-using GameDevTV.RTS.UI;
 using UnityEngine;
+using GameDevTV.RTS.Commands;
 
 namespace GameDevTV.RTS.Units
 {

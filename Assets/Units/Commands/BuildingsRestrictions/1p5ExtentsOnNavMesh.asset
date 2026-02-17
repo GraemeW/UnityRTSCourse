@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b070cf954e24d728ab1580ffb11e1e6, type: 3}
   m_Name: 1p5ExtentsOnNavMesh
   m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Commands.BuildingRestrictionSO
-  <MustBeFullyOnNavMesh>k__BackingField: 1
-  <NavMeshAgentTypeID>k__BackingField: 0
-  <NavMeshTolerance>k__BackingField: 0.25
-  <Extents>k__BackingField: {x: 1.5, y: 1.5, z: 1.5}
+  <extents>k__BackingField: {x: 1.5, y: 1.5, z: 1.5}
+  <hitDetectionStyle>k__BackingField: 0
+  <radius>k__BackingField: 1
+  <layerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0
+  <mustBeFullyOnNavMesh>k__BackingField: 1
+  <navMeshAgentTypeID>k__BackingField: 0
+  <navMeshTolerance>k__BackingField: 0.25

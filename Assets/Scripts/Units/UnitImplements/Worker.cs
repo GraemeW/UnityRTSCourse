@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using Unity.Behavior;
+using UnityEngine;
+using GameDevTV.RTS.Commands;
 using GameDevTV.RTS.Behavior;
 using GameDevTV.RTS.Environment;
 using GameDevTV.RTS.Utilities;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
-using Unity.Behavior;
-using UnityEngine;
-using GameDevTV.RTS.Commands;
 
 namespace GameDevTV.RTS.Units
 {
@@ -15,6 +15,7 @@ namespace GameDevTV.RTS.Units
     {
         // Tunables
         [SerializeField] private ActionBase CancelBuildingCommand;
+        [SerializeField][Range(0f,1f)] private float cancelBuildingRefundFraction = 0.75f;
 
         #region ComputedProperties
         public bool HasSupplies => BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
@@ -74,6 +75,7 @@ namespace GameDevTV.RTS.Units
 
         public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
         {
+            if (buildingSO == null) { return null; }
             if (IsBuilding) { return null; }
             
             GameObject buildingInstance = Instantiate(buildingSO.prefab, targetLocation, Quaternion.identity);
@@ -85,6 +87,8 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
             SetCommandOverrides(null);
             AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
+            
+            buildingSO.ChargeSupplies();
 
             return buildingInstance;
         }
@@ -112,7 +116,12 @@ namespace GameDevTV.RTS.Units
         {
             CancelGhost();
             BaseBuilding baseBuilding = BehaviorConstants.GetBuildingUnderConstruction(behaviorAgent);
-            if (baseBuilding != null) { Destroy(baseBuilding.gameObject); }
+            if (baseBuilding != null)
+            {
+                BuildingSO buildingSO = baseBuilding.GetBuildingSO();
+                if (buildingSO != null) { buildingSO.RefundSupplies(cancelBuildingRefundFraction); }
+                Destroy(baseBuilding.gameObject);
+            }
 
             SetCommandOverrides(null);
             Stop();

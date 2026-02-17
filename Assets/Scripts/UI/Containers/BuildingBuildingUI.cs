@@ -19,16 +19,16 @@ namespace GameDevTV.RTS.UI.Containers
         private BaseBuilding baseBuilding;
         private Coroutine buildCoroutine;
 
-        public void EnableFor(BaseBuilding baseBuilding)
+        public void EnableFor(BaseBuilding setBaseBuilding)
         {
-            if (baseBuilding == null) { return; }
+            if (setBaseBuilding == null) { return; }
 
             gameObject.SetActive(true);
-            this.baseBuilding = baseBuilding;
-            this.baseBuilding.onQueueUpdated += HandleQueueUpdated;
+            baseBuilding = setBaseBuilding;
+            baseBuilding.onQueueUpdated += HandleQueueUpdated;
 
             HandleQueueUpdated(null);
-            RefreshUnitButtons(baseBuilding.buildingQueueSnapshot);
+            RefreshUnitButtons(setBaseBuilding.buildingQueueSnapshot);
         }
 
         public void Disable()
@@ -43,7 +43,7 @@ namespace GameDevTV.RTS.UI.Containers
 
         private void HandleQueueUpdated(AbstractUnitSO[] unitsInQueue)
         {
-            if (buildCoroutine == null) { buildCoroutine = StartCoroutine(UpdateUnitProgress()); }
+            buildCoroutine ??= StartCoroutine(UpdateUnitProgress());
             RefreshUnitButtons(unitsInQueue);
         }
 

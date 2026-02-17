@@ -1,8 +1,9 @@
+using UnityEngine;
+using TMPro;
 using GameDevTV.RTS.Environment;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
-using TMPro;
-using UnityEngine;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Player
 {
@@ -17,12 +18,20 @@ namespace GameDevTV.RTS.Player
         [SerializeField] private SupplySO mineralsSupply;
         [SerializeField] private SupplySO gasSupply;
 
-        // Static Variables
-        public static int Minerals { get; private set; } = 50;
-        public static int Gas { get; private set; } = 50;
-        public static int Population { get; private set; }
-        public static int PopulationLimit { get; private set; } = 200;
-
+        #region Static
+        public static int minerals { get; private set; } = 50;
+        public static int gas { get; private set; } = 50;
+        public static int population { get; private set; }
+        public static int populationLimit { get; private set; } = 200;
+        
+        public static bool HasEnoughSuppliesToBuild(AbstractUnitSO unitSO)
+        {
+            if (unitSO == null) { return false; }
+            if (unitSO.cost == null) { return true; }
+            return minerals >= unitSO.cost.minerals && gas >= unitSO.cost.gas;
+        }
+        #endregion
+        
         #region UnityMethods
         private void Start()
         {
@@ -47,11 +56,11 @@ namespace GameDevTV.RTS.Player
 
             if (supplyEvent.supplyType.Equals(mineralsSupply))
             {
-                Minerals += supplyEvent.amount;
+                minerals += supplyEvent.amount;
             }
             else if (supplyEvent.supplyType.Equals (gasSupply))
             {
-                Gas += supplyEvent.amount;
+                gas += supplyEvent.amount;
             }
 
             RefreshUI();
@@ -61,8 +70,8 @@ namespace GameDevTV.RTS.Player
         #region UIMethods
         private void RefreshUI()
         {
-            mineralsText.SetText(Minerals.ToString());
-            gasText.SetText(Gas.ToString());
+            mineralsText.SetText(minerals.ToString());
+            gasText.SetText(gas.ToString());
         }
         #endregion
     }

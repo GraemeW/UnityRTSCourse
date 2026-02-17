@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Unity.Cinemachine;
 using UnityEngine.InputSystem;
@@ -7,7 +8,6 @@ using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Units;
 using GameDevTV.RTS.Commands;
 using UnityEngine.EventSystems;
-using System.Linq;
 
 namespace GameDevTV.RTS.Player
 {

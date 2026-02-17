@@ -2,7 +2,7 @@ namespace GameDevTV.RTS.UI
 {
     public interface IUIElement<T>
     {
-        void EnableFor(T item);
+        void EnableFor(T setBaseBuilding);
         void Disable();
     }
 

@@ -5,7 +5,7 @@ namespace GameDevTV.RTS.Events
 {
     public struct UnitDeathEvent : IEvent
     {
-        public EventType EventType => EventType.UnitDeath;
+        public EventType eventType => EventType.UnitDeath;
 
         public AbstractUnit unit { get; private set; }
 

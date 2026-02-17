@@ -1,11 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Player;
 using GameDevTV.RTS.UI.Containers;
 using GameDevTV.RTS.Units;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace GameDevTV.RTS.UI
 {
@@ -17,7 +17,7 @@ namespace GameDevTV.RTS.UI
         [SerializeField] private BuildingBuildingUI buildingBuildingUI;
 
         // State
-        HashSet<AbstractCommandable> selectedUnits = new HashSet<AbstractCommandable>(PlayerInput.maxSelectionCount);
+        private readonly HashSet<AbstractCommandable> selectedUnits = new(PlayerInput.maxSelectionCount);
 
         #region UnityMethods
         private void OnEnable()

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using GameDevTV.RTS.EventBus;
 using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Commands;
-using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 namespace GameDevTV.RTS.Units
 {

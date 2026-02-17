@@ -89,6 +89,8 @@ namespace GameDevTV.RTS.Units
             if (buildingQueue.Count == _maxQueueSize) { return; }
 
             buildingQueue.Add(unitToBuild);
+            unitToBuild.ChargeSupplies();
+            
             if (buildCoroutine == null)
             {
                 buildCoroutine = StartCoroutine(DoBuildUnits());
@@ -103,6 +105,9 @@ namespace GameDevTV.RTS.Units
         {
             if (index < 0 || index >= buildingQueue.Count) { return; }
 
+            AbstractUnitSO canceledUnit = buildingQueue[index];
+            canceledUnit.RefundSupplies();
+            
             if (index == 0)
             {
                 StopCoroutine(buildCoroutine);
