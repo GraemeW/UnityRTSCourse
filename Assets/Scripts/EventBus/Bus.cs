@@ -64,8 +64,8 @@ namespace GameDevTV.RTS.EventBus
         {
             switch (eventType)
             {
-                case EventType.ActionSelected:
-                    Bus<ActionSelectedEvent>.PrintAllEvents();
+                case EventType.CommandSelected:
+                    Bus<CommandSelectedEvent>.PrintAllEvents();
                     break;
                 case EventType.Supply:
                     Bus<SupplyEvent>.PrintAllEvents();
@@ -91,8 +91,8 @@ namespace GameDevTV.RTS.EventBus
         {
             switch (eventType)
             {
-                case EventType.ActionSelected:
-                    Bus<ActionSelectedEvent>.ClearAllSubscriptions();
+                case EventType.CommandSelected:
+                    Bus<CommandSelectedEvent>.ClearAllSubscriptions();
                     break;
                 case EventType.Supply:
                     Bus<SupplyEvent>.ClearAllSubscriptions();

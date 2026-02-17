@@ -15,10 +15,10 @@ namespace GameDevTV.RTS.Units
 
         [Header("Hookups")]
         [SerializeField] private DecalProjector decalProjector;
-        [SerializeField] private List<ActionBase> availableCommands = new();
+        [SerializeField] private List<BaseCommand> availableCommands = new();
 
         // State
-        public List<ActionBase> currentCommands { get; private set; }
+        public List<BaseCommand> currentCommands { get; private set; }
 
         #region UnityMethods
         protected virtual void Start()
@@ -57,22 +57,22 @@ namespace GameDevTV.RTS.Units
 
         private void ResetCommandOverrides()
         {
-            currentCommands = new List<ActionBase>(availableCommands);
+            currentCommands = new List<BaseCommand>(availableCommands);
         }
         
-        public void SetCommandOverrides(IList<ActionBase> commandOverrides, bool callUnitSelectedEvent = true)
+        public void SetCommandOverrides(IList<BaseCommand> commandOverrides, bool callUnitSelectedEvent = true)
         {
             if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
-            else { currentCommands = new List<ActionBase>(commandOverrides); }
+            else { currentCommands = new List<BaseCommand>(commandOverrides); }
             if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
         }
 
-        protected void AppendToCommands(IList<ActionBase> commandOverrides, bool callUnitSelectedEvent = true)
+        protected void AppendToCommands(IList<BaseCommand> commandOverrides, bool callUnitSelectedEvent = true)
         {
             if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
             else
             {
-                foreach (ActionBase commandOverride in commandOverrides)
+                foreach (BaseCommand commandOverride in commandOverrides)
                 {
                     currentCommands.Add(commandOverride);
                 }

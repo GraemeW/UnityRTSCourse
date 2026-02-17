@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using GameDevTV.RTS.Commands;
@@ -25,7 +26,7 @@ namespace GameDevTV.RTS.UI.Containers
             ClearActionButtons();
             if (commandableUnits == null || commandableUnits.Count == 0) { return; }
 
-            HashSet<ActionBase> availableCommands = ReconcileCommands(commandableUnits);
+            HashSet<BaseCommand> availableCommands = ReconcileCommands(commandableUnits);
             DrawActionButtons(availableCommands);
         }
 
@@ -37,15 +38,15 @@ namespace GameDevTV.RTS.UI.Containers
             }
         }
 
-        private HashSet<ActionBase> ReconcileCommands(HashSet<AbstractCommandable> commandableUnits)
+        private HashSet<BaseCommand> ReconcileCommands(HashSet<AbstractCommandable> commandableUnits)
         {
-            HashSet<ActionBase> availableCommands = new HashSet<ActionBase>();
+            var availableCommands = new HashSet<BaseCommand>();
             foreach (AbstractCommandable commandableUnit in commandableUnits)
             {
                 if (commandableUnit == null)  { continue; }
                 if (!commandableUnit.isActiveAndEnabled) { continue; }
 
-                foreach (ActionBase action in commandableUnit.currentCommands)
+                foreach (BaseCommand action in commandableUnit.currentCommands)
                 {
                     availableCommands.Add(action);
                 }
@@ -53,19 +54,17 @@ namespace GameDevTV.RTS.UI.Containers
             return availableCommands;
         }
 
-        private void DrawActionButtons(HashSet<ActionBase> availableCommands)
+        private void DrawActionButtons(HashSet<BaseCommand> availableCommands)
         {
-            foreach (ActionBase action in availableCommands)
+            foreach (BaseCommand action in availableCommands.Where(action => action.slot < actionButtons.Length))
             {
-                if (action.slot >= actionButtons.Length) { continue; }
-
                 actionButtons[action.slot].EnableFor(action, HandleClick(action));
             }
         }
 
-        private UnityAction HandleClick(ActionBase action)
+        private static UnityAction HandleClick(BaseCommand action)
         {
-            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
+            return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
         }
         #endregion
     }

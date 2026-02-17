@@ -7,7 +7,7 @@ using GameDevTV.RTS.Units;
 namespace GameDevTV.RTS.Commands
 {
     [CreateAssetMenu(fileName = "BuildBuildingAction", menuName = "Units/Commands/BuildBuilding", order = 105)]
-    public class BuildBuildingCommand : ActionBase
+    public class BuildBuildingCommand : BaseCommand
     {
         [field: SerializeField] public BuildingSO buildingSO { get; private set; }
         [field: SerializeField] public List<BuildingRestrictionSO> buildingRestrictions { get; private set; } = new();

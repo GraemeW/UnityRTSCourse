@@ -4,7 +4,7 @@ using GameDevTV.RTS.Units;
 namespace GameDevTV.RTS.Commands
 {
     [CreateAssetMenu(fileName = "Move", menuName = "Units/Commands/Move")]
-    public class MoveCommand : ActionBase
+    public class MoveCommand : BaseCommand
     {
         // Tunables
         [SerializeField] private LayerMask floorLayers;

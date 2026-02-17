@@ -49,20 +49,20 @@ namespace GameDevTV.RTS.Player
         private HashSet<AbstractUnit> addedUnits;
         private List<ISelectable> selectedUnits;
 
-        private ActionBase queuedCommand;
+        private BaseCommand queuedCommand;
         private GameObject ghostInstance;
         private MeshRenderer ghostRenderer;
 
         #region StaticMethods
-        private static List<ActionBase> GetAvailableCommands(AbstractCommandable abstractUnit)
+        private static List<BaseCommand> GetAvailableCommands(AbstractCommandable abstractUnit)
         {
             var overrideCommandsCommands = new List<OverrideCommandsCommand>();
-            foreach (ActionBase command in abstractUnit.currentCommands)
+            foreach (BaseCommand command in abstractUnit.currentCommands)
             {
                 if (command is OverrideCommandsCommand commandsCommand) { overrideCommandsCommands.Add(commandsCommand); }
             }
 
-            List<ActionBase> allAvailableCommands = new();
+            List<BaseCommand> allAvailableCommands = new();
             foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
             {
                 allAvailableCommands.AddRange(overrideCommand.commandOverrides
@@ -94,7 +94,7 @@ namespace GameDevTV.RTS.Player
             Bus<UnitDeselectedEvent>.SubscribeToEvent(HandleUnitDeselected);
             Bus<UnitSpawnEvent>.SubscribeToEvent(HandleUnitSpawned);
             Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
-            Bus<ActionSelectedEvent>.SubscribeToEvent(HandleActionSelected);
+            Bus<CommandSelectedEvent>.SubscribeToEvent(HandleActionSelected);
         }
 
         private void OnDestroy()
@@ -103,7 +103,7 @@ namespace GameDevTV.RTS.Player
             Bus<UnitDeselectedEvent>.UnsubscribeFromEvent(HandleUnitDeselected);
             Bus<UnitSpawnEvent>.UnsubscribeFromEvent(HandleUnitSpawned);
             Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
-            Bus<ActionSelectedEvent>.UnsubscribeFromEvent(HandleActionSelected);
+            Bus<CommandSelectedEvent>.UnsubscribeFromEvent(HandleActionSelected);
         }
 
         private void Update()
@@ -159,10 +159,10 @@ namespace GameDevTV.RTS.Player
             selectedUnits.Remove(selectableUnit);
         }
 
-        private void HandleActionSelected(ActionSelectedEvent actionSelectedEvent)
+        private void HandleActionSelected(CommandSelectedEvent commandSelectedEvent)
         {
-            queuedCommand = actionSelectedEvent.action;
-            if (!actionSelectedEvent.action.requiresClickToActivate)
+            queuedCommand = commandSelectedEvent.baseCommand;
+            if (!commandSelectedEvent.baseCommand.requiresClickToActivate)
             {
                 ActivateCommand(true);
                 queuedCommand = null;

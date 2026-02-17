@@ -4,7 +4,7 @@ using GameDevTV.RTS.Units;
 namespace GameDevTV.RTS.Commands
 {
     [CreateAssetMenu(fileName = "StopAction", menuName = "Units/Commands/Stop")]
-    public class StopCommand : ActionBase
+    public class StopCommand : BaseCommand
     {
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {

@@ -6,7 +6,7 @@ using GameDevTV.RTS.Commands;
 namespace GameDevTV.RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class ActionButtonUI : MonoBehaviour, IUIElement<ActionBase, UnityAction>
+    public class ActionButtonUI : MonoBehaviour, IUIElement<BaseCommand, UnityAction>
     {
         // Hookups
         [SerializeField] private Image icon;
@@ -19,7 +19,7 @@ namespace GameDevTV.RTS.UI.Components
             button = GetComponent<Button>();
         }
 
-        public void EnableFor(ActionBase action, UnityAction onClick)
+        public void EnableFor(BaseCommand action, UnityAction onClick)
         {
             button.onClick.RemoveAllListeners();
 

@@ -14,7 +14,7 @@ namespace GameDevTV.RTS.Units
     public class Worker : AbstractUnit, IBuildingBuilder
     {
         // Tunables
-        [SerializeField] private ActionBase CancelBuildingCommand;
+        [SerializeField] private BaseCommand CancelBuildingCommand;
         [SerializeField][Range(0f,1f)] private float cancelBuildingRefundFraction = 0.75f;
 
         #region ComputedProperties
@@ -86,7 +86,7 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
             SetCommandOverrides(null);
-            AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
+            AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
             
             buildingSO.ChargeSupplies();
 
@@ -103,7 +103,7 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
 
             SetCommandOverrides(null);
-            AppendToCommands(new List<ActionBase> { CancelBuildingCommand });
+            AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
         }
 
         public void CancelGhost()

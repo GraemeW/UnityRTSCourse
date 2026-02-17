@@ -4,7 +4,7 @@ using GameDevTV.RTS.Units;
 namespace GameDevTV.RTS.Commands
 {
     [CreateAssetMenu(fileName = "Follow", menuName = "Units/Commands/Follow")]
-    public class FollowCommand : ActionBase
+    public class FollowCommand : BaseCommand
     {
         [SerializeField] private LayerMask selectableLayers;
 

@@ -4,7 +4,7 @@ using GameDevTV.RTS.Commands;
 namespace GameDevTV.RTS.Units
 {
     [CreateAssetMenu(fileName = "CancelBuilding", menuName = "Units/Commands/CancelBuilding")]
-    public class CancelBuilding : ActionBase
+    public class CancelBuilding : BaseCommand
     {
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {

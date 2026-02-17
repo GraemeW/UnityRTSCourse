@@ -2,7 +2,7 @@ namespace GameDevTV.RTS.EventBus
 {
     public enum EventType
     {
-        ActionSelected,
+        CommandSelected,
         Supply,
         UnitDeath,
         UnitDeselected,
