@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: 8c3d98eaf097e4ef186c8880e40ca3d3, type: 3}
   <slot>k__BackingField: 1
+  <tooltipText>k__BackingField: Build a grenadier
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
   unitSO: {fileID: 11400000, guid: 62b644c592d1bde42ad147e706f6d6b1, type: 2}

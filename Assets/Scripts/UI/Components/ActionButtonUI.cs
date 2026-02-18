@@ -2,16 +2,20 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using GameDevTV.RTS.Commands;
-using GameDevTV.RTS.EventBus;
-using GameDevTV.RTS.Events;
+using UnityEngine.EventSystems;
 
 namespace GameDevTV.RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class ActionButtonUI : MonoBehaviour, IUIElement<BaseCommand, UnityAction>
+    [RequireComponent(typeof(EventTrigger))]
+    public class ActionButtonUI : MonoBehaviour, IUIElement<BaseCommand, UnityAction>, IPointerEnterHandler, IPointerExitHandler
     {
-        // Hookups
+        [Header("Hookups")]
         [SerializeField] private Image icon;
+        [SerializeField] private Tooltip tooltip;
+        
+        // State
+        private string actionTooltipText;
         
         // Cached References
         private Button button;
@@ -23,7 +27,7 @@ namespace GameDevTV.RTS.UI.Components
         }
         #endregion
 
-        #region PublicMethods
+        #region InterfaceMethods
         public void EnableFor(BaseCommand action, UnityAction onClick)
         {
             ClearButtonState();
@@ -33,12 +37,25 @@ namespace GameDevTV.RTS.UI.Components
             icon.sprite = action.icon;
             button.interactable = !action.IsLocked(new CommandContext());
             button.onClick.AddListener(onClick);
+            if (tooltip != null) { tooltip.SetText(action.tooltipText); }
         }
 
         public void Disable()
         {
             ClearButtonState();
             icon.gameObject.SetActive(false);
+        }
+        
+        public void OnPointerEnter(PointerEventData _)
+        {
+            if (tooltip == null) { return;  }
+            tooltip.DelayedShowTooltip();
+        }
+
+        public void OnPointerExit(PointerEventData _)
+        {
+            if (tooltip == null) { return; }
+            tooltip.DelayedHideTooltip();
         }
         #endregion
         
@@ -48,6 +65,7 @@ namespace GameDevTV.RTS.UI.Components
             icon.sprite = null;
             button.interactable = false;
             button.onClick.RemoveAllListeners();
+            if (tooltip != null) { tooltip.SetText(string.Empty); }
         }
         #endregion
     }

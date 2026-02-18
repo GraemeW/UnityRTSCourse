@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: fbd5ca5720bbbf344ac1b24c7e42072a, type: 3}
   <slot>k__BackingField: 5
+  <tooltipText>k__BackingField: Gather gas or minerals
   <requiresClickToActivate>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 0}
   selectableLayers:
     serializedVersion: 2
     m_Bits: 704

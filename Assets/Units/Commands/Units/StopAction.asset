@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: 1a3a199fa1bcd2642a8472336cb43de1, type: 3}
   <slot>k__BackingField: 2
+  <tooltipText>k__BackingField: Stop current action
   <requiresClickToActivate>k__BackingField: 0
+  <ghostPrefab>k__BackingField: {fileID: 0}

@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: dd2886383de883c448b002edab7b5a06, type: 3}
   <slot>k__BackingField: 1
+  <tooltipText>k__BackingField: Follow a unit
   <requiresClickToActivate>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 0}
   selectableLayers:
     serializedVersion: 2
     m_Bits: 704

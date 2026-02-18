@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: 9cc8d41a18bc04fc5a62e42344e567d6, type: 3}
   <slot>k__BackingField: 0
+  <tooltipText>k__BackingField: Build a worker
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
   unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
