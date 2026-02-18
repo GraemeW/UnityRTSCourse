@@ -21,16 +21,6 @@ namespace GameDevTV.RTS.Commands
 
             hit = new RaycastHit();
         }
-
-        // Alt -- already used ray to derive hit
-        public CommandContext(AbstractCommandable commandable, RaycastHit hit, int unitIndex = 0)
-        {
-            this.commandable = commandable;
-            this.hit = hit;
-            this.unitIndex = unitIndex;
-
-            cameraRay = new Ray(); // Dummy, garbage
-        }
         
         // Derivative
         public CommandContext(CommandContext commandContext)

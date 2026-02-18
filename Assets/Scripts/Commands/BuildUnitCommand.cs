@@ -32,5 +32,7 @@ namespace GameDevTV.RTS.Commands
             BaseBuilding baseBuilding = (BaseBuilding)commandContext.commandable;
             baseBuilding.BuildUnit(unitSO);
         }
+
+        public override bool IsLocked(CommandContext commandContext) => !Supplies.HasEnoughSuppliesToBuild(unitSO);
     }
 }

@@ -16,5 +16,7 @@ namespace GameDevTV.RTS.Commands
             AbstractUnit abstractUnit = (AbstractUnit)commandContext.commandable;
             abstractUnit.Stop();
         }
+        
+        public override bool IsLocked(CommandContext commandContext) => false;
     }
 }

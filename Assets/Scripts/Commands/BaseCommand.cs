@@ -11,5 +11,6 @@ namespace GameDevTV.RTS.Commands
 
         public abstract bool CanHandle(ref CommandContext commandContext, bool skipCondition = false);
         public abstract void Handle(CommandContext commandContext);
+        public abstract bool IsLocked(CommandContext commandContext);
     }
 }

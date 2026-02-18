@@ -25,6 +25,7 @@ namespace GameDevTV.RTS.UI
             Bus<UnitSelectedEvent>.SubscribeToEvent(HandleUnitSelected);
             Bus<UnitDeselectedEvent>.SubscribeToEvent(HandleUnitDeselected);
             Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
+            Bus<SupplyEvent>.SubscribeToEvent(HandleSuppliesUpdate);
         }
 
         private void OnDisable()
@@ -32,6 +33,7 @@ namespace GameDevTV.RTS.UI
             Bus<UnitSelectedEvent>.UnsubscribeFromEvent(HandleUnitSelected);
             Bus<UnitDeselectedEvent>.UnsubscribeFromEvent(HandleUnitDeselected);
             Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
+            Bus<SupplyEvent>.UnsubscribeFromEvent(HandleSuppliesUpdate);
         }
 
         private void Start()
@@ -62,6 +64,11 @@ namespace GameDevTV.RTS.UI
         {
             if (unitDeathEvent.unit is not AbstractCommandable commandableUnit) { return; }
             selectedUnits.Remove(commandableUnit);
+            RefreshUI();
+        }
+
+        private void HandleSuppliesUpdate(SupplyEvent supplyEvent)
+        {
             RefreshUI();
         }
         #endregion

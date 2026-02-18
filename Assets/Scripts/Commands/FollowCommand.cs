@@ -23,5 +23,7 @@ namespace GameDevTV.RTS.Commands
             IMoveable moveable = (IMoveable)commandContext.commandable;
             moveable.SetMoveTarget(commandContext.hit.collider.gameObject);
         }
+        
+        public override bool IsLocked(CommandContext commandContext) => false;
     }
 }

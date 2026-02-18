@@ -35,6 +35,8 @@ namespace GameDevTV.RTS.Commands
 
             ComplexRadialMove(commandContext, moveable, abstractUnit);
         }
+        
+        public override bool IsLocked(CommandContext commandContext) => false;
 
         private void ComplexRadialMove(CommandContext commandContext, IMoveable moveable, AbstractUnit abstractUnit)
         {

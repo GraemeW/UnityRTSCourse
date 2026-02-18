@@ -49,6 +49,8 @@ namespace GameDevTV.RTS.Commands
             }
         }
 
+        public override bool IsLocked(CommandContext commandContext) => !Supplies.HasEnoughSuppliesToBuild(buildingSO);
+
         private bool IsResumable(RaycastHit unitHit)
         {
             if (!unitHit.collider.TryGetComponent(out BaseBuilding baseBuilding) || baseBuilding.GetBuildingSO() != buildingSO) { return false; }

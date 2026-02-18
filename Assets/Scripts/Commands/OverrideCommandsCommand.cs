@@ -17,5 +17,7 @@ namespace GameDevTV.RTS.Commands
         {
             commandContext.commandable.SetCommandOverrides(commandOverrides);
         }
+        
+        public override bool IsLocked(CommandContext commandContext) => false;
     }
 }

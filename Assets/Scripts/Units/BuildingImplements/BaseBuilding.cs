@@ -75,7 +75,7 @@ namespace GameDevTV.RTS.Units
         #region PublicMethods
         public BuildingSO GetBuildingSO() => buildingSO;
         public BuildingProgress GetBuildingProgress() => progress;
-        public float GetUnitBuildProgress() => Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime);
+        public float GetUnitBuildProgress() => buildingUnit != null ? Mathf.Clamp01((Time.time - currentQueueStartTime) / buildingUnit.buildTime) : 0.0f;
         public MeshRenderer GetRenderer() => rendererLookup.FirstOrDefault().Key;
 
         public void PauseBuildingProgress()

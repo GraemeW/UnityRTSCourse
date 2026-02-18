@@ -31,5 +31,7 @@ namespace GameDevTV.RTS.Commands
                 worker.ReturnSupplies(commandPost);
             }
         }
+        
+        public override bool IsLocked(CommandContext commandContext) => false;
     }
 }

@@ -21,5 +21,7 @@ namespace GameDevTV.RTS.Units
             IBuildingBuilder buildingBuilder = (IBuildingBuilder)commandContext.commandable;
             buildingBuilder.CancelBuilding();
         }
+
+        public override bool IsLocked(CommandContext commandContext) => false;
     }
 }
