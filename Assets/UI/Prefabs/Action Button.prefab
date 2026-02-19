@@ -90,6 +90,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.UI.Components.Tooltip
   tooltipTMP: {fileID: 753312127254192795}
+  rectTransform: {fileID: 8142159870844363649}
+  delayToShowTooltip: 0.5
+  xOffset: 50
 --- !u!1 &4803793363255682526
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +443,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 290920304268996613}
   tooltip: {fileID: 2106245358980765076}
-  delayToShowTooltip: 0.5
 --- !u!114 &1614225209186276300
 MonoBehaviour:
   m_ObjectHideFlags: 0

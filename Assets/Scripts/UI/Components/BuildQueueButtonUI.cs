@@ -19,10 +19,10 @@ namespace GameDevTV.RTS.UI.Components
             button = GetComponent<Button>();
         }
 
-        public void EnableFor(AbstractUnitSO unit, UnityAction onClick)
+        public void EnableFor(AbstractUnitSO command, UnityAction onClick)
         {
             icon.gameObject.SetActive(true);
-            icon.sprite = unit.icon;
+            icon.sprite = command.icon;
             button.interactable = true;
             button.onClick.AddListener(onClick);
         }

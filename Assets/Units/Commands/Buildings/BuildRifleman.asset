@@ -17,4 +17,4 @@ MonoBehaviour:
   <tooltipText>k__BackingField: Build a rifleman
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
-  unitSO: {fileID: 11400000, guid: 44bfc9e4a35609949bb27f53843b77b6, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: 44bfc9e4a35609949bb27f53843b77b6, type: 2}

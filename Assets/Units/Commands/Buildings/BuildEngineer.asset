@@ -17,4 +17,4 @@ MonoBehaviour:
   <tooltipText>k__BackingField: Build an engineer
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
-  unitSO: {fileID: 11400000, guid: a6c4543b59bc38843a1435a1212db270, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: a6c4543b59bc38843a1435a1212db270, type: 2}

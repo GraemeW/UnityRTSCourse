@@ -17,4 +17,4 @@ MonoBehaviour:
   <tooltipText>k__BackingField: Build a worker
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
-  unitSO: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}

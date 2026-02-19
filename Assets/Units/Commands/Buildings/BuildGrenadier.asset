@@ -17,4 +17,4 @@ MonoBehaviour:
   <tooltipText>k__BackingField: Build a grenadier
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
-  unitSO: {fileID: 11400000, guid: 62b644c592d1bde42ad147e706f6d6b1, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: 62b644c592d1bde42ad147e706f6d6b1, type: 2}
