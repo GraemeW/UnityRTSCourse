@@ -5685,6 +5685,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 467497951}
+  - component: {fileID: 467497952}
   m_Layer: 5
   m_Name: Building Selected Container
   m_TagString: Untagged
@@ -5713,6 +5714,21 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &467497952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467497949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e33855ea14f480d803fb5e1d84bd27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.UI.Containers.BuildingSelectedUI
+  singleUnitSelectedUI: {fileID: 1315305436}
+  buildingUnderConstructionUI: {fileID: 678677022}
+  buildingBuildingUI: {fileID: 1619984283}
 --- !u!1 &468676273
 GameObject:
   m_ObjectHideFlags: 0
@@ -7427,7 +7443,7 @@ MonoBehaviour:
   actionsUI: {fileID: 1741608388}
   unitIconUI: {fileID: 1439996932}
   singleUnitSelectedUI: {fileID: 1315305436}
-  buildingBuildingUI: {fileID: 1619984283}
+  buildingSelectedUI: {fileID: 467497952}
 --- !u!1001 &646904507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7818,6 +7834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 678677021}
+  - component: {fileID: 678677022}
   m_Layer: 5
   m_Name: Building Under Construction Container
   m_TagString: Untagged
@@ -7847,6 +7864,21 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 0}
   m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &678677022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678677020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97790f51bc724b888b5d5c4188f9b63f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.UI.Containers.BuildingUnderConstructionUI
+  buildingNameText: {fileID: 749207882}
+  progressBar: {fileID: 2121856792}
+  timeStep: 0.1
 --- !u!1 &679504034
 GameObject:
   m_ObjectHideFlags: 0
@@ -29363,6 +29395,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7238607690618788840, guid: 3ece5d289035d0b4580cc990a54e21cd, type: 3}
   m_PrefabInstance: {fileID: 2110231349}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2121856792 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8655966342516124208, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+  m_PrefabInstance: {fileID: 1819996207}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68348eaa7a5e2943b93bcecf5836727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2125432614
 PrefabInstance:
   m_ObjectHideFlags: 0

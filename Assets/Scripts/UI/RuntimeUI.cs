@@ -16,7 +16,7 @@ namespace GameDevTV.RTS.UI
         [SerializeField] private ActionsUI actionsUI;
         [SerializeField] private UnitIconUI unitIconUI;
         [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
-        [SerializeField] private BuildingBuildingUI buildingBuildingUI;
+        [SerializeField] private BuildingSelectedUI buildingSelectedUI;
 
         // State
         private readonly HashSet<AbstractCommandable> selectedUnits = new(PlayerInput.maxSelectionCount);
@@ -40,10 +40,7 @@ namespace GameDevTV.RTS.UI
 
         private void Start()
         {
-            actionsUI.Disable();
-            unitIconUI.Disable();
-            singleUnitSelectedUI.Disable();
-            buildingBuildingUI.Disable();
+            ClearUI();
         }
         #endregion
 
@@ -90,7 +87,7 @@ namespace GameDevTV.RTS.UI
                     switch (commandableUnit)
                     {
                         case BaseBuilding baseBuilding:
-                            buildingBuildingUI.EnableFor(baseBuilding);
+                            buildingSelectedUI.EnableFor(baseBuilding);
                             break;
                         case AbstractUnit abstractUnit:
                             singleUnitSelectedUI.EnableFor(abstractUnit);
@@ -105,7 +102,7 @@ namespace GameDevTV.RTS.UI
             actionsUI.Disable();
             unitIconUI.Disable();
             singleUnitSelectedUI.Disable();
-            buildingBuildingUI.Disable();
+            buildingSelectedUI.Disable();
         }
         #endregion
     }

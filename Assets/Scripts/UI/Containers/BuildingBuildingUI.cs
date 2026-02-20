@@ -48,6 +48,7 @@ namespace GameDevTV.RTS.UI.Containers
 
         private void HandleQueueUpdated(AbstractUnitSO[] unitsInQueue)
         {
+            if (baseBuilding == null) { return; }
             buildCoroutine ??= StartCoroutine(UpdateUnitProgress());
             RefreshUnitButtons(unitsInQueue);
         }

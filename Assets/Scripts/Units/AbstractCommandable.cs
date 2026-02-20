@@ -18,7 +18,7 @@ namespace GameDevTV.RTS.Units
         [SerializeField] private List<BaseCommand> availableCommands = new();
 
         // State
-        public List<BaseCommand> currentCommands { get; private set; }
+        public List<BaseCommand> currentCommands { get; private set; } =  new();
 
         #region UnityMethods
         protected virtual void Start()
