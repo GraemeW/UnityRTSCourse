@@ -1,8 +1,10 @@
-using GameDevTV.RTS.UI.Components;
-using GameDevTV.RTS.Units;
 using System.Collections;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
+using GameDevTV.RTS.UI.Components;
+using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.UI.Containers
 {
@@ -10,6 +12,7 @@ namespace GameDevTV.RTS.UI.Containers
     {
         // Tunables
         [Header("Hookups")]
+        [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private ProgressBar progressBar;
         [SerializeField] private BuildQueueButtonUI[] unitButtons;
         [Header("Properties")]
@@ -28,6 +31,7 @@ namespace GameDevTV.RTS.UI.Containers
             baseBuilding.onQueueUpdated += HandleQueueUpdated;
 
             HandleQueueUpdated(null);
+            if (setBaseBuilding.unitSO != null) { nameText.text = Regex.Replace(setBaseBuilding.unitSO.name, "([A-Z])", " $1", RegexOptions.Compiled); }
             RefreshUnitButtons(setBaseBuilding.buildingQueueSnapshot);
         }
 
@@ -36,6 +40,7 @@ namespace GameDevTV.RTS.UI.Containers
             if (baseBuilding != null) { baseBuilding.onQueueUpdated -= HandleQueueUpdated; }
             if (buildCoroutine != null) { StopCoroutine(buildCoroutine); }
 
+            nameText.text = string.Empty;
             buildCoroutine = null;
             baseBuilding = null;
             gameObject.SetActive(false);

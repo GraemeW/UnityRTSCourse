@@ -6957,6 +6957,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Armor Icon
       objectReference: {fileID: 0}
+    - target: {fileID: 4089526309284811479, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 4089526309284811479, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5345928508485223958, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5345928508485223958, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 8810813777082331533, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7409,6 +7425,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionsUI: {fileID: 1741608388}
+  unitIconUI: {fileID: 1439996932}
+  singleUnitSelectedUI: {fileID: 1315305436}
   buildingBuildingUI: {fileID: 1619984283}
 --- !u!1001 &646904507
 PrefabInstance:
@@ -16319,8 +16337,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Unit Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: de5a42f739cb1344b8c4fac04113013b, type: 2}
-  m_sharedMaterial: {fileID: 4660662461759981731, guid: de5a42f739cb1344b8c4fac04113013b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -16996,6 +17014,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1315305435}
+  - component: {fileID: 1315305436}
   m_Layer: 5
   m_Name: Single Unit Container
   m_TagString: Untagged
@@ -17025,6 +17044,19 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1315305436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315305434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753bf463c2f64b34b9fd6ad8075908e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.UI.Containers.SingleIconSelectedUI
+  nameText: {fileID: 1266750878}
 --- !u!1001 &1316927690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19797,6 +19829,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1439996931}
+  - component: {fileID: 1439996932}
   m_Layer: 5
   m_Name: Selected Unit Icon Container
   m_TagString: Untagged
@@ -19825,6 +19858,20 @@ RectTransform:
   m_AnchoredPosition: {x: 100.000046, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1439996932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439996930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf92a7d291f145b7b416678b772ebbf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.UI.Containers.UnitIconUI
+  icon: {fileID: 1431966782}
+  healthText: {fileID: 1936917055}
 --- !u!1 &1441022221
 GameObject:
   m_ObjectHideFlags: 0
@@ -21887,6 +21934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c63830c935b48c4ab2fe32a76622af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nameText: {fileID: 143719006}
   progressBar: {fileID: 684018148024924125}
   unitButtons:
   - {fileID: 7469599826143240343}
@@ -27139,8 +27187,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 150 / 150
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: de5a42f739cb1344b8c4fac04113013b, type: 2}
-  m_sharedMaterial: {fileID: 4660662461759981731, guid: de5a42f739cb1344b8c4fac04113013b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -29537,6 +29585,22 @@ PrefabInstance:
       propertyPath: Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4089526309284811479, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 4089526309284811479, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5345928508485223958, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5345928508485223958, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 8810813777082331533, guid: 5914b11ece63bbe4c8e5405f73f35210, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

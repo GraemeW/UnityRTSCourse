@@ -14,6 +14,8 @@ namespace GameDevTV.RTS.UI
         // Tunables
         [Header("Hookups")]
         [SerializeField] private ActionsUI actionsUI;
+        [SerializeField] private UnitIconUI unitIconUI;
+        [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
         [SerializeField] private BuildingBuildingUI buildingBuildingUI;
 
         // State
@@ -39,6 +41,8 @@ namespace GameDevTV.RTS.UI
         private void Start()
         {
             actionsUI.Disable();
+            unitIconUI.Disable();
+            singleUnitSelectedUI.Disable();
             buildingBuildingUI.Disable();
         }
         #endregion
@@ -49,8 +53,7 @@ namespace GameDevTV.RTS.UI
             if (unitSelectedEvent.unit is not AbstractCommandable commandableUnit) { return; }
             selectedUnits.Add(commandableUnit);
 
-            actionsUI.EnableFor(selectedUnits);
-            if (selectedUnits.Count == 1 && unitSelectedEvent.unit is BaseBuilding baseBuilding) { buildingBuildingUI.EnableFor(baseBuilding); }
+            RefreshUI();
         }
 
         private void HandleUnitDeselected(UnitDeselectedEvent unitDeselectedEvent)
@@ -76,18 +79,33 @@ namespace GameDevTV.RTS.UI
         #region HelperMethods
         private void RefreshUI()
         {
+            ClearUI();
             if (selectedUnits.Count > 0)
             {
                 actionsUI.EnableFor(selectedUnits);
-                buildingBuildingUI.Disable();
+                if (selectedUnits.Count == 1)
+                {
+                    AbstractCommandable commandableUnit = selectedUnits.First();
+                    unitIconUI.EnableFor(commandableUnit);
+                    switch (commandableUnit)
+                    {
+                        case BaseBuilding baseBuilding:
+                            buildingBuildingUI.EnableFor(baseBuilding);
+                            break;
+                        case AbstractUnit abstractUnit:
+                            singleUnitSelectedUI.EnableFor(abstractUnit);
+                            break;
+                    }
+                }
+            }
+        }
 
-                if (selectedUnits.Count == 1 && selectedUnits.First() is BaseBuilding baseBuilding) { buildingBuildingUI.EnableFor(baseBuilding); }
-            }
-            else
-            {
-                actionsUI.Disable();
-                buildingBuildingUI.Disable();
-            }
+        private void ClearUI()
+        {
+            actionsUI.Disable();
+            unitIconUI.Disable();
+            singleUnitSelectedUI.Disable();
+            buildingBuildingUI.Disable();
         }
         #endregion
     }
