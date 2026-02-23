@@ -19,7 +19,6 @@ namespace GameDevTV.RTS.Units
 
         #region ComputedProperties
         public bool HasSupplies => BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
-
         public bool IsBuilding => BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
         #endregion
 
@@ -52,12 +51,19 @@ namespace GameDevTV.RTS.Units
             base.OnDestroy();
         } 
         #endregion
+        
+        #region ProtectedMethods
+        protected override void ReconcileContingentCommands()
+        {
+            if (IsBuilding)
+            {
+                AppendToCommands(new List<BaseCommand> { CancelBuildingCommand }, false);
+            }
+        }
+        #endregion
 
         #region PublicMethods
-        public void ResetCommandList()
-        {
-            SetCommandOverrides(null);
-        }
+        public void ResetCommandList() => SetCommandOverrides(null);
         
         public void Gather(GatherableSupply gatherableSupply)
         {
@@ -86,7 +92,6 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
-            SetCommandOverrides(null);
             AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
             
             buildingSO.ChargeSupplies();
@@ -104,7 +109,6 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
 
             SetCommandOverrides(null);
-            AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
         }
 
         public void CancelGhost()
@@ -125,6 +129,7 @@ namespace GameDevTV.RTS.Units
             }
 
             SetCommandOverrides(null);
+            if (TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
             Stop();
         }
         #endregion

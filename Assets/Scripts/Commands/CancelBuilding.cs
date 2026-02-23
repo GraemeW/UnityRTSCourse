@@ -8,12 +8,7 @@ namespace GameDevTV.RTS.Units
     {
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
-            IBuildingBuilder buildingBuilder = commandContext.commandable as IBuildingBuilder;
-            bool isWorker = buildingBuilder != null;
-            if (!isWorker) { return false; }
-
-            bool isBuilding = buildingBuilder.IsBuilding;
-            return isBuilding;
+            return commandContext.commandable is IBuildingBuilder { IsBuilding: true };
         }
 
         public override void Handle(CommandContext commandContext)

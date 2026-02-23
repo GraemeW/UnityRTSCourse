@@ -98,6 +98,8 @@ namespace GameDevTV.RTS.Behavior
 
         private Status UpdateRendererPosition()
         {
+            if (buildingRenderer == null) { return Status.Failure; }
+            
             float normalizedTime = Mathf.Clamp01((Time.time - startBuildTime) / buildTime);
             buildingRenderer.transform.SetLocalPositionAndRotation(Vector3.Lerp(startPosition, endPosition, normalizedTime), Quaternion.identity);
             return (normalizedTime >= 1.0) ? Status.Success : Status.Running;

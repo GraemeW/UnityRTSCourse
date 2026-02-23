@@ -43,36 +43,29 @@ namespace GameDevTV.RTS.Units
         public void Select()
         {
             if (decalProjector != null) { decalProjector.gameObject.SetActive(true); }
+            SetCommandOverrides(null, false);
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
         #endregion
 
         #region Commands
+        protected abstract void ReconcileContingentCommands();
 
-        private void ResetCommandOverrides()
+        public void SetCommandOverrides(IList<BaseCommand> commandOverrides, bool announceCommandList = true)
         {
-            currentCommands = new List<BaseCommand>(availableCommands);
-            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
-        }
-        
-        public void SetCommandOverrides(IList<BaseCommand> commandOverrides)
-        {
-            if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
+            if (commandOverrides == null || commandOverrides.Count == 0) { currentCommands = new List<BaseCommand>(availableCommands); }
             else { currentCommands = new List<BaseCommand>(commandOverrides); }
-            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
+            ReconcileContingentCommands();
+            
+            if (announceCommandList) { Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands)); }
         }
 
-        protected void AppendToCommands(IList<BaseCommand> commandOverrides)
+        protected void AppendToCommands(IList<BaseCommand> commandOverrides, bool announceCommandList = true)
         {
-            if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
-            else
-            {
-                foreach (BaseCommand commandOverride in commandOverrides)
-                {
-                    currentCommands.Add(commandOverride);
-                }
-            }
-            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
+            if (commandOverrides == null || commandOverrides.Count == 0) { return; }
+            
+            foreach (BaseCommand commandOverride in commandOverrides) { currentCommands.Add(commandOverride); }
+            if (announceCommandList) { Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands)); }
         }
         #endregion
         

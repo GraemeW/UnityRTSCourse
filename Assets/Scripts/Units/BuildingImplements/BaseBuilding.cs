@@ -75,6 +75,11 @@ namespace GameDevTV.RTS.Units
             Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));
         }
 
+        protected override void ReconcileContingentCommands()
+        {
+            // No special commands
+        }
+
         private void OnDestroy()
         {
             Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);

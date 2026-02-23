@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: 69c40ef50682f4e99807c71c38e35b92, type: 3}
   <slot>k__BackingField: 0
+  <IsSingleUnitCommand>k__BackingField: 1
   <tooltipText>k__BackingField: Build a command post
   <requiresClickToActivate>k__BackingField: 1
   <ghostPrefab>k__BackingField: {fileID: 2567010447404687281, guid: 5f6400319211bfe4ba0612ef7be20333, type: 3}

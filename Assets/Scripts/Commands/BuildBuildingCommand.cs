@@ -16,18 +16,23 @@ namespace GameDevTV.RTS.Commands
 
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
-            bool isBuilder = commandContext.commandable is IBuildingBuilder;
-            if (!isBuilder) { return false; }
+            if (commandContext.commandable is not IBuildingBuilder buildingBuilder) { return false; }
 
             bool isSelectable = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, selectableLayers);
             commandContext.hit = unitHit;
-            
-            if (isSelectable && IsResumable(unitHit)) { return true; }
+
+            if (isSelectable && IsResumable(unitHit))
+            {
+                bool isBuilderAvailable = !buildingBuilder.IsBuilding;
+                return isBuilderAvailable;
+            }
             
             bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
             commandContext.hit = floorHit; 
             
+            // These final checks down here (instead of early return) to allow commandContext.hit to be populated correctly
             if (!Supplies.HasEnoughSuppliesToBuild(buildingSO)) { return false; }
+            if (buildingBuilder.IsBuilding) { return false; }
             
             if (skipCondition || !isFloor) { return false; }
             return buildingRestrictions.All(restriction => restriction.CanPlace(floorHit.point));

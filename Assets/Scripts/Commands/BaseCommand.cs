@@ -6,10 +6,11 @@ namespace GameDevTV.RTS.Commands
     {
         [field: SerializeField] public Sprite icon { get; private set; }
         [field: Range(0,8)][field: SerializeField] public int slot { get; private set; }
+        [field: SerializeField] public bool IsSingleUnitCommand { get; private set; } = false;
         [field: SerializeField] public string tooltipText { get; private set; }
         [field: SerializeField] public bool requiresClickToActivate { get; private set; } = true;
         [field: SerializeField] public GameObject ghostPrefab { get; private set; }
-
+        
         public abstract bool CanHandle(ref CommandContext commandContext, bool skipCondition = false);
         public abstract void Handle(CommandContext commandContext);
         public abstract bool IsLocked(CommandContext commandContext);

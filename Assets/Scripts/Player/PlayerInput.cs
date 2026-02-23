@@ -116,18 +116,6 @@ namespace GameDevTV.RTS.Player
             HandleLeftClick();
             HandleRightClick();
             HandleGhost();
-
-            // Hack code to test event unsub
-            if (Keyboard.current.deleteKey.wasReleasedThisFrame)
-            {
-                Debug.Log("Deleting All Events");
-                Debug.Log("Events Before Deletion:");
-                Bus.PrintAllEvents();
-                Bus.DeleteAllEvents();
-                Debug.Log("Events After Deletion:");
-                Bus.PrintAllEvents();
-                Debug.Log("End Deletion Test");
-            }
         }
         #endregion
 
@@ -447,11 +435,15 @@ namespace GameDevTV.RTS.Player
                 var volatileCommandContext = new CommandContext(commandContext);
                 if (useQueuedCommand && queuedCommand != null)
                 {
-                    if (queuedCommand.CanHandle(ref volatileCommandContext)) { queuedCommand.Handle(volatileCommandContext); }
+                    if (!queuedCommand.CanHandle(ref volatileCommandContext)) { continue; }
+                    queuedCommand.Handle(volatileCommandContext);
+                    
+                    if (queuedCommand.IsSingleUnitCommand) { return; }
                 }
                 else
                 {
-                    ExecuteFirstViableCommand(volatileCommandContext.commandable, ref volatileCommandContext);
+                    bool wasSingleUnitCommandExecuted = ExecuteFirstViableCommand(volatileCommandContext.commandable, ref volatileCommandContext);
+                    if (wasSingleUnitCommandExecuted) { return; }
                 }
             }
         }
@@ -471,15 +463,16 @@ namespace GameDevTV.RTS.Player
             return commandContexts;
         }
 
-        private void ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
+        private bool ExecuteFirstViableCommand(AbstractCommandable abstractUnit, ref CommandContext commandContext)
         {
             foreach (ICommand command in GetAvailableCommands(abstractUnit))
             {
                 if (!command.CanHandle(ref commandContext, true)) { continue; }
                 
                 command.Handle(commandContext);
-                break;
+                return command.IsSingleUnitCommand;
             }
+            return false;
         }
 
         private void SetupGhostVisuals(bool enable)
@@ -503,16 +496,18 @@ namespace GameDevTV.RTS.Player
             if (Keyboard.current.escapeKey.wasReleasedThisFrame) { SetupGhostVisuals(false); queuedCommand = null; return; }
             
             if (queuedCommand == null) { return; }
-            bool positionSet = false;
+            SetGhostColor(false);
             foreach (CommandContext commandContext in GetCommandContexts())
             {
                 var volatileCommandContext = new CommandContext(commandContext);
                 bool isValidPlacement = queuedCommand.CanHandle(ref volatileCommandContext);
-                SetGhostColor(isValidPlacement);
-                if (positionSet) { continue; }
-                
                 ghostInstance.transform.position = volatileCommandContext.hit.point;
-                positionSet = true;
+
+                if (isValidPlacement)
+                {
+                    SetGhostColor(true);
+                    break;
+                }
             }
         }
 

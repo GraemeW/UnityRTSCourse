@@ -52,15 +52,15 @@ namespace GameDevTV.RTS.UI.Containers
             }
         }
 
-        private HashSet<BaseCommand> ReconcileCommands(HashSet<AbstractCommandable> commandableUnits)
+        private HashSet<BaseCommand> ReconcileCommands(HashSet<AbstractCommandable> passCommandableUnits)
         {
             var availableCommands = new HashSet<BaseCommand>();
-            foreach (AbstractCommandable commandableUnit in commandableUnits)
+            foreach (AbstractCommandable commandableUnit in passCommandableUnits)
             {
                 if (commandableUnit == null)  { continue; }
                 if (!commandableUnit.isActiveAndEnabled) { continue; }
 
-                foreach (BaseCommand action in commandableUnit.currentCommands)
+                foreach (BaseCommand action in commandableUnit.currentCommands.Where(action => action != null))
                 {
                     availableCommands.Add(action);
                 }
@@ -72,6 +72,7 @@ namespace GameDevTV.RTS.UI.Containers
         {
             foreach (BaseCommand action in availableCommands.Where(action => action.slot < actionButtons.Length))
             {
+                if (action == null) { continue; }
                 actionButtons[action.slot].EnableFor(action, HandleClick(action));
             }
         }
