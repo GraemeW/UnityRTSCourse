@@ -32,23 +32,14 @@ namespace GameDevTV.RTS.Units
         #region Selection
         public void Deselect()
         {
-            SetCommandOverrides(null, false);
-
-            if (decalProjector != null)
-            {
-                decalProjector.gameObject.SetActive(false);
-            }
-
+            SetCommandOverrides(null);
+            if (decalProjector != null) { decalProjector.gameObject.SetActive(false); }
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
         public void Select()
         {
-            if (decalProjector != null)
-            {
-                decalProjector.gameObject.SetActive(true);
-            }
-
+            if (decalProjector != null) { decalProjector.gameObject.SetActive(true); }
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
         #endregion
@@ -58,16 +49,17 @@ namespace GameDevTV.RTS.Units
         private void ResetCommandOverrides()
         {
             currentCommands = new List<BaseCommand>(availableCommands);
+            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
         }
         
-        public void SetCommandOverrides(IList<BaseCommand> commandOverrides, bool callUnitSelectedEvent = true)
+        public void SetCommandOverrides(IList<BaseCommand> commandOverrides)
         {
             if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
             else { currentCommands = new List<BaseCommand>(commandOverrides); }
-            if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
+            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
         }
 
-        protected void AppendToCommands(IList<BaseCommand> commandOverrides, bool callUnitSelectedEvent = true)
+        protected void AppendToCommands(IList<BaseCommand> commandOverrides)
         {
             if (commandOverrides == null || commandOverrides.Count == 0) { ResetCommandOverrides(); }
             else
@@ -77,7 +69,7 @@ namespace GameDevTV.RTS.Units
                     currentCommands.Add(commandOverride);
                 }
             }
-            if (callUnitSelectedEvent) { Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this)); }
+            Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
         }
         #endregion
     }

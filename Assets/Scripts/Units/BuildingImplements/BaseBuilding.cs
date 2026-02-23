@@ -57,13 +57,11 @@ namespace GameDevTV.RTS.Units
         {
             base.Start();
             if (navMeshObstacle != null) { navMeshObstacle.enabled = true; }
-        }
-
-        private void OnEnable()
-        {
+            
             unitBuildingThis = null;
             progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, 0.0f, 1.0f);
             Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
+            Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));
         }
 
         private void OnDestroy()

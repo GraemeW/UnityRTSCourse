@@ -13,19 +13,33 @@ namespace GameDevTV.RTS.UI.Containers
     public class ActionsUI : MonoBehaviour, IUIElement<HashSet<AbstractCommandable>>
     {
         // Tunables
-        [SerializeField] ActionButtonUI[] actionButtons;
-
+        [SerializeField] private ActionButtonUI[] actionButtons;
+        
+        // State
+        private readonly HashSet<AbstractCommandable> commandableUnits = new();
+        
         #region Interfaces
-        public void EnableFor(HashSet<AbstractCommandable> setBaseBuilding) => RefreshButtons(setBaseBuilding);
-        public void Disable() => RefreshButtons(null);
+
+        public void EnableFor(HashSet<AbstractCommandable> setCommandables)
+        {
+            commandableUnits.Clear();
+            foreach (AbstractCommandable commandable in setCommandables) { commandableUnits.Add(commandable); }
+            RefreshButtons();
+        }
+
+        public void Disable()
+        {
+            commandableUnits.Clear();
+            RefreshButtons();
+        }
         #endregion
 
         #region HelperMethods
-        private void RefreshButtons(HashSet<AbstractCommandable> commandableUnits)
+        private void RefreshButtons()
         {
             ClearActionButtons();
-            if (commandableUnits == null || commandableUnits.Count == 0) { return; }
-
+            if (commandableUnits.Count == 0) { return; }
+            
             HashSet<BaseCommand> availableCommands = ReconcileCommands(commandableUnits);
             DrawActionButtons(availableCommands);
         }
