@@ -14,14 +14,20 @@ namespace GameDevTV.RTS.UI.Containers
         // Constants
         private const string _healthTextFormat = "{0} / {1}";
         
-        public void EnableFor(AbstractCommandable commandable)
+        // State
+        private AbstractCommandable commandable;
+        
+        public void EnableFor(AbstractCommandable setCommandable)
         {
             ClearState();
-            if (commandable == null || commandable.unitSO == null) { return; }
+            if (setCommandable == null || setCommandable.unitSO == null) { return; }
             
+            commandable = setCommandable;
             gameObject.SetActive(true);
-            if (commandable.unitSO.icon != null) { icon.sprite = commandable.unitSO.icon; }
-            healthText.text = string.Format(_healthTextFormat, commandable.currentHealth, commandable.maxHealth);
+            commandable.onHealthUpdated += HandleHealthUpdateEvent;
+            
+            RefreshUI();
+            UpdateHealth();
         }
 
         public void Disable()
@@ -32,8 +38,34 @@ namespace GameDevTV.RTS.UI.Containers
 
         private void ClearState()
         {
+            if (commandable != null) { commandable.onHealthUpdated -= HandleHealthUpdateEvent; }
+            commandable = null;
             icon.sprite = null;
             healthText.text = string.Empty;
+        }
+
+        private void RefreshUI()
+        {
+            if (commandable == null || commandable.unitSO == null) { return; }
+            UpdateIcon();
+            UpdateHealth();
+        }
+
+        private void UpdateIcon()
+        {
+            if (commandable.unitSO.icon == null) { return; }
+            icon.sprite = commandable.unitSO.icon;
+        }
+
+        private void UpdateHealth()
+        {
+            healthText.text = string.Format(_healthTextFormat, commandable.GetCurrentHealth(), commandable.maxHealth);
+        }
+
+        private void HandleHealthUpdateEvent(AbstractCommandable passCommandable, int lastHealth, int newHealth)
+        {
+            if (commandable != passCommandable) { return; }
+            RefreshUI();
         }
     }
 }

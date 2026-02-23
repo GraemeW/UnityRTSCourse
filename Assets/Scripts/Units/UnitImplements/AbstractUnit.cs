@@ -26,6 +26,8 @@ namespace GameDevTV.RTS.Units
         protected override void Start()
         {
             base.Start();
+            currentHealth = unitSO.health;
+            maxHealth = unitSO.health;
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 

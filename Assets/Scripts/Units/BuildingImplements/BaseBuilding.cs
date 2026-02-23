@@ -42,15 +42,26 @@ namespace GameDevTV.RTS.Units
         #region UnityMethods
         private void Awake()
         {
+            InitializeBuildingProperties();
+            InitializeBuildingReferences();
+        }
+
+        private void InitializeBuildingProperties()
+        {
+            buildingSO = unitSO as BuildingSO;
+            if (buildingSO == null) { Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
+            
+            maxHealth = unitSO.health;
+        }
+
+        private void InitializeBuildingReferences()
+        {
             navMeshObstacle = GetComponent<NavMeshObstacle>();
 
             foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
             {
                 rendererLookup[meshRenderer] = meshRenderer.material;
             }
-
-            buildingSO = unitSO as BuildingSO;
-            if (buildingSO == null) { Debug.Log($"BaseBuilding must use a BuildingSO for its AbstractUnitSO field.  Replace current: {unitSO}"); }
         }
 
         protected override void Start()
@@ -123,7 +134,7 @@ namespace GameDevTV.RTS.Units
         {
             unitBuildingThis = buildingBuilder;
             ShowGhostVisuals(true);
-            this.enabled = false;
+            enabled = false;
 
             float currentProgress = initializeProgress ? 0.0f : progress.progress;
             progress = new BuildingProgress(
@@ -131,6 +142,8 @@ namespace GameDevTV.RTS.Units
                 Time.time - buildingSO.buildTime * currentProgress,
                 currentProgress
             );
+
+            if (progress.progress == 0) { SetHealthFraction(0f, true); }
 
             Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
             Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);

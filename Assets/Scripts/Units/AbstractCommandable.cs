@@ -9,8 +9,8 @@ namespace GameDevTV.RTS.Units
 {
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
-        [field: SerializeField] public int currentHealth { get; private set; }
-        [field: SerializeField] public int maxHealth { get; private set; }
+        [field: SerializeField] public int maxHealth { get; protected set; }
+        [field: SerializeField] private float initialHealthFraction = 0.35f;
         [field: SerializeField] public AbstractUnitSO unitSO { get; private set; }
 
         [Header("Hookups")]
@@ -19,12 +19,15 @@ namespace GameDevTV.RTS.Units
 
         // State
         public List<BaseCommand> currentCommands { get; private set; } =  new();
+        protected float currentHealth = 0f;
+        
+        // Events
+        public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
+        public event HealthUpdatedEvent onHealthUpdated;
 
         #region UnityMethods
         protected virtual void Start()
         {
-            currentHealth = unitSO.health;
-            maxHealth = unitSO.health;
             currentCommands = availableCommands;
         }
         #endregion
@@ -70,6 +73,33 @@ namespace GameDevTV.RTS.Units
                 }
             }
             Bus<CommandListUpdatedEvent>.Raise(new CommandListUpdatedEvent(this, currentCommands));
+        }
+        #endregion
+        
+        #region PublicMethods
+
+        public int GetCurrentHealth() => Mathf.RoundToInt(currentHealth);
+        
+
+        public void Heal(float amount)
+        {
+            int lastHealth = GetCurrentHealth();
+            currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+            onHealthUpdated?.Invoke(this, lastHealth, GetCurrentHealth());
+        }
+
+        public void SetHealthFraction(float fractionOfHealth, bool floorToInitial = false)
+        {
+            int lastHealth = GetCurrentHealth();
+            float minimumHealth = floorToInitial ? initialHealthFraction * maxHealth : 0;
+            currentHealth = Mathf.Clamp(maxHealth * fractionOfHealth, minimumHealth, maxHealth);
+            onHealthUpdated?.Invoke(this, lastHealth, GetCurrentHealth());
+        }
+
+        public void IncrementHealthDelta(float normalizedDelta, bool deltaToInitial = false)
+        {
+            float minimum = deltaToInitial ? initialHealthFraction * maxHealth : 0;
+            Heal(normalizedDelta * (maxHealth - minimum));
         }
         #endregion
     }

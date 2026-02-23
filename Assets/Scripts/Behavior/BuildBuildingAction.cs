@@ -41,6 +41,7 @@ namespace GameDevTV.RTS.Behavior
 
         protected override Status OnUpdate()
         {
+            IncrementHealth();
             return UpdateRendererPosition();
         }
 
@@ -85,6 +86,14 @@ namespace GameDevTV.RTS.Behavior
             startBuildTime = BuildingUnderConstruction.Value.GetBuildingProgress().startTime;
 
             return Status.Running;
+        }
+
+        private void IncrementHealth()
+        {
+            if (BuildingUnderConstruction.Value == null) { return; }
+            
+            float normalizedDeltaTime = Time.deltaTime / buildTime;
+            BuildingUnderConstruction.Value.IncrementHealthDelta(normalizedDeltaTime, true);
         }
 
         private Status UpdateRendererPosition()
