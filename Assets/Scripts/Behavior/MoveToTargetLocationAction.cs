@@ -26,9 +26,7 @@ namespace GameDevTV.RTS.Behavior
             if (Vector3.Distance(navMeshAgent.transform.position, TargetLocation.Value) <= navMeshAgent.stoppingDistance) { return Status.Success; }
 
             Agent.Value.TryGetComponent(out animator);
-
             navMeshAgent.SetDestination(TargetLocation.Value);
-
             return Status.Running;
         }
 

@@ -8,6 +8,6 @@ namespace GameDevTV.RTS.Units
         public bool IsBuilding { get; }
         public void ResumeBuilding(BaseBuilding building);
         public void CancelBuilding();
-        public void Abort();
+        public void Abort(bool callStop = true);
     }
 }

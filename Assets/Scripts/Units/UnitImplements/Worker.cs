@@ -76,6 +76,7 @@ namespace GameDevTV.RTS.Units
                     CancelGhost();
                     break;
                 case BuildingEventType.Begin:
+                    AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
                     break;
                 case BuildingEventType.Cancel:
                 case BuildingEventType.Abort:
@@ -134,12 +135,12 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
         }
         
-        public void Abort()
+        public void Abort(bool callStop = true)
         {
             CancelGhost();
-            SetCommandOverrides(null);
             if (TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
-            Stop();
+            if (callStop) { Stop(); }
+            SetCommandOverrides(null);
         }
 
         public void CancelBuilding()

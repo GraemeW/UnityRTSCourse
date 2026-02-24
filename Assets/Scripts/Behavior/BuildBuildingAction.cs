@@ -45,7 +45,7 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { builder.Abort(); }
+            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { builder.Abort(false); }
             
             if (CurrentStatus == Status.Success)
             {
