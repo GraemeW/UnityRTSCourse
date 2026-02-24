@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9d0f4ab4bb4464ebb8555c41b53e07, type: 3}
+  m_Name: BuildBarracksAction
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 21300000, guid: 6dcb43e7fa4c2460b95a4bb32c5ba049, type: 3}
+  <slot>k__BackingField: 1
+  <tooltipText>k__BackingField: Build a barracks
+  <isSingleUnitCommand>k__BackingField: 1
+  <requiresClickToActivate>k__BackingField: 1
+  <allowRightClick>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 2319832299532894775, guid: 457f9af21a47d48ec8911b9e698967ec, type: 3}
+  <buildingSO>k__BackingField: {fileID: 11400000, guid: 1acc9b05c809604469b7a0cde0736b97, type: 2}
+  <buildingRestrictions>k__BackingField:
+  - {fileID: 11400000, guid: 651318c5711274deeb2c45d16f2b9bbb, type: 2}
+  floorLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  selectableLayers:
+    serializedVersion: 2
+    m_Bits: 128

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7391351083741371992}
   - component: {fileID: 4111206010722160055}
   m_Layer: 7
-  m_Name: Command Post
+  m_Name: CommandPost
   m_TagString: Home
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

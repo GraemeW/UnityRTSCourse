@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9d0f4ab4bb4464ebb8555c41b53e07, type: 3}
+  m_Name: BuildAirport
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 21300000, guid: 104e51948fba14b58b75577fe56a3a4f, type: 3}
+  <slot>k__BackingField: 2
+  <tooltipText>k__BackingField: Build an airport
+  <isSingleUnitCommand>k__BackingField: 1
+  <requiresClickToActivate>k__BackingField: 1
+  <allowRightClick>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 3181869410998372286, guid: 91cc1e3f1c4144e73beb39bd9b7aa320, type: 3}
+  <buildingSO>k__BackingField: {fileID: 11400000, guid: c5896adc98c879c4b9322fd0d0e313d0, type: 2}
+  <buildingRestrictions>k__BackingField:
+  - {fileID: 11400000, guid: db9e860b2669e4e60a60881e1a5ad9ea, type: 2}
+  floorLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  selectableLayers:
+    serializedVersion: 2
+    m_Bits: 128

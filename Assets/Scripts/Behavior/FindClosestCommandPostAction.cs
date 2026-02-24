@@ -30,30 +30,32 @@ namespace GameDevTV.RTS.Behavior
                 if (commandPost.GetBuildingProgress().state != BuildingProgress.BuildingState.Completed) { continue; }
                 nearbyCommandPosts.Add(commandPost);
             }
-            
-            // Simple exit criteria
-            if (nearbyCommandPosts.Count == 0) { return Status.Failure; }
-            else if (nearbyCommandPosts.Count == 1)
-            {
-                CommandPost.Value = nearbyCommandPosts[0].gameObject;
-                return Status.Success;
-            }
 
-            // Find best post otherwise
-            float minimumDistance = Mathf.Infinity;
-            CommandPost closestCommandPost = null;
-            foreach (CommandPost commandPost in nearbyCommandPosts)
+            switch (nearbyCommandPosts.Count)
             {
-                float checkDistance = Vector3.Distance(commandPost.transform.position, Agent.Value.transform.position);
-                if (checkDistance < minimumDistance)
+                case 1:
                 {
-                    minimumDistance = checkDistance;
-                    closestCommandPost = commandPost;
+                    CommandPost.Value = nearbyCommandPosts[0].gameObject;
+                    return Status.Success;
+                }
+                case > 1:
+                {
+                    float minimumDistance = Mathf.Infinity;
+                    CommandPost closestCommandPost = null;
+                    foreach (CommandPost commandPost in nearbyCommandPosts)
+                    {
+                        float checkDistance = Vector3.Distance(commandPost.transform.position, Agent.Value.transform.position);
+                        if (checkDistance >= minimumDistance) { continue; }
+                        
+                        minimumDistance = checkDistance;
+                        closestCommandPost = commandPost;
+                    }
+
+                    CommandPost.Value = closestCommandPost.gameObject;
+                    return Status.Success;
                 }
             }
-            CommandPost.Value = closestCommandPost.gameObject;
-            return Status.Success;
-
+            return Status.Failure;
         }
     }
 }

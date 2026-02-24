@@ -19,8 +19,8 @@ namespace GameDevTV.RTS.Player
         [SerializeField] private SupplySO gasSupply;
 
         #region Static
-        public static int minerals { get; private set; } = 50;
-        public static int gas { get; private set; } = 50;
+        public static int minerals { get; private set; } = 1000;
+        public static int gas { get; private set; } = 1000;
         public static int population { get; private set; }
         public static int populationLimit { get; private set; } = 200;
         

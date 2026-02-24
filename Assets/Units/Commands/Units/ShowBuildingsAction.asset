@@ -14,10 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: a5df28aa58ab6264bb16fe1e21c4e327, type: 3}
   <slot>k__BackingField: 6
-  <IsSingleUnitCommand>k__BackingField: 0
   <tooltipText>k__BackingField: Show buildings menu
+  <isSingleUnitCommand>k__BackingField: 0
   <requiresClickToActivate>k__BackingField: 0
+  <allowRightClick>k__BackingField: 1
   <ghostPrefab>k__BackingField: {fileID: 0}
   <commandOverrides>k__BackingField:
   - {fileID: 11400000, guid: cc3bfb9f92f8b554a9d71c075399c3d5, type: 2}
+  - {fileID: 11400000, guid: a6eeae7a1a0ac4e019ca6d8bbe53c9c4, type: 2}
+  - {fileID: 11400000, guid: 9f931d4a1cb154042b9ab8303f852cad, type: 2}
+  - {fileID: 11400000, guid: 44809b7b54b9642b0a0629b72e802506, type: 2}
+  - {fileID: 11400000, guid: 111d9e152a5124640b55de70bcdec0a5, type: 2}
   - {fileID: 11400000, guid: 9127ff66c974f6a4c9dbba47454a337c, type: 2}

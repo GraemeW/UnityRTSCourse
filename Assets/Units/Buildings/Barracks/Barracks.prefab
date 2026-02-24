@@ -117,8 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a3aef258b22f2849a84e52680c49acc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
+  initialHealthFraction: 0.35
   <unitSO>k__BackingField: {fileID: 11400000, guid: 1acc9b05c809604469b7a0cde0736b97, type: 2}
   decalProjector: {fileID: 70918663804090427}
   availableCommands:

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9d0f4ab4bb4464ebb8555c41b53e07, type: 3}
+  m_Name: BuildSupplyHut
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 21300000, guid: 6fc83cfff594744f79c96f0218cdbdd7, type: 3}
+  <slot>k__BackingField: 3
+  <tooltipText>k__BackingField: Build a supply hut
+  <isSingleUnitCommand>k__BackingField: 1
+  <requiresClickToActivate>k__BackingField: 1
+  <allowRightClick>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 3470482798210000657, guid: 3275f0434ab5d43b9bd3f99b1550f5c5, type: 3}
+  <buildingSO>k__BackingField: {fileID: 11400000, guid: 37c2da07dfaa7024e8124e0e37645fd8, type: 2}
+  <buildingRestrictions>k__BackingField:
+  - {fileID: 11400000, guid: f4f0425c7e10e427099ed25d61406431, type: 2}
+  floorLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  selectableLayers:
+    serializedVersion: 2
+    m_Bits: 128
