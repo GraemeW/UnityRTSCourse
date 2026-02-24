@@ -21,6 +21,7 @@ namespace GameDevTV.RTS.Utilities
         private const string _ghostBuildingRef = "Ghost";
         private const string _buildingSORef = "BuildingSO";
         private const string _buildingUnderConstructionRef = "BuildingUnderConstruction";
+        private const string _buildingEventChannelRef = "BuildingEventChannel";
 
         #region Setters
         public static void SetCommand(BehaviorGraphAgent behaviorAgent, UnitCommands command)
@@ -107,6 +108,12 @@ namespace GameDevTV.RTS.Utilities
         {
             if (behaviorAgent == null) { return null; }
             return !behaviorAgent.GetVariable(_buildingUnderConstructionRef, out BlackboardVariable<BaseBuilding> baseBuilding) ? null : baseBuilding.Value;
+        }
+
+        public static BuildingEventChannel GetBuildingEventChannel(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return null; }
+            return !behaviorAgent.GetVariable(_buildingEventChannelRef, out BlackboardVariable<BuildingEventChannel> buildingEventChannel) ? null : buildingEventChannel.Value;
         }
         #endregion
     }

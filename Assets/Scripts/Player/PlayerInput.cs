@@ -76,7 +76,7 @@ namespace GameDevTV.RTS.Player
         }
         #endregion
         
-        #region UnitMethods
+        #region UniyMethods
         private void Awake()
         {
             cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -438,7 +438,7 @@ namespace GameDevTV.RTS.Player
                     if (!queuedCommand.CanHandle(ref volatileCommandContext)) { continue; }
                     queuedCommand.Handle(volatileCommandContext);
                     
-                    if (queuedCommand.IsSingleUnitCommand) { return; }
+                    if (queuedCommand.isSingleUnitCommand) { return; }
                 }
                 else
                 {
@@ -467,10 +467,11 @@ namespace GameDevTV.RTS.Player
         {
             foreach (ICommand command in GetAvailableCommands(abstractUnit))
             {
+                if (!command.allowRightClick) { continue; }
                 if (!command.CanHandle(ref commandContext, true)) { continue; }
                 
                 command.Handle(commandContext);
-                return command.IsSingleUnitCommand;
+                return command.isSingleUnitCommand;
             }
             return false;
         }

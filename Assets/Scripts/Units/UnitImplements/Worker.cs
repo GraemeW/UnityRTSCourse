@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Behavior;
 using UnityEngine;
@@ -21,13 +22,6 @@ namespace GameDevTV.RTS.Units
         public bool HasSupplies => BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
         public bool IsBuilding => BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
         #endregion
-
-        #region StaticMethods
-        private static void HandleGatherSupplies(GameObject worker, int amount, SupplySO supplyType)
-        {
-            Bus<SupplyEvent>.Raise(new SupplyEvent(supplyType, amount));
-        }
-        #endregion
         
         #region UnityMethods
         protected override void Start()
@@ -37,7 +31,10 @@ namespace GameDevTV.RTS.Units
             if (behaviorAgent.BlackboardReference != null)
             {
                 GatherSuppliesEventChannel gatherSuppliesEventChannel = BehaviorConstants.GetGatherSuppliesEventChannel(behaviorAgent);
-                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event += HandleGatherSupplies; }
+                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event += HandleGatherSuppliesEvent; }
+                
+                BuildingEventChannel buildingEventChannel = BehaviorConstants.GetBuildingEventChannel(behaviorAgent);
+                if (buildingEventChannel != null) { buildingEventChannel.Event += HandleBuildingEvent; }
             }
         }
 
@@ -46,7 +43,10 @@ namespace GameDevTV.RTS.Units
             if (behaviorAgent.BlackboardReference != null)
             {
                 GatherSuppliesEventChannel gatherSuppliesEventChannel = BehaviorConstants.GetGatherSuppliesEventChannel(behaviorAgent);
-                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event -= HandleGatherSupplies; }
+                if (gatherSuppliesEventChannel != null) { gatherSuppliesEventChannel.Event -= HandleGatherSuppliesEvent; }
+                
+                BuildingEventChannel buildingEventChannel = BehaviorConstants.GetBuildingEventChannel(behaviorAgent);
+                if (buildingEventChannel != null) { buildingEventChannel.Event += HandleBuildingEvent; }
             }
             base.OnDestroy();
         } 
@@ -58,6 +58,31 @@ namespace GameDevTV.RTS.Units
             if (IsBuilding)
             {
                 AppendToCommands(new List<BaseCommand> { CancelBuildingCommand }, false);
+            }
+        }
+        #endregion
+        
+        #region EventHandlers
+        private void HandleGatherSuppliesEvent(GameObject worker, int amount, SupplySO supplyType)
+        {
+            Bus<SupplyEvent>.Raise(new SupplyEvent(supplyType, amount));
+        }
+
+        private void HandleBuildingEvent(GameObject self, BuildingEventType buildingEventType, BaseBuilding baseBuilding)
+        {
+            switch (buildingEventType)
+            {
+                case BuildingEventType.ArrivedAt:
+                    CancelGhost();
+                    break;
+                case BuildingEventType.Begin:
+                    break;
+                case BuildingEventType.Cancel:
+                case BuildingEventType.Abort:
+                    Abort();
+                    break;
+                case BuildingEventType.Completed:
+                    break;
             }
         }
         #endregion
@@ -107,19 +132,18 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetBuildingSO(behaviorAgent, baseBuilding.GetBuildingSO());
             BehaviorConstants.SetBuildingUnderConstruction(behaviorAgent, baseBuilding);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
-
-            SetCommandOverrides(null);
         }
-
-        public void CancelGhost()
+        
+        public void Abort()
         {
-            GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
-            if (ghostBuilding != null) { Destroy(ghostBuilding); }
+            CancelGhost();
+            SetCommandOverrides(null);
+            if (TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
+            Stop();
         }
 
         public void CancelBuilding()
         {
-            CancelGhost();
             BaseBuilding baseBuilding = BehaviorConstants.GetBuildingUnderConstruction(behaviorAgent);
             if (baseBuilding != null)
             {
@@ -127,10 +151,15 @@ namespace GameDevTV.RTS.Units
                 if (buildingSO != null) { buildingSO.RefundSupplies(cancelBuildingRefundFraction); }
                 Destroy(baseBuilding.gameObject);
             }
-
-            SetCommandOverrides(null);
-            if (TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
-            Stop();
+            Abort();
+        }
+        #endregion
+        
+        #region PrivateMethods
+        private void CancelGhost()
+        {
+            GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
+            if (ghostBuilding != null) { Destroy(ghostBuilding); }
         }
         #endregion
     }

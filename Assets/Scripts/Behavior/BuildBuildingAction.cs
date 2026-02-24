@@ -4,8 +4,6 @@ using UnityEngine;
 using Unity.Properties;
 using Action = Unity.Behavior.Action;
 using Object = UnityEngine.Object;
-using GameDevTV.RTS.EventBus;
-using GameDevTV.RTS.Events;
 using GameDevTV.RTS.Utilities;
 using GameDevTV.RTS.Units;
 
@@ -47,8 +45,7 @@ namespace GameDevTV.RTS.Behavior
 
         protected override void OnEnd()
         {
-            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { builder.ResetCommandList(); }
-            if (!Agent.Value.TryGetComponent(out Animator animator)) { AnimationConstants.AnimateGathering(animator, false); }
+            if (Agent.Value.TryGetComponent(out IBuildingBuilder builder)) { builder.Abort(); }
             
             if (CurrentStatus == Status.Success)
             {

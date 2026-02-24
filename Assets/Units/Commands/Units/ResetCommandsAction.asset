@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196d704948e554a4bbc48b73d179ea20, type: 3}
   m_Name: ResetCommandsAction
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: af5afbd56621f394b8d6017ebda9401e, type: 3}
+  <icon>k__BackingField: {fileID: 21300000, guid: ce0fc3a46b548b046a45c56ca84b6c1a, type: 3}
   <slot>k__BackingField: 8
+  <IsSingleUnitCommand>k__BackingField: 0
   <tooltipText>k__BackingField: Back
   <requiresClickToActivate>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}

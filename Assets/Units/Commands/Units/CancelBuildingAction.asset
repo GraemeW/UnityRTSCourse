@@ -15,5 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: af5afbd56621f394b8d6017ebda9401e, type: 3}
   <slot>k__BackingField: 7
   <tooltipText>k__BackingField: Cancel current building
+  <isSingleUnitCommand>k__BackingField: 0
   <requiresClickToActivate>k__BackingField: 0
+  <allowRightClick>k__BackingField: 0
   <ghostPrefab>k__BackingField: {fileID: 0}
