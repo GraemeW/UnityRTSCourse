@@ -23,13 +23,12 @@ namespace GameDevTV.RTS.Behavior
                 SearchRadius.Value, 
                 LayerMask.GetMask(BaseBuilding.buildingsLayerMaskRef));
 
-            List<CommandPost> nearbyCommandPosts = new List<CommandPost>();
+            var nearbyCommandPosts = new List<CommandPost>();
             foreach (Collider collider in colliders)
             {
-                if (collider.TryGetComponent(out CommandPost commandPost))
-                {
-                    nearbyCommandPosts.Add(commandPost);
-                }
+                if (!collider.TryGetComponent(out CommandPost commandPost)) { continue; }
+                if (commandPost.GetBuildingProgress().state != BuildingProgress.BuildingState.Completed) { continue; }
+                nearbyCommandPosts.Add(commandPost);
             }
             
             // Simple exit criteria
