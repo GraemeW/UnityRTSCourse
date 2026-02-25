@@ -4,7 +4,7 @@ using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "GatherAction", menuName = "Units/Commands/Gather", order = 105)]
+    [CreateAssetMenu(fileName = "Gather", menuName = "Units/Commands/Gather", order = 105)]
     public class GatherCommand : BaseCommand
     {
         [SerializeField] private LayerMask selectableLayers;

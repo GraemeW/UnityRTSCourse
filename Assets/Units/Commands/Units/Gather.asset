@@ -9,16 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b53f5398759fbe0409bf0d821424b1e8, type: 3}
-  m_Name: MoveAction
+  m_Script: {fileID: 11500000, guid: 972ee22ecd2b42941bddf60280c09fcc, type: 3}
+  m_Name: Gather
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: 1bacc833ebef65045b595cc1a395dda9, type: 3}
-  <slot>k__BackingField: 0
-  <tooltipText>k__BackingField: Move to location
+  <icon>k__BackingField: {fileID: 21300000, guid: fbd5ca5720bbbf344ac1b24c7e42072a, type: 3}
+  <slot>k__BackingField: 5
+  <tooltipText>k__BackingField: Gather gas or minerals
   <requiresClickToActivate>k__BackingField: 1
   <ghostPrefab>k__BackingField: {fileID: 0}
-  floorLayers:
+  selectableLayers:
     serializedVersion: 2
-    m_Bits: 256
-  isComplexMoveBehaviour: 1
-  complexMoveRadiusExpansion: 3.5
+    m_Bits: 704

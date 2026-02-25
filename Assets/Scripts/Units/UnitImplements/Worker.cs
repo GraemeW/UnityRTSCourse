@@ -18,7 +18,6 @@ namespace GameDevTV.RTS.Units
         [SerializeField][Range(0f,1f)] private float cancelBuildingRefundFraction = 0.75f;
 
         #region ComputedProperties
-        public bool HasSupplies => BehaviorConstants.GetGatherAmount(behaviorAgent) > 0;
         public bool IsBuilding => BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
         #endregion
         
@@ -88,8 +87,6 @@ namespace GameDevTV.RTS.Units
         #endregion
 
         #region PublicMethods
-        public void ResetCommandList() => SetCommandOverrides(null);
-        
         public void Gather(GatherableSupply gatherableSupply)
         {
             BehaviorConstants.SetSupply(behaviorAgent, gatherableSupply);

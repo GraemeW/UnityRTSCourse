@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bb29d1a008d4b109b1b0d1c1fe0403c, type: 3}
+  m_Name: Attack
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Commands.AttackCommand
+  <icon>k__BackingField: {fileID: 21300000, guid: 4be4d75da3282e64fbab743c34270c88, type: 3}
+  <slot>k__BackingField: 3
+  <tooltipText>k__BackingField: 
+  <isSingleUnitCommand>k__BackingField: 0
+  <requiresClickToActivate>k__BackingField: 1
+  <allowRightClick>k__BackingField: 1
+  <ghostPrefab>k__BackingField: {fileID: 0}
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 192

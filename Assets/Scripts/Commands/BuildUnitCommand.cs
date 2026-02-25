@@ -4,7 +4,7 @@ using GameDevTV.RTS.Units;
 
 namespace GameDevTV.RTS.Commands
 {
-    [CreateAssetMenu(fileName = "BuildAction", menuName = "Buildings/Commands/Build", order = 120)]
+    [CreateAssetMenu(fileName = "Build", menuName = "Buildings/Commands/Build", order = 120)]
     public class BuildUnitCommand : BaseCommand
     {
         [field: SerializeField] public AbstractUnitSO unitSO { get; private set; }

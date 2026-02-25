@@ -8,7 +8,7 @@ using GameDevTV.RTS.Utilities;
 namespace GameDevTV.RTS.Units
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
-    public abstract class AbstractUnit : AbstractCommandable, IMoveable
+    public abstract class AbstractUnit : AbstractCommandable, IMoveable, IAttacker
     {
         // Hookups
         [SerializeField] private DamageableSensor damageableSensor;
@@ -54,7 +54,6 @@ namespace GameDevTV.RTS.Units
         #endregion
         
         #region Sensors
-
         private void SetupDamageableSensor(bool enable)
         {
             if (damageableSensor == null) { return; }
@@ -117,6 +116,14 @@ namespace GameDevTV.RTS.Units
         public void Stop()
         {
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Stop);
+        }
+        #endregion
+        
+        #region Attack
+
+        public void Attack(IDamageable damageable)
+        {
+            UnityEngine.Debug.Log($"{gameObject.name} is attacking {damageable.unitGameObject}");
         }
         #endregion
     }
