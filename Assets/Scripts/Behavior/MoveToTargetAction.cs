@@ -29,6 +29,7 @@ namespace GameDevTV.RTS.Behavior
 
             isTargetMoveable = (Target.Value.TryGetComponent(out AbstractUnit _));
             Agent.Value.TryGetComponent(out animator);
+            if (animator == null) { animator = Agent.Value.GetComponentInChildren<Animator>(); }
 
             Vector3 targetLocation = GetTargetPosition();
             navMeshAgent.ResetPath();

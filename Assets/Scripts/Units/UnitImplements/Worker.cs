@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Unity.Behavior;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace GameDevTV.RTS.Units
     public class Worker : AbstractUnit, IBuildingBuilder
     {
         // Tunables
-        [SerializeField] private BaseCommand CancelBuildingCommand;
+        [SerializeField] private BaseCommand cancelBuildingCommand;
         [SerializeField][Range(0f,1f)] private float cancelBuildingRefundFraction = 0.75f;
 
         #region ComputedProperties
@@ -57,7 +56,7 @@ namespace GameDevTV.RTS.Units
         {
             if (IsBuilding)
             {
-                AppendToCommands(new List<BaseCommand> { CancelBuildingCommand }, false);
+                AppendToCommands(new List<BaseCommand> { cancelBuildingCommand }, false);
             }
         }
         #endregion
@@ -76,7 +75,7 @@ namespace GameDevTV.RTS.Units
                     CancelGhost();
                     break;
                 case BuildingEventType.Begin:
-                    AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
+                    AppendToCommands(new List<BaseCommand> { cancelBuildingCommand });
                     break;
                 case BuildingEventType.Cancel:
                 case BuildingEventType.Abort:
@@ -118,7 +117,7 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.SetGhostBuilding(behaviorAgent, buildingInstance);
             BehaviorConstants.SetBuildingSO(behaviorAgent, buildingSO);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.BuildBuilding);
-            AppendToCommands(new List<BaseCommand> { CancelBuildingCommand });
+            AppendToCommands(new List<BaseCommand> { cancelBuildingCommand });
             
             buildingSO.ChargeSupplies();
 
