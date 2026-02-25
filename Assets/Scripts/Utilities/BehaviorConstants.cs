@@ -23,6 +23,7 @@ namespace GameDevTV.RTS.Utilities
         private const string _buildingSORef = "BuildingSO";
         private const string _buildingUnderConstructionRef = "BuildingUnderConstruction";
         private const string _buildingEventChannelRef = "BuildingEventChannel";
+        private const string _attackConfigRef = "AttackConfig";
         private const string _nearbyEnemiesRef = "NearbyEnemies";
 
         #region Setters
@@ -78,6 +79,12 @@ namespace GameDevTV.RTS.Utilities
         {
             if (behaviorAgent == null) { return; }
             behaviorAgent.SetVariableValue<BaseBuilding>(_buildingUnderConstructionRef, baseBuilding);
+        }
+
+        public static void SetAttackConfig(BehaviorGraphAgent behaviorAgent, AttackConfigSO attackConfig)
+        {
+            if (behaviorAgent == null) { return; }
+            behaviorAgent.SetVariableValue<AttackConfigSO>(_attackConfigRef, attackConfig);
         }
 
         public static void AddToNearbyEnemies(BehaviorGraphAgent behaviorAgent, IDamageable damageable)

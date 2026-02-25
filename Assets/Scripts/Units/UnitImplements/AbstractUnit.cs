@@ -14,6 +14,7 @@ namespace GameDevTV.RTS.Units
         [SerializeField] private DamageableSensor damageableSensor;
         
         // Cached References
+        private UnitSO unitSOImpl;
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
         protected BehaviorGraphAgent behaviorAgent;
@@ -21,23 +22,28 @@ namespace GameDevTV.RTS.Units
         #region UnityMethods
         private void Awake()
         {
+            unitSOImpl = unitSO as UnitSO;
             navMeshAgent = GetComponent<NavMeshAgent>();
             behaviorAgent = GetComponent<BehaviorGraphAgent>();
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Stop);
+            if (unitSOImpl != null) { BehaviorConstants.SetAttackConfig(behaviorAgent, unitSOImpl.attackConfig); }
         }
 
+        private void OnEnable()
+        {
+            SetupDamageableSensor(true);
+        }
+
+        private void OnDisable()
+        {
+            SetupDamageableSensor(false);
+        }
+        
         protected override void Start()
         {
             base.Start();
             currentHealth = unitSO.health;
             maxHealth = unitSO.health;
-
-            if (damageableSensor != null)
-            {
-                damageableSensor.onUnitEnter += HandleUnitEnter;
-                damageableSensor.onUnitExit += HandleUnitExit;
-            }
-            
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
@@ -48,6 +54,24 @@ namespace GameDevTV.RTS.Units
         #endregion
         
         #region Sensors
+
+        private void SetupDamageableSensor(bool enable)
+        {
+            if (damageableSensor == null) { return; }
+
+            if (enable)
+            {
+                damageableSensor.onUnitEnter += HandleUnitEnter;
+                damageableSensor.onUnitExit += HandleUnitExit;
+                if (unitSOImpl != null) { damageableSensor.SetupFrom(unitSOImpl.attackConfig); }
+            }
+            else
+            {
+                damageableSensor.onUnitEnter -= HandleUnitEnter;
+                damageableSensor.onUnitExit -= HandleUnitExit;
+            }
+        }
+        
         private void HandleUnitEnter(IDamageable damageable)
         {
             if (behaviorAgent == null) { return; }

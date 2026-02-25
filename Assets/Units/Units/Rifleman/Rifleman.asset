@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Rifleman
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: dd16372e179224bd0a3b7f0e4c8651d7, type: 3}
-  <health>k__BackingField: 150
+  <health>k__BackingField: 40
   <prefab>k__BackingField: {fileID: 1931094961596098796, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
-  <buildTime>k__BackingField: 5
+  <buildTime>k__BackingField: 24
   <cost>k__BackingField: {fileID: 11400000, guid: 7b95538e92551435389dea475d054b8d, type: 2}
+  <attackConfig>k__BackingField: {fileID: 11400000, guid: 85c9178b569e84457aa7d02bc8685846, type: 2}
