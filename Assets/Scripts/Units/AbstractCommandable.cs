@@ -7,23 +7,24 @@ using GameDevTV.RTS.Commands;
 
 namespace GameDevTV.RTS.Units
 {
-    public abstract class AbstractCommandable : MonoBehaviour, ISelectable
+    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable
     {
-        [field: SerializeField] public int maxHealth { get; protected set; }
-        [field: SerializeField] private float initialHealthFraction = 0.35f;
+        [field: SerializeField] public float maxHealth { get; protected set; }
+        [field: SerializeField] public float initialHealthFraction { get; private set; } = 0.35f;
         [field: SerializeField] public AbstractUnitSO unitSO { get; private set; }
 
         [Header("Hookups")]
+        public GameObject unitGameObject => gameObject;
+        public Transform unitTransform => transform;
         [SerializeField] private DecalProjector decalProjector;
         [SerializeField] private List<BaseCommand> availableCommands = new();
 
         // State
         public List<BaseCommand> currentCommands { get; private set; } =  new();
-        protected float currentHealth = 0f;
+        public float currentHealth  { get; protected set; } = 0f;
         
         // Events
-        public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
-        public event HealthUpdatedEvent onHealthUpdated;
+        public event IDamageable.HealthUpdatedEvent onHealthUpdated;
 
         #region UnityMethods
         protected virtual void Start()
@@ -32,7 +33,7 @@ namespace GameDevTV.RTS.Units
         }
         #endregion
 
-        #region Selection
+        #region ISelectableMethods  
         public void Deselect()
         {
             SetCommandOverrides(null);
@@ -69,16 +70,16 @@ namespace GameDevTV.RTS.Units
         }
         #endregion
         
-        #region PublicMethods
-
+        #region IDamageableMethods
         public int GetCurrentHealth() => Mathf.RoundToInt(currentHealth);
-        
 
-        public void Heal(float amount)
+        public void AdjustHealth(float amount)
         {
             int lastHealth = GetCurrentHealth();
             currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
             onHealthUpdated?.Invoke(this, lastHealth, GetCurrentHealth());
+            
+            if (Mathf.Approximately(currentHealth, 0f)) { Die(); }
         }
 
         public void SetHealthFraction(float fractionOfHealth, bool floorToInitial = false)
@@ -87,12 +88,19 @@ namespace GameDevTV.RTS.Units
             float minimumHealth = floorToInitial ? initialHealthFraction * maxHealth : 0;
             currentHealth = Mathf.Clamp(maxHealth * fractionOfHealth, minimumHealth, maxHealth);
             onHealthUpdated?.Invoke(this, lastHealth, GetCurrentHealth());
+            
+            if (Mathf.Approximately(currentHealth, 0f)) { Die(); }
         }
 
-        public void IncrementHealthDelta(float normalizedDelta, bool deltaToInitial = false)
+        public void AdjustHealthDelta(float normalizedDelta, bool deltaToInitial = false)
         {
             float minimum = deltaToInitial ? initialHealthFraction * maxHealth : 0;
-            Heal(normalizedDelta * (maxHealth - minimum));
+            AdjustHealth(normalizedDelta * (maxHealth - minimum));
+        }
+
+        public void Die()
+        {
+            Destroy(gameObject);
         }
         #endregion
     }

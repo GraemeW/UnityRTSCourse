@@ -90,7 +90,7 @@ namespace GameDevTV.RTS.Behavior
             if (BuildingUnderConstruction.Value == null) { return; }
             
             float normalizedDeltaTime = Time.deltaTime / buildTime;
-            BuildingUnderConstruction.Value.IncrementHealthDelta(normalizedDeltaTime, true);
+            BuildingUnderConstruction.Value.AdjustHealthDelta(normalizedDeltaTime, true);
         }
 
         private Status UpdateRendererPosition()

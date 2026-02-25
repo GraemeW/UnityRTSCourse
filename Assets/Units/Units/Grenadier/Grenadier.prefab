@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 1324784020702504064}
   - component: {fileID: 4936711382548348666}
   - component: {fileID: -2662921054983240986}
+  - component: {fileID: 3103255230513824931}
   - component: {fileID: 547204062799916432}
   - component: {fileID: -7370167480734060650}
   - component: {fileID: 3029662096022827338}
@@ -588,6 +589,33 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &3103255230513824931
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813055781741166138}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!136 &547204062799916432
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -653,7 +681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Units.BaseMilitaryUnit
   <maxHealth>k__BackingField: 0
-  initialHealthFraction: 0.35
+  <initialHealthFraction>k__BackingField: 0.35
   <unitSO>k__BackingField: {fileID: 11400000, guid: 62b644c592d1bde42ad147e706f6d6b1, type: 2}
   decalProjector: {fileID: 1372102197092240113}
   availableCommands:

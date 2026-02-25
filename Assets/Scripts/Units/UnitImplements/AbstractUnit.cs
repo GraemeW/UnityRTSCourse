@@ -10,6 +10,9 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
     public abstract class AbstractUnit : AbstractCommandable, IMoveable
     {
+        // Hookups
+        [SerializeField] private DamageableSensor damageableSensor;
+        
         // Cached References
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
@@ -28,12 +31,32 @@ namespace GameDevTV.RTS.Units
             base.Start();
             currentHealth = unitSO.health;
             maxHealth = unitSO.health;
+
+            if (damageableSensor != null)
+            {
+                damageableSensor.onUnitEnter += HandleUnitEnter;
+                damageableSensor.onUnitExit += HandleUnitExit;
+            }
+            
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
         protected virtual void OnDestroy()
         {
             Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
+        }
+        #endregion
+        
+        #region Sensors
+        private void HandleUnitEnter(IDamageable damageable)
+        {
+            if (behaviorAgent == null) { return; }
+            BehaviorConstants.AddToNearbyEnemies(behaviorAgent, damageable);
+        }
+        private void HandleUnitExit(IDamageable damageable)
+        {
+            if (behaviorAgent == null) { return; }
+            BehaviorConstants.RemoveFromNearbyEnemies(behaviorAgent, damageable);
         }
         #endregion
 

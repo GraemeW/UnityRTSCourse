@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameDevTV.RTS.Units;
 using UnityEngine;
 using Unity.Behavior;
@@ -22,6 +23,7 @@ namespace GameDevTV.RTS.Utilities
         private const string _buildingSORef = "BuildingSO";
         private const string _buildingUnderConstructionRef = "BuildingUnderConstruction";
         private const string _buildingEventChannelRef = "BuildingEventChannel";
+        private const string _nearbyEnemiesRef = "NearbyEnemies";
 
         #region Setters
         public static void SetCommand(BehaviorGraphAgent behaviorAgent, UnitCommands command)
@@ -77,6 +79,28 @@ namespace GameDevTV.RTS.Utilities
             if (behaviorAgent == null) { return; }
             behaviorAgent.SetVariableValue<BaseBuilding>(_buildingUnderConstructionRef, baseBuilding);
         }
+
+        public static void AddToNearbyEnemies(BehaviorGraphAgent behaviorAgent, IDamageable damageable)
+        {
+            if (damageable == null) { return; }
+            GameObject enemy = damageable.unitGameObject;
+            if (enemy == null) { return; }
+            
+            List<GameObject> nearbyEnemies = GetNearbyEnemies(behaviorAgent);
+            nearbyEnemies.Add(enemy);
+            nearbyEnemies.Sort(new ClosestGameObjectComparator(behaviorAgent.transform.position));
+        }
+
+        public static void RemoveFromNearbyEnemies(BehaviorGraphAgent behaviorAgent, IDamageable damageable)
+        {
+            if (damageable == null) { return; }
+            GameObject enemy = damageable.unitGameObject;
+            if (enemy == null) { return; }
+            
+            List<GameObject> nearbyEnemies = GetNearbyEnemies(behaviorAgent);
+            nearbyEnemies.Remove(enemy);
+            nearbyEnemies.Sort(new ClosestGameObjectComparator(behaviorAgent.transform.position));
+        }
         #endregion
 
         #region Getters
@@ -114,6 +138,12 @@ namespace GameDevTV.RTS.Utilities
         {
             if (behaviorAgent == null) { return null; }
             return !behaviorAgent.GetVariable(_buildingEventChannelRef, out BlackboardVariable<BuildingEventChannel> buildingEventChannel) ? null : buildingEventChannel.Value;
+        }
+
+        public static List<GameObject> GetNearbyEnemies(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return null; }
+            return !behaviorAgent.GetVariable(_nearbyEnemiesRef, out BlackboardVariable<List<GameObject>> nearbyEnemies) ? null : nearbyEnemies.Value;
         }
         #endregion
     }

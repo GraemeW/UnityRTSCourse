@@ -597,6 +597,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -618,9 +620,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -744,11 +748,15 @@ MonoBehaviour:
   m_EndAngleFade: 180
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
-  m_DecalLayerMask: 2
+  m_RenderingLayerMask:
+    serializedVersion: 0
+    m_Bits: 2
   m_ScaleMode: 0
   m_Offset: {x: 0, y: 0, z: 4}
   m_Size: {x: 1.5, y: 1.5, z: 8}
   m_FadeFactor: 1
+  version: 1
+  m_DecalLayerMask: 2
 --- !u!1 &3168995856014687885
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,6 +802,7 @@ GameObject:
   - component: {fileID: 9085990032264575114}
   - component: {fileID: 911212785119481167}
   - component: {fileID: 4413471402850268908}
+  - component: {fileID: 7519475458746785507}
   m_Layer: 6
   m_Name: Engineer_1
   m_TagString: Untagged
@@ -875,8 +884,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb5a45b711769924388293122d2d1691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <currentHealth>k__BackingField: 0
   <maxHealth>k__BackingField: 0
+  <initialHealthFraction>k__BackingField: 0.35
   <unitSO>k__BackingField: {fileID: 0}
   decalProjector: {fileID: 4752806030668615140}
   availableCommands:
@@ -884,6 +893,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
   - {fileID: 11400000, guid: ef6bdd8e5eee3924b9f2adde0482f015, type: 2}
   - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
+  cancelBuildingCommand: {fileID: 0}
+  cancelBuildingRefundFraction: 0.75
 --- !u!136 &911212785119481167
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -922,6 +933,7 @@ MonoBehaviour:
   m_Graph: {fileID: -5427218438338677319, guid: d7e0ebe2d16461f4c95352916af2f120, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 8901574015960744562
+  m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -935,6 +947,33 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 3226995718862172680}
+--- !u!54 &7519475458746785507
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3226995718862172680}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3397965674737790768
 GameObject:
   m_ObjectHideFlags: 0
