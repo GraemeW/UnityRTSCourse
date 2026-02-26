@@ -179,11 +179,13 @@ MonoBehaviour:
   <unitSO>k__BackingField: {fileID: 11400000, guid: a8f5355d6036acc4485c83599c6b9f5f, type: 2}
   decalProjector: {fileID: 7589638744750387322}
   availableCommands:
+  - {fileID: 11400000, guid: 528495f224b82482ea5da32c2e105264, type: 2}
   - {fileID: 11400000, guid: 7e57bed5e2f15d646ae247df3251d545, type: 2}
   - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
   - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
   - {fileID: 11400000, guid: ef6bdd8e5eee3924b9f2adde0482f015, type: 2}
   - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
+  damageableSensor: {fileID: 0}
   cancelBuildingCommand: {fileID: 11400000, guid: ceb9ad405ab037a42b617b9f5eb89584, type: 2}
   cancelBuildingRefundFraction: 0.75
 --- !u!1 &7428323614143241876

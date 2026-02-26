@@ -24,5 +24,11 @@ namespace GameDevTV.RTS.Utilities
             if (animator == null || animator.runtimeAnimatorController == null) { return; }
             animator.SetBool(AnimationConstants.isGatheringRef, isGathering);
         }
+
+        public static void AnimateAttack(Animator animator, bool isAttacking)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null) { return; }
+            animator.SetBool(attackRef, isAttacking);
+        }
     }
 }

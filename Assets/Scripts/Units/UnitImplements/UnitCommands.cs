@@ -9,6 +9,7 @@ namespace GameDevTV.RTS.Units
         Move,
         Gather,
         ReturnSupplies,
-        BuildBuilding
+        BuildBuilding,
+        Attack
     }
 }

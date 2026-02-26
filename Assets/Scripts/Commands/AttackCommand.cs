@@ -13,9 +13,10 @@ namespace GameDevTV.RTS.Commands
             bool isAttacker = commandContext.commandable is IAttacker;
             bool isValidHit = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, damageableLayers);
             commandContext.hit = unitHit;
-            bool isHitIDamageable = unitHit.transform.TryGetComponent(out IDamageable _);
             
-            return isAttacker && isValidHit && isHitIDamageable;
+            bool isHitIDamageable = isValidHit && unitHit.transform.TryGetComponent(out IDamageable _);
+            
+            return isAttacker && isHitIDamageable;
         }
 
         public override void Handle(CommandContext commandContext)

@@ -70,6 +70,7 @@ namespace GameDevTV.RTS.Units
             if (navMeshObstacle != null) { navMeshObstacle.enabled = true; }
             
             unitBuildingThis = null;
+            if (Mathf.Approximately(currentHealth, 0f)) { currentHealth = unitSO.health; }
             progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, 0.0f, 1.0f);
             Bus<UnitDeathEvent>.SubscribeToEvent(HandleUnitDeath);
             Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));

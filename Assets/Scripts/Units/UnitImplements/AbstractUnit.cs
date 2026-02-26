@@ -123,7 +123,10 @@ namespace GameDevTV.RTS.Units
 
         public void Attack(IDamageable damageable)
         {
-            UnityEngine.Debug.Log($"{gameObject.name} is attacking {damageable.unitGameObject}");
+            if (damageable == null) { return; }
+            
+            BehaviorConstants.SetTarget(behaviorAgent, damageable.unitGameObject);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Attack);
         }
         #endregion
     }
