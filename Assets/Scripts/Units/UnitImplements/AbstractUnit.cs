@@ -11,6 +11,7 @@ namespace GameDevTV.RTS.Units
     public abstract class AbstractUnit : AbstractCommandable, IMoveable, IAttacker
     {
         // Hookups
+        [field: SerializeField] public ParticleSystem attackingParticleSystem { get; private set; }
         [SerializeField] private DamageableSensor damageableSensor;
         
         // Cached References

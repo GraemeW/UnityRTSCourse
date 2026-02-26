@@ -17,8 +17,9 @@ public partial class AttackTargetAction : Action
     [SerializeReference] public BlackboardVariable<AttackConfigSO> AttackConfig;
 
     // Cached References
-    private NavMeshAgent navMeshAgent;
     private Transform selfTransform;
+    private AbstractUnit abstractUnit;
+    private NavMeshAgent navMeshAgent;
     private Animator animator;
     private IDamageable targetDamageable;
     private Transform targetTransform;
@@ -32,13 +33,12 @@ public partial class AttackTargetAction : Action
         if (!HasValidInputs()) { return Status.Failure; }
         
         selfTransform = Self.Value.transform;
+        abstractUnit = selfTransform.GetComponent<AbstractUnit>();
         navMeshAgent = selfTransform.GetComponent<NavMeshAgent>();
         animator = selfTransform.GetComponent<Animator>();
         
         targetTransform = Target.Value.transform;
         targetDamageable = targetTransform.GetComponent<IDamageable>();
-
-        if (animator != null) { AnimationConstants.AnimateAttack(animator, true); }
         
         return Status.Running;
     }
@@ -47,27 +47,45 @@ public partial class AttackTargetAction : Action
     {
         if (Self.Value == null) { return Status.Failure; }
         if (Target.Value == null || targetDamageable.GetCurrentHealth() == 0) { return Status.Success; }
+
+        ResetAnimation();
+        if (IsMovingToTarget())
+        {
+            if (animator != null) { AnimationConstants.AnimateMovement(animator, navMeshAgent.speed); }
+            return Status.Running;
+        }
+
+        Quaternion lookRotation = Quaternion.LookRotation((targetTransform.position - selfTransform.position).normalized, Vector3.up);
+        selfTransform.rotation = Quaternion.Euler(
+            selfTransform.rotation.eulerAngles.x,
+            lookRotation.eulerAngles.y,
+            selfTransform.rotation.eulerAngles.z);
         
-        if (IsMovingToTarget()) { return Status.Running; }
-        if (IsCooldownElapsed()) { targetDamageable.AdjustHealth(-AttackConfig.Value.damage);}
+        Self.Value.transform.LookAt(Target.Value.transform.position, Self.Value.transform.up);
+        if (IsCooldownElapsed())
+        {
+            if (animator != null) { AnimationConstants.AnimateAttack(animator, true); }
+            if (abstractUnit.attackingParticleSystem != null) { abstractUnit.attackingParticleSystem.Play(); }
+            targetDamageable.AdjustHealth(-AttackConfig.Value.damage);
+        }
 
         return Status.Running;
     }
 
     protected override void OnEnd()
     {
-        if (animator != null) { AnimationConstants.AnimateAttack(animator, false); }
+        ResetAnimation();
     }
     #endregion
 
     #region PrivateMethods
-
     private bool IsMovingToTarget()
     {
         if (Vector3.Distance(targetTransform.position, selfTransform.position) > AttackConfig.Value.attackRange)
         {
             navMeshAgent.SetDestination(targetTransform.position);
             navMeshAgent.isStopped = false;
+            lastAttackTime = Time.time;
             return true;
         }
         navMeshAgent.isStopped = true;
@@ -80,10 +98,17 @@ public partial class AttackTargetAction : Action
         lastAttackTime = Time.time;
         return true;
     }
+
+    private void ResetAnimation()
+    {
+        if (animator == null) { return; }
+        AnimationConstants.AnimateMovement(animator, 0f);
+        AnimationConstants.AnimateAttack(animator, false);
+    }
     
     private bool HasValidInputs()
     {
-        bool isSelfValid = Self.Value != null && Self.Value.TryGetComponent(out NavMeshAgent _);
+        bool isSelfValid = Self.Value != null && Self.Value.TryGetComponent(out AbstractUnit _) && Self.Value.TryGetComponent(out NavMeshAgent _);
         bool isTargetValid = Target.Value != null && Target.Value.TryGetComponent(out IDamageable _);
         bool isAttackConfigValid = AttackConfig.Value != null;
         return isSelfValid && isTargetValid && isAttackConfigValid;
