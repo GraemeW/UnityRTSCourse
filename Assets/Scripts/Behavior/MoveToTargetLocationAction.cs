@@ -24,9 +24,11 @@ namespace GameDevTV.RTS.Behavior
         {
             if (!Agent.Value.TryGetComponent(out navMeshAgent)) { return Status.Failure; }
             if (Vector3.Distance(navMeshAgent.transform.position, TargetLocation.Value) <= navMeshAgent.stoppingDistance) { return Status.Success; }
-
+            
             Agent.Value.TryGetComponent(out animator);
             if (animator == null) { animator = Agent.Value.GetComponentInChildren<Animator>(); }
+            
+            navMeshAgent.ResetPath();
             navMeshAgent.SetDestination(TargetLocation.Value);
             return Status.Running;
         }
@@ -43,7 +45,6 @@ namespace GameDevTV.RTS.Behavior
             }
 
             AnimationConstants.AnimateMovement(animator, navMeshAgent.velocity.magnitude);
-
             return Status.Running;
         }
 

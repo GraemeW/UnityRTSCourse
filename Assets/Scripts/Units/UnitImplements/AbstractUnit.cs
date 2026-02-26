@@ -104,12 +104,14 @@ namespace GameDevTV.RTS.Units
 
         public void MoveTo(Vector3 position)
         {
+            BehaviorConstants.SetTarget(behaviorAgent, null);
             BehaviorConstants.SetTargetLocation(behaviorAgent, position);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Move);
         }
 
         public void SetMoveTarget(GameObject target)
         {
+            BehaviorConstants.SetTargetLocation(behaviorAgent, navMeshAgent.transform.position);
             BehaviorConstants.SetTarget(behaviorAgent, target);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Move);
         }
