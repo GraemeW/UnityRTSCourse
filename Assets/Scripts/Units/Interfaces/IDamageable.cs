@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace GameDevTV.RTS.Units
@@ -21,5 +22,6 @@ namespace GameDevTV.RTS.Units
         // Events
         public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HealthUpdatedEvent onHealthUpdated;
+        public event Action<IDamageable> onDeath;
     }
 }

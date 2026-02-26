@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GameDevTV.RTS.Units;
 using UnityEngine;
 using Unity.Behavior;
@@ -117,6 +118,12 @@ namespace GameDevTV.RTS.Utilities
             return !behaviorAgent.GetVariable(_commandRef, out BlackboardVariable<UnitCommands> command) ? UnitCommands.Stop : command.Value;
         }
 
+        public static GameObject GetTarget(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return null; }
+            return !behaviorAgent.GetVariable(_targetRef, out BlackboardVariable<GameObject> target) ? null : target.Value;
+        }
+
         public static int GetGatherAmount(BehaviorGraphAgent behaviorAgent)
         {
             if (behaviorAgent == null) { return 0; }
@@ -151,6 +158,12 @@ namespace GameDevTV.RTS.Utilities
         {
             if (behaviorAgent == null) { return null; }
             return !behaviorAgent.GetVariable(_nearbyEnemiesRef, out BlackboardVariable<List<GameObject>> nearbyEnemies) ? null : nearbyEnemies.Value;
+        }
+
+        public static GameObject GetNearestEnemy(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return null; }
+            return !behaviorAgent.GetVariable(_nearbyEnemiesRef, out BlackboardVariable<List<GameObject>> nearbyEnemies) ? null : nearbyEnemies.Value.FirstOrDefault();
         }
         #endregion
     }

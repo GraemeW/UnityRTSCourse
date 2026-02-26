@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -18,18 +19,24 @@ namespace GameDevTV.RTS.Units
         public Transform unitTransform => transform;
         [SerializeField] private DecalProjector decalProjector;
         [SerializeField] private List<BaseCommand> availableCommands = new();
-
+        
         // State
         public List<BaseCommand> currentCommands { get; private set; } =  new();
         public float currentHealth  { get; protected set; } = 0f;
         
         // Events
         public event IDamageable.HealthUpdatedEvent onHealthUpdated;
+        public event Action<IDamageable> onDeath;
 
         #region UnityMethods
         protected virtual void Start()
         {
             currentCommands = availableCommands;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            onDeath?.Invoke(this);
         }
         #endregion
 

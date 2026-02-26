@@ -81,8 +81,9 @@ namespace GameDevTV.RTS.Units
             // No special commands
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleUnitDeath);
         }
         #endregion

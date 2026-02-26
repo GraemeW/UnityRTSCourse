@@ -7,6 +7,7 @@ namespace GameDevTV.RTS.Commands
     public class AttackCommand : BaseCommand
     {
         [SerializeField] private LayerMask damageableLayers;
+        [SerializeField] private LayerMask floorLayers;
         
         public override bool CanHandle(ref CommandContext commandContext, bool skipCondition = false)
         {
@@ -14,9 +15,15 @@ namespace GameDevTV.RTS.Commands
             bool isValidHit = Physics.Raycast(commandContext.cameraRay, out RaycastHit unitHit, float.MaxValue, damageableLayers);
             commandContext.hit = unitHit;
             
-            bool isHitIDamageable = isValidHit && unitHit.transform.TryGetComponent(out IDamageable _);
+            if (isAttacker && isValidHit)
+            {
+                return unitHit.transform.TryGetComponent(out IDamageable _);
+            }
             
-            return isAttacker && isHitIDamageable;
+            bool isFloor = Physics.Raycast(commandContext.cameraRay, out RaycastHit floorHit, float.MaxValue, floorLayers);
+            commandContext.hit = floorHit; 
+            
+            return isAttacker && isFloor;
         }
 
         public override void Handle(CommandContext commandContext)
@@ -25,6 +32,10 @@ namespace GameDevTV.RTS.Commands
             if (commandContext.hit.collider.TryGetComponent(out IDamageable damageable))
             {
                 attacker.Attack(damageable);
+            }
+            else
+            {
+                attacker.Attack(commandContext.hit.point);
             }
         }
 

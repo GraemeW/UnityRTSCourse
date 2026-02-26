@@ -10,5 +10,6 @@ namespace GameDevTV.RTS.Units
         
         // Interface Methods
         public void Attack(IDamageable damageable);
+        public void Attack(Vector3 targetLocation);
     }
 }

@@ -48,8 +48,9 @@ namespace GameDevTV.RTS.Units
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
         }
         #endregion
@@ -74,13 +75,37 @@ namespace GameDevTV.RTS.Units
         
         private void HandleUnitEnter(IDamageable damageable)
         {
+            // Note:  Do not early exit on null damageable here (handled downstream)
             if (behaviorAgent == null) { return; }
             BehaviorConstants.AddToNearbyEnemies(behaviorAgent, damageable);
+            
+            if (BehaviorConstants.GetCommand(behaviorAgent) != UnitCommands.Attack) { return; }
+
+            SetNearestEnemyToTarget();
         }
+        
         private void HandleUnitExit(IDamageable damageable)
         {
+            // Note:  Do not early exit on null damageable here (handled downstream)
             if (behaviorAgent == null) { return; }
             BehaviorConstants.RemoveFromNearbyEnemies(behaviorAgent, damageable);
+            
+            if (BehaviorConstants.GetCommand(behaviorAgent) != UnitCommands.Attack) { return; }
+            if (!IsDamageableCurrentTarget(damageable)) { return; }
+
+            SetNearestEnemyToTarget();
+        }
+
+        private void SetNearestEnemyToTarget()
+        {
+            GameObject nearestTarget = BehaviorConstants.GetNearestEnemy(behaviorAgent);
+            BehaviorConstants.SetTarget(behaviorAgent, nearestTarget);
+        }
+
+        private bool IsDamageableCurrentTarget(IDamageable damageable)
+        {
+            GameObject currentTarget = BehaviorConstants.GetTarget(behaviorAgent);
+            return currentTarget != null && damageable != null && currentTarget == damageable.unitGameObject;
         }
         #endregion
 
@@ -111,7 +136,7 @@ namespace GameDevTV.RTS.Units
 
         public void SetMoveTarget(GameObject target)
         {
-            BehaviorConstants.SetTargetLocation(behaviorAgent, navMeshAgent.transform.position);
+            BehaviorConstants.SetTargetLocation(behaviorAgent, transform.position);
             BehaviorConstants.SetTarget(behaviorAgent, target);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Move);
         }
@@ -127,9 +152,19 @@ namespace GameDevTV.RTS.Units
         public void Attack(IDamageable damageable)
         {
             if (damageable == null) { return; }
+            if (damageable == (IDamageable)this) { return; }
             
+            BehaviorConstants.SetTargetLocation(behaviorAgent, transform.position);
             BehaviorConstants.SetTarget(behaviorAgent, damageable.unitGameObject);
             BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Attack);
+        }
+
+        public void Attack(Vector3 targetLocation)
+        {
+            BehaviorConstants.SetTarget(behaviorAgent, null);
+            BehaviorConstants.SetTargetLocation(behaviorAgent, targetLocation);
+            BehaviorConstants.SetCommand(behaviorAgent, UnitCommands.Attack);
+            HandleUnitEnter(null);
         }
         #endregion
     }
