@@ -22,6 +22,5 @@ namespace GameDevTV.RTS.Units
         // Events
         public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HealthUpdatedEvent onHealthUpdated;
-        public event Action<IDamageable> onDeath;
     }
 }

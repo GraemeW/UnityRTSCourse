@@ -48,9 +48,8 @@ namespace GameDevTV.RTS.Units
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
-        protected override void OnDestroy()
+        protected virtual void OnDestroy()
         {
-            base.OnDestroy();
             Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
         }
         #endregion
@@ -117,14 +116,7 @@ namespace GameDevTV.RTS.Units
 
         public void ToggleAvoidance(bool enable)
         {
-            if (enable)
-            {
-                navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            }
-            else
-            {
-                navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-            }
+            navMeshAgent.obstacleAvoidanceType = enable ? ObstacleAvoidanceType.HighQualityObstacleAvoidance : ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         public void MoveTo(Vector3 position)

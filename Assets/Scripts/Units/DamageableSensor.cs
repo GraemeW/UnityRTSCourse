@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameDevTV.RTS.EventBus;
+using GameDevTV.RTS.Events;
 using UnityEngine;
 
 namespace GameDevTV.RTS.Units
@@ -29,10 +31,8 @@ namespace GameDevTV.RTS.Units
 
         private void OnDestroy()
         {
-            foreach (IDamageable damageable in damageables)
-            {
-                SubscribeToDamageableDeathEvent(damageable, false);
-            }
+            Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
+            Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
         }
         #endregion
         
@@ -59,33 +59,44 @@ namespace GameDevTV.RTS.Units
         #endregion
         
         #region PrivateMethods
-
-        private void SubscribeToDamageableDeathEvent(IDamageable damageable, bool enable)
-        {
-            if (damageable == null) { return; }
-            damageable.onDeath -= HandleDamageableDeath;
-            if (enable) { damageable.onDeath += HandleDamageableDeath; }
-        }
-
         private void HandleTriggerEvent(IDamageable damageable, bool isEntry)
         {
             if (damageable == null) { return; }
-            
-            SubscribeToDamageableDeathEvent(damageable, isEntry);
             if (isEntry)
             {
                 damageables.Add(damageable);
                 onUnitEnter?.Invoke(damageable);
+                
+                if (damageables.Count == 1)
+                {
+                    Bus<UnitDeathEvent>.SubscribeToEvent(HandleDamageableDeath);
+                    Bus<BuildingDeathEvent>.SubscribeToEvent(HandleDamageableDeath);
+                }
             }
             else
             {
                 damageables.Remove(damageable);
                 onUnitExit?.Invoke(damageable);
+                
+                if (damageables.Count == 0)
+                {
+                    Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
+                    Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
+                }
             }
         }
 
-        private void HandleDamageableDeath(IDamageable damageable)
+        private void HandleDamageableDeath(UnitDeathEvent unitDeathEvent)
         {
+            IDamageable damageable = unitDeathEvent.unit;
+            if (!damageables.Contains(damageable)) { return; }
+            HandleTriggerEvent(damageable, false);
+        }
+
+        private void HandleDamageableDeath(BuildingDeathEvent buildingDeathEvent)
+        {
+            IDamageable damageable = buildingDeathEvent.building;
+            if (!damageables.Contains(damageable)) { return; }
             HandleTriggerEvent(damageable, false);
         }
         #endregion

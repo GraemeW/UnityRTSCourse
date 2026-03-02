@@ -26,17 +26,11 @@ namespace GameDevTV.RTS.Units
         
         // Events
         public event IDamageable.HealthUpdatedEvent onHealthUpdated;
-        public event Action<IDamageable> onDeath;
 
         #region UnityMethods
         protected virtual void Start()
         {
             currentCommands = availableCommands;
-        }
-
-        protected virtual void OnDestroy()
-        {
-            onDeath?.Invoke(this);
         }
         #endregion
 
