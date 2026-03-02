@@ -79,7 +79,7 @@ namespace GameDevTV.RTS.Units
             BehaviorConstants.AddToNearbyEnemies(behaviorAgent, damageable);
             
             if (BehaviorConstants.GetCommand(behaviorAgent) != UnitCommands.Attack) { return; }
-
+            
             SetNearestEnemyToTarget();
         }
         
@@ -94,13 +94,7 @@ namespace GameDevTV.RTS.Units
 
             SetNearestEnemyToTarget();
         }
-
-        private void SetNearestEnemyToTarget()
-        {
-            GameObject nearestTarget = BehaviorConstants.GetNearestEnemy(behaviorAgent);
-            BehaviorConstants.SetTarget(behaviorAgent, nearestTarget);
-        }
-
+        
         private bool IsDamageableCurrentTarget(IDamageable damageable)
         {
             GameObject currentTarget = BehaviorConstants.GetTarget(behaviorAgent);
@@ -140,7 +134,14 @@ namespace GameDevTV.RTS.Units
         #endregion
         
         #region Attack
-
+        public void SetNearestEnemyToTarget(bool overrideCurrentTarget = false)
+        {
+            if (!overrideCurrentTarget && BehaviorConstants.GetTarget(behaviorAgent) != null) { return; }
+            
+            GameObject nearestTarget = BehaviorConstants.GetNearestEnemy(behaviorAgent);
+            BehaviorConstants.SetTarget(behaviorAgent, nearestTarget);
+        }
+        
         public void Attack(IDamageable damageable)
         {
             if (damageable == null) { return; }

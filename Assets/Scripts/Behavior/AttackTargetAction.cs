@@ -28,6 +28,7 @@ public partial class AttackTargetAction : Action
     
     // State
     private float lastAttackTime;
+    private float accumulatedChaseTime;
     
     #region UnityMethods
     protected override Status OnStart()
@@ -48,12 +49,14 @@ public partial class AttackTargetAction : Action
     protected override Status OnUpdate()
     {
         if (Self.Value == null) { return Status.Failure; }
+        if (accumulatedChaseTime > AttackConfig.Value.maxChaseTime) { abstractUnit.SetNearestEnemyToTarget(true); }
         if (Target.Value == null || targetDamageable.GetCurrentHealth() == 0) { return Status.Success; }
-
+        
         ResetAnimation();
         if (IsMovingToTarget())
         {
             if (animator != null) { AnimationConstants.AnimateMovement(animator, navMeshAgent.speed); }
+            accumulatedChaseTime += Time.deltaTime;
             return Status.Running;
         }
 

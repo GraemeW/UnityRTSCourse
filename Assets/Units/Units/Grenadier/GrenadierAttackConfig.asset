@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e393e6b74e71455c886348cafab34897, type: 3}
-  m_Name: RiflemanAttackConfig
+  m_Name: GrenadierAttackConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Units.AttackConfigSO
-  <attackRange>k__BackingField: 7
-  <attackDelay>k__BackingField: 1
-  <damage>k__BackingField: 6
+  <attackRange>k__BackingField: 10
+  <attackDelay>k__BackingField: 2.5
+  <damage>k__BackingField: 25
   <maxChaseTime>k__BackingField: 1

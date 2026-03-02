@@ -539,6 +539,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1392863644434197884}
   - {fileID: 221767034485092806}
   - {fileID: 533189333140811927}
   - {fileID: 1434624522023372421}
@@ -687,7 +688,10 @@ MonoBehaviour:
   availableCommands:
   - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
   - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
+  - {fileID: 11400000, guid: 528495f224b82482ea5da32c2e105264, type: 2}
   - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
+  <attackingParticleSystem>k__BackingField: {fileID: 0}
+  damageableSensor: {fileID: 1878437323949766520}
 --- !u!1 &1929278855779803906
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,6 +915,72 @@ Transform:
   - {fileID: 5159638355370684760}
   m_Father: {fileID: 2791957669183474161}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3453741010250116263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1392863644434197884}
+  - component: {fileID: 398487395007594287}
+  - component: {fileID: 1878437323949766520}
+  m_Layer: 10
+  m_Name: DamageableSensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1392863644434197884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453741010250116263}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1324784020702504064}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &398487395007594287
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453741010250116263}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 8
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1878437323949766520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453741010250116263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292ed2dfbd6e4706bbb23ddaf3dbb2c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Units.DamageableSensor
 --- !u!1 &3665383866197533260
 GameObject:
   m_ObjectHideFlags: 0

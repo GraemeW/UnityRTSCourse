@@ -8,5 +8,6 @@ namespace GameDevTV.RTS.Units
         [field: SerializeField] public float attackRange { get; private set; } = 1.5f;
         [field: SerializeField] public float attackDelay { get; private set; } = 1.0f;
         [field: SerializeField] public float damage { get; private set; } = 5.0f;
+        [field: SerializeField] public float maxChaseTime { get; private set; } = 1.0f;
     }
 }
