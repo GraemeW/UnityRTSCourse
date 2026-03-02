@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
@@ -15,6 +16,7 @@ public partial class AttackTargetAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<GameObject> Target;
     [SerializeReference] public BlackboardVariable<AttackConfigSO> AttackConfig;
+    [SerializeReference] public BlackboardVariable<List<GameObject>> NearbyEnemies;
 
     // Cached References
     private Transform selfTransform;
@@ -81,7 +83,7 @@ public partial class AttackTargetAction : Action
     #region PrivateMethods
     private bool IsMovingToTarget()
     {
-        if (Vector3.Distance(targetTransform.position, selfTransform.position) > AttackConfig.Value.attackRange)
+        if (!NearbyEnemies.Value.Contains(Target.Value))
         {
             navMeshAgent.SetDestination(targetTransform.position);
             navMeshAgent.isStopped = false;
@@ -110,7 +112,7 @@ public partial class AttackTargetAction : Action
     {
         bool isSelfValid = Self.Value != null && Self.Value.TryGetComponent(out AbstractUnit _) && Self.Value.TryGetComponent(out NavMeshAgent _);
         bool isTargetValid = Target.Value != null && Target.Value.TryGetComponent(out IDamageable _);
-        bool isAttackConfigValid = AttackConfig.Value != null;
+        bool isAttackConfigValid = AttackConfig.Value != null && NearbyEnemies.Value != null;
         return isSelfValid && isTargetValid && isAttackConfigValid;
     }
     #endregion
