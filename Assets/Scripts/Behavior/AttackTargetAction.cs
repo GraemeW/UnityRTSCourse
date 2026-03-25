@@ -29,6 +29,7 @@ public partial class AttackTargetAction : Action
     // State
     private float lastAttackTime;
     private float accumulatedChaseTime;
+    private Collider[] enemyColliders;
     
     #region UnityMethods
     protected override Status OnStart()
@@ -43,6 +44,8 @@ public partial class AttackTargetAction : Action
         targetTransform = Target.Value.transform;
         targetDamageable = targetTransform.GetComponent<IDamageable>();
         
+        enemyColliders = new Collider[AttackConfig.Value.maxEnemiesHitPerAttack];
+        
         return Status.Running;
     }
 
@@ -55,34 +58,18 @@ public partial class AttackTargetAction : Action
         if (animator != null) { AnimationConstants.AnimateMovement(animator, 0f); }
         if (IsMovingToTarget())
         {
-            if (animator != null)
-            {
-                AnimationConstants.AnimateAttack(animator, false);
-                AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
-            }
+            AnimateMovement();
             accumulatedChaseTime += Time.deltaTime;
             return Status.Running;
         }
 
-        Quaternion lookRotation = Quaternion.LookRotation((targetTransform.position - selfTransform.position).normalized, Vector3.up);
-        selfTransform.rotation = Quaternion.Euler(
-            selfTransform.rotation.eulerAngles.x,
-            lookRotation.eulerAngles.y,
-            selfTransform.rotation.eulerAngles.z);
-        
-        Self.Value.transform.LookAt(Target.Value.transform.position, Self.Value.transform.up);
+        LookAtTarget();
         if (IsCooldownElapsed())
         {
-            if (animator != null) { AnimationConstants.AnimateAttack(animator, true); }
-            if (abstractUnit.attackingParticleSystem != null) { abstractUnit.attackingParticleSystem.Play(); }
-
-            if (!AttackConfig.Value.hasProjectileAttack)
-            {
-                targetDamageable.AdjustHealth(-AttackConfig.Value.damage);
-                // Projectile attacks to be handled as a consequence of the animation / in the specific subclass
-            }
+            AnimateAttack();
+            if (AttackConfig.Value.hasProjectileAttack) { return Status.Running; }  // Projectile attacks to be handled as a consequence of the animation / in the specific subclass
+            AttackConfig.Value.ApplyDamage(targetDamageable.unitTransform.position, targetDamageable, ref enemyColliders);
         }
-
         return Status.Running;
     }
 
@@ -124,6 +111,28 @@ public partial class AttackTargetAction : Action
         bool isAttackConfigValid = AttackConfig.Value != null && NearbyEnemies.Value != null;
         return isSelfValid && isTargetValid && isAttackConfigValid;
     }
+
+    private void AnimateMovement()
+    {
+        if (animator == null) return;
+        AnimationConstants.AnimateAttack(animator, false);
+        AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
+    }
+
+    private void AnimateAttack()
+    {
+        if (animator != null) { AnimationConstants.AnimateAttack(animator, true); }
+        if (abstractUnit.attackingParticleSystem != null) { abstractUnit.attackingParticleSystem.Play(); }
+    }
+
+    private void LookAtTarget()
+    {
+        Quaternion lookRotation = Quaternion.LookRotation((targetTransform.position - selfTransform.position).normalized, Vector3.up);
+        selfTransform.rotation = Quaternion.Euler(
+            selfTransform.rotation.eulerAngles.x,
+            lookRotation.eulerAngles.y,
+            selfTransform.rotation.eulerAngles.z);
+        Self.Value.transform.LookAt(Target.Value.transform.position, Self.Value.transform.up);
+    }
     #endregion
 }
-

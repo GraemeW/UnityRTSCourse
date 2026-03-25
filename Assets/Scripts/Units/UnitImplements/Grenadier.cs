@@ -19,6 +19,9 @@ namespace GameDevTV.RTS.Units
         private Transform grenadeParent;
         private Vector3 defaultGrenadePosition;
         
+        // State
+        private Collider[] enemyColliders;
+        
         #region UnityMethods
         protected override void Awake()
         {
@@ -31,6 +34,13 @@ namespace GameDevTV.RTS.Units
             
             defaultGrenadePosition = grenade.transform.localPosition;
             grenadeParent = grenade.transform.parent;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            if (attackConfigSO == null) { return; }
+            enemyColliders = new Collider[attackConfigSO.maxEnemiesHitPerAttack];
         }
 
         protected override void OnDestroy()
@@ -78,7 +88,7 @@ namespace GameDevTV.RTS.Units
             }
 
             TriggerExplosionEffect(endPosition);
-            ApplyDamage(targetDamageable);
+            attackConfigSO.ApplyDamage(endPosition, targetDamageable, ref enemyColliders);
             
             grenade.transform.SetParent(grenadeParent);
             grenade.transform.localPosition = defaultGrenadePosition;
@@ -94,11 +104,7 @@ namespace GameDevTV.RTS.Units
             explosionParticles.Play();
         }
 
-        private void ApplyDamage(IDamageable targetDamageable)
-        {
-            if (targetDamageable == null || attackConfigSO == null) { return; }
-            targetDamageable.AdjustHealth(-attackConfigSO.damage);
-        }
+
         #endregion
     }
 }
