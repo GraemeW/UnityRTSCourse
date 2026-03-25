@@ -21,7 +21,7 @@ namespace GameDevTV.RTS.Units
         protected BehaviorGraphAgent behaviorAgent;
 
         #region UnityMethods
-        private void Awake()
+        protected virtual void Awake()
         {
             unitSOImpl = unitSO as UnitSO;
             navMeshAgent = GetComponent<NavMeshAgent>();

@@ -118,6 +118,12 @@ namespace GameDevTV.RTS.Utilities
             return !behaviorAgent.GetVariable(_commandRef, out BlackboardVariable<UnitCommands> command) ? UnitCommands.Stop : command.Value;
         }
 
+        public static Vector3? GetTargetLocation(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return Vector3.zero; }
+            return !behaviorAgent.GetVariable(_targetLocationRef, out BlackboardVariable<Vector3> targetLocation) ? null : targetLocation.Value;
+        }
+
         public static GameObject GetTarget(BehaviorGraphAgent behaviorAgent)
         {
             if (behaviorAgent == null) { return null; }

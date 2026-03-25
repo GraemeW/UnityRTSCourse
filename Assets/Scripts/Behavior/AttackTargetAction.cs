@@ -52,10 +52,14 @@ public partial class AttackTargetAction : Action
         if (accumulatedChaseTime > AttackConfig.Value.maxChaseTime) { abstractUnit.SetNearestEnemyToTarget(true); }
         if (Target.Value == null || targetDamageable.GetCurrentHealth() == 0) { return Status.Success; }
         
-        ResetAnimation();
+        if (animator != null) { AnimationConstants.AnimateMovement(animator, 0f); }
         if (IsMovingToTarget())
         {
-            if (animator != null) { AnimationConstants.AnimateMovement(animator, navMeshAgent.speed); }
+            if (animator != null)
+            {
+                AnimationConstants.AnimateAttack(animator, false);
+                AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);
+            }
             accumulatedChaseTime += Time.deltaTime;
             return Status.Running;
         }
@@ -79,7 +83,11 @@ public partial class AttackTargetAction : Action
 
     protected override void OnEnd()
     {
-        ResetAnimation();
+        if (animator != null)
+        {
+            AnimationConstants.AnimateAttack(animator, false);
+            AnimationConstants.AnimateMovement(animator, 0f);
+        }
     }
     #endregion
 
@@ -102,13 +110,6 @@ public partial class AttackTargetAction : Action
         if (Time.time < lastAttackTime + AttackConfig.Value.attackDelay) { return false; }
         lastAttackTime = Time.time;
         return true;
-    }
-
-    private void ResetAnimation()
-    {
-        if (animator == null) { return; }
-        AnimationConstants.AnimateMovement(animator, 0f);
-        AnimationConstants.AnimateAttack(animator, false);
     }
     
     private bool HasValidInputs()

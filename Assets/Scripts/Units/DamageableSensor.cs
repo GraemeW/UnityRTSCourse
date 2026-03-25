@@ -26,13 +26,18 @@ namespace GameDevTV.RTS.Units
 
         public void Awake()
         { 
-            sensorCollider = GetComponent<SphereCollider>();
+            CacheSensorCollider();
         }
 
         private void OnDestroy()
         {
+            Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
             Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
-            Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
+        }
+
+        private void CacheSensorCollider()
+        {
+            sensorCollider = GetComponent<SphereCollider>();
         }
         #endregion
         
@@ -54,6 +59,9 @@ namespace GameDevTV.RTS.Units
         public void SetupFrom(AttackConfigSO attackConfig)
         {
             if (attackConfig == null)  { return; }
+            if (sensorCollider == null) { CacheSensorCollider(); }
+            if (sensorCollider == null) { return; }
+            
             sensorCollider.radius = attackConfig.attackRange;
         }
         #endregion
@@ -80,7 +88,7 @@ namespace GameDevTV.RTS.Units
                 
                 if (damageables.Count == 0)
                 {
-                    Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
+                    Bus<UnitDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
                     Bus<BuildingDeathEvent>.UnsubscribeFromEvent(HandleDamageableDeath);
                 }
             }
