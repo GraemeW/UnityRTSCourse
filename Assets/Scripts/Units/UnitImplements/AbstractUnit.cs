@@ -15,7 +15,7 @@ namespace GameDevTV.RTS.Units
         [SerializeField] private DamageableSensor damageableSensor;
         
         // Cached References
-        private UnitSO unitSOImpl;
+        protected UnitSO unitSOImpl;
         private NavMeshAgent navMeshAgent;
         public float agentRadius => navMeshAgent.radius;
         protected BehaviorGraphAgent behaviorAgent;

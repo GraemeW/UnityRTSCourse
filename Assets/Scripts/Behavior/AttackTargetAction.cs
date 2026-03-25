@@ -75,7 +75,12 @@ public partial class AttackTargetAction : Action
         {
             if (animator != null) { AnimationConstants.AnimateAttack(animator, true); }
             if (abstractUnit.attackingParticleSystem != null) { abstractUnit.attackingParticleSystem.Play(); }
-            targetDamageable.AdjustHealth(-AttackConfig.Value.damage);
+
+            if (!AttackConfig.Value.hasProjectileAttack)
+            {
+                targetDamageable.AdjustHealth(-AttackConfig.Value.damage);
+                // Projectile attacks to be handled as a consequence of the animation / in the specific subclass
+            }
         }
 
         return Status.Running;

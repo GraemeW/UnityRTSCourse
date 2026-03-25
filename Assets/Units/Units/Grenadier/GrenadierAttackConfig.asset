@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Units.AttackConfigSO
   <attackRange>k__BackingField: 10
   <attackDelay>k__BackingField: 2.5
+  <hasProjectileAttack>k__BackingField: 1
   <damage>k__BackingField: 25
   <maxChaseTime>k__BackingField: 1

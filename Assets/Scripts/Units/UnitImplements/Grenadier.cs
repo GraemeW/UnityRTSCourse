@@ -23,8 +23,12 @@ namespace GameDevTV.RTS.Units
         protected override void Awake()
         {
             base.Awake();
-            if (grenade == null || explosionParticles == null) { return; }
-
+            if (grenade == null || explosionParticles == null)
+            {
+                Debug.LogError("Grenadier has not been configured!");
+                return;
+            }
+            
             defaultGrenadePosition = grenade.transform.localPosition;
             grenadeParent = grenade.transform.parent;
         }
@@ -56,10 +60,12 @@ namespace GameDevTV.RTS.Units
             {
                 endPosition = targetLocation.Value;
             }
-            StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition));
+            
+            IDamageable targetDamageable = target != null ? target.GetComponent<IDamageable>() : null;
+            StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition, targetDamageable));
         }
 
-        private IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition)
+        private IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition, IDamageable targetDamageable)
         {
             float currentGrenadeThrowTime = 0f;
             while (currentGrenadeThrowTime < throwTimeSeconds)
@@ -71,15 +77,27 @@ namespace GameDevTV.RTS.Units
                 yield return null;
             }
 
-            if (explosionParticles != null)
-            {
-                explosionParticles.transform.SetParent(null);
-                explosionParticles.transform.position = endPosition;
-                explosionParticles.Play();
-            }
+            TriggerExplosionEffect(endPosition);
+            ApplyDamage(targetDamageable);
             
             grenade.transform.SetParent(grenadeParent);
             grenade.transform.localPosition = defaultGrenadePosition;
+        }
+        #endregion
+        
+        #region PrivateMethods
+        private void TriggerExplosionEffect(Vector3 position)
+        {
+            if (explosionParticles == null) { return; }
+            explosionParticles.transform.SetParent(null);
+            explosionParticles.transform.position = position;
+            explosionParticles.Play();
+        }
+
+        private void ApplyDamage(IDamageable targetDamageable)
+        {
+            if (targetDamageable == null || attackConfigSO == null) { return; }
+            targetDamageable.AdjustHealth(-attackConfigSO.damage);
         }
         #endregion
     }
