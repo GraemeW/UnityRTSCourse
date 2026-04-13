@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1974153333601261373}
   - component: {fileID: 6373942607041070935}
   - component: {fileID: 4998999097916986450}
-  - component: {fileID: 673536013338686601}
   - component: {fileID: 2115234063178354583}
+  - component: {fileID: -3799254493399567971}
   m_Layer: 6
   m_Name: Air Transport
   m_TagString: Untagged
@@ -133,27 +133,6 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &673536013338686601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076983579694789324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb5a45b711769924388293122d2d1691, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <currentHealth>k__BackingField: 0
-  <maxHealth>k__BackingField: 0
-  <unitSO>k__BackingField: {fileID: 11400000, guid: 9e47eae9aa0922f45ae6ac79df5748aa, type: 2}
-  decalProjector: {fileID: 6185970725219423034}
-  availableCommands:
-  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
-  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
-  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
-  CancelBuildingCommand: {fileID: 0}
 --- !u!114 &2115234063178354583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,10 +145,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Graph: {fileID: -5427218438338677319, guid: d7e0ebe2d16461f4c95352916af2f120, type: 2}
+  m_Graph: {fileID: -6881303480630233432, guid: 167e858ebb71040fb883e44dd7946c28, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 8901574015960744563
-  m_OriginalGraph: {fileID: 0}
+  m_OriginalGraph: {fileID: -6881303480630233432, guid: 167e858ebb71040fb883e44dd7946c28, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -183,6 +162,28 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1076983579694789324}
+--- !u!114 &-3799254493399567971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076983579694789324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279a7cddce6f45098957b6e900514583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDevTV.RTS.Units.AirTransport
+  <maxHealth>k__BackingField: 0
+  <initialHealthFraction>k__BackingField: 0.35
+  <unitSO>k__BackingField: {fileID: 11400000, guid: 9e47eae9aa0922f45ae6ac79df5748aa, type: 2}
+  decalProjector: {fileID: 6185970725219423034}
+  availableCommands:
+  - {fileID: 11400000, guid: c55da07d3a401c548821ce53f933d82f, type: 2}
+  - {fileID: 11400000, guid: 9c132ad570b89454a91a65cc5acf9047, type: 2}
+  - {fileID: 11400000, guid: 176079dfe10d82543a98b2b7b73087a7, type: 2}
+  <attackingParticleSystem>k__BackingField: {fileID: 0}
+  damageableSensor: {fileID: 0}
 --- !u!1 &3008828906968547231
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +242,7 @@ MonoBehaviour:
   m_Offset: {x: 0, y: 0, z: 4}
   m_Size: {x: 1.5, y: 1.5, z: 8}
   m_FadeFactor: 1
+  m_VisibleInScene: 1
   version: 1
   m_DecalLayerMask: 2
 --- !u!1001 &406761210951193130
@@ -251,18 +253,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2636797422651241148}
     m_Modifications:
-    - target: {fileID: -7511558181221131132, guid: fc4b6195552128c49a48de7801e0e7b7, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
-    - target: {fileID: -7511558181221131132, guid: fc4b6195552128c49a48de7801e0e7b7, type: 3}
-      propertyPath: 'm_Materials.Array.data[2]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 69987b2c316d1154ea5e1d61e87a9136, type: 2}
-    - target: {fileID: 2774208711206805212, guid: 1fc34cffcacebc5489886345a88277ec, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4a5b84d40cd4e5047a53df6c61269bb4, type: 2}
     - target: {fileID: -8679921383154817045, guid: b17b2104b495b4e96af1964ddd97ef12, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -307,6 +297,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fc4b6195552128c49a48de7801e0e7b7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
+    - target: {fileID: -7511558181221131132, guid: fc4b6195552128c49a48de7801e0e7b7, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 69987b2c316d1154ea5e1d61e87a9136, type: 2}
+    - target: {fileID: 2774208711206805212, guid: 1fc34cffcacebc5489886345a88277ec, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a5b84d40cd4e5047a53df6c61269bb4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
