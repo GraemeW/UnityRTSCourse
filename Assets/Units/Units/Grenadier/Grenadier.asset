@@ -18,3 +18,4 @@ MonoBehaviour:
   <buildTime>k__BackingField: 42
   <cost>k__BackingField: {fileID: 11400000, guid: 0c34ba5ab5bc9444daead3da491ffc96, type: 2}
   <attackConfig>k__BackingField: {fileID: 11400000, guid: 35ca36822d4d8436b97883fe91ff0e96, type: 2}
+  <transportConfig>k__BackingField: {fileID: 11400000, guid: a0d73bbc385b345c99955b2b14f0a845, type: 2}

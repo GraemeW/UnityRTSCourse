@@ -15,8 +15,11 @@ namespace GameDevTV.RTS.Behavior
     {
         [SerializeReference] public BlackboardVariable<GameObject> Agent;
         [SerializeReference] public BlackboardVariable<GameObject> Target;
+        [SerializeReference] public BlackboardVariable<float> MoveThreshold = new(0.25f);
+        
         // State
         bool isTargetMoveable = false;
+        private Vector3 lastPosition;
 
         // Cached References
         private NavMeshAgent navMeshAgent;
@@ -34,6 +37,7 @@ namespace GameDevTV.RTS.Behavior
             Vector3 targetLocation = GetTargetPosition();
             navMeshAgent.ResetPath();
             navMeshAgent.SetDestination(targetLocation);
+            lastPosition = targetLocation;
 
             return Status.Running;
         }
@@ -54,7 +58,11 @@ namespace GameDevTV.RTS.Behavior
             if (isTargetMoveable)
             {
                 Vector3 targetLocation = GetTargetPosition();
-                navMeshAgent.SetDestination(targetLocation);
+                if (Vector3.Distance(lastPosition, targetLocation) >= MoveThreshold.Value)
+                {
+                    navMeshAgent.SetDestination(targetLocation);
+                    lastPosition = targetLocation;
+                }
             }
 
             AnimationConstants.AnimateMovement(animator, navMeshAgent.speed);

@@ -26,66 +26,67 @@ namespace GameDevTV.RTS.Utilities
         private const string _buildingEventChannelRef = "BuildingEventChannel";
         private const string _attackConfigRef = "AttackConfig";
         private const string _nearbyEnemiesRef = "NearbyEnemies";
+        private const string _loadUnitEventChannelRef = "LoadUnitEventChannel";
 
         #region Setters
         public static void SetCommand(BehaviorGraphAgent behaviorAgent, UnitCommands command)
         {
             if  (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<UnitCommands>(_commandRef, command);
+            behaviorAgent.SetVariableValue(_commandRef, command);
         }
 
         public static void SetTargetLocation(BehaviorGraphAgent behaviorAgent, Vector3 position)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<Vector3>(_targetLocationRef, position);
+            behaviorAgent.SetVariableValue(_targetLocationRef, position);
         }
 
         public static void SetTarget(BehaviorGraphAgent behaviorAgent, GameObject target)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<GameObject>(_targetRef, target);
+            behaviorAgent.SetVariableValue(_targetRef, target);
         }
 
         public static void SetSupply(BehaviorGraphAgent behaviorAgent, GatherableSupply gatherableSupply)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<GatherableSupply>(_supplyRef, gatherableSupply);
+            behaviorAgent.SetVariableValue(_supplyRef, gatherableSupply);
         }
 
         public static void SetNearbySupplyCount(BehaviorGraphAgent behaviorAgent, int nearbySupplyCount)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<int>(_nearbySupplyCountRef, nearbySupplyCount);
+            behaviorAgent.SetVariableValue(_nearbySupplyCountRef, nearbySupplyCount);
         }
 
         public static void SetCommandPost(BehaviorGraphAgent behaviorAgent, GameObject commandPost)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<GameObject>(_commandPostRef, commandPost);
+            behaviorAgent.SetVariableValue(_commandPostRef, commandPost);
         }
 
         public static void SetGhostBuilding(BehaviorGraphAgent behaviorAgent, GameObject ghostBuilding)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<GameObject>(_ghostBuildingRef, ghostBuilding);
+            behaviorAgent.SetVariableValue(_ghostBuildingRef, ghostBuilding);
         }
 
         public static void SetBuildingSO(BehaviorGraphAgent behaviorAgent, BuildingSO buildingSO)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<BuildingSO>(_buildingSORef, buildingSO);
+            behaviorAgent.SetVariableValue(_buildingSORef, buildingSO);
         }
 
         public static void SetBuildingUnderConstruction(BehaviorGraphAgent behaviorAgent, BaseBuilding baseBuilding)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<BaseBuilding>(_buildingUnderConstructionRef, baseBuilding);
+            behaviorAgent.SetVariableValue(_buildingUnderConstructionRef, baseBuilding);
         }
 
         public static void SetAttackConfig(BehaviorGraphAgent behaviorAgent, AttackConfigSO attackConfig)
         {
             if (behaviorAgent == null) { return; }
-            behaviorAgent.SetVariableValue<AttackConfigSO>(_attackConfigRef, attackConfig);
+            behaviorAgent.SetVariableValue(_attackConfigRef, attackConfig);
         }
 
         public static void AddToNearbyEnemies(BehaviorGraphAgent behaviorAgent, IDamageable damageable)
@@ -170,6 +171,12 @@ namespace GameDevTV.RTS.Utilities
         {
             if (behaviorAgent == null) { return null; }
             return !behaviorAgent.GetVariable(_nearbyEnemiesRef, out BlackboardVariable<List<GameObject>> nearbyEnemies) ? null : nearbyEnemies.Value.FirstOrDefault();
+        }
+
+        public static LoadUnitEventChannel GetLoadUnitEventChannel(BehaviorGraphAgent behaviorAgent)
+        {
+            if (behaviorAgent == null) { return null; }
+            return !behaviorAgent.GetVariable(_loadUnitEventChannelRef, out BlackboardVariable <LoadUnitEventChannel> loadUnitEventChannel) ? null : loadUnitEventChannel.Value;
         }
         #endregion
     }

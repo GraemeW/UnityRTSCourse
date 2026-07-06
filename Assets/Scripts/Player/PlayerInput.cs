@@ -17,7 +17,7 @@ namespace GameDevTV.RTS.Player
         [Header("Hookups")]
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
-        [SerializeField] private new Camera camera;
+        [SerializeField] private Camera camera;
         [SerializeField] private CameraConfig cameraConfig;
         [Header("Game Behaviour")]
         [SerializeField] private bool enableEdgePan = true;

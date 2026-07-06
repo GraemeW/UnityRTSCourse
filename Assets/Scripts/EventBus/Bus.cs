@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using GameDevTV.RTS.Events;
 
 namespace GameDevTV.RTS.EventBus
 {
@@ -40,80 +38,5 @@ namespace GameDevTV.RTS.EventBus
                 UnityEngine.Debug.Log(handler.Method.Name);
             }
         }
-    }
-
-    public static class Bus
-    {
-        public static void PrintAllEvents()
-        {
-            foreach (EventType eventType in Enum.GetValues(typeof(EventType)))
-            {
-                PrintEvents(eventType);
-            }
-        }
-
-        public static void DeleteAllEvents()
-        {
-            foreach (EventType eventType in Enum.GetValues(typeof(EventType)))
-            {
-                DeleteEvents(eventType);
-            }
-        }   
-
-        public static void PrintEvents(EventType eventType)
-        {
-            switch (eventType)
-            {
-                case EventType.CommandSelected:
-                    Bus<CommandSelectedEvent>.PrintAllEvents();
-                    break;
-                case EventType.Supply:
-                    Bus<SupplyEvent>.PrintAllEvents();
-                    break;
-                case EventType.UnitSelected:
-                    Bus<UnitSelectedEvent>.PrintAllEvents();
-                    break;
-                case EventType.UnitDeselected:
-                    Bus<UnitDeselectedEvent>.PrintAllEvents();
-                    break;
-                case EventType.UnitSpawn:
-                    Bus<UnitSpawnEvent>.PrintAllEvents();
-                    break;
-                case EventType.UnitDeath:
-                    Bus<UnitDeathEvent>.PrintAllEvents();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null);
-            }
-        }
-
-        public static void DeleteEvents(EventType eventType)
-        {
-            switch (eventType)
-            {
-                case EventType.CommandSelected:
-                    Bus<CommandSelectedEvent>.ClearAllSubscriptions();
-                    break;
-                case EventType.Supply:
-                    Bus<SupplyEvent>.ClearAllSubscriptions();
-                    break;
-                case EventType.UnitSelected:
-                    Bus<UnitSelectedEvent>.ClearAllSubscriptions();
-                    break;
-                case EventType.UnitDeselected:
-                    Bus<UnitDeselectedEvent>.ClearAllSubscriptions();
-                    break;
-                case EventType.UnitSpawn:
-                    Bus<UnitSpawnEvent>.ClearAllSubscriptions();
-                    break;
-                case EventType.UnitDeath:
-                    Bus<UnitDeathEvent>.ClearAllSubscriptions();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null);
-            }
-        }
-
-
     }
 }

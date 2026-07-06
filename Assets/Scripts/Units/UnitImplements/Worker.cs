@@ -11,15 +11,15 @@ using GameDevTV.RTS.Events;
 namespace GameDevTV.RTS.Units
 {
     [RequireComponent(typeof(BehaviorGraphAgent))]
-    public class Worker : AbstractUnit, IBuildingBuilder
+    public class Worker : AbstractUnit, IBuildingBuilder, ITransportable
     {
         // Tunables
         [SerializeField] private BaseCommand cancelBuildingCommand;
         [SerializeField][Range(0f,1f)] private float cancelBuildingRefundFraction = 0.75f;
 
-        #region ComputedProperties
+        // Properties
         public bool IsBuilding => BehaviorConstants.GetCommand(behaviorAgent) == UnitCommands.BuildBuilding;
-        #endregion
+        public int transportCapacityUsage => unitSOImpl != null ? unitSOImpl.transportConfig.GetTransportCapacityUsage() : int.MaxValue;
         
         #region UnityMethods
         protected override void Start()
@@ -157,6 +157,13 @@ namespace GameDevTV.RTS.Units
         {
             GameObject ghostBuilding = BehaviorConstants.GetGhostBuilding(behaviorAgent);
             if (ghostBuilding != null) { Destroy(ghostBuilding); }
+        }
+        #endregion
+        
+        #region TransportableMethods
+        public void LoadInto(ITransporter transporter)
+        {
+            throw new System.NotImplementedException();
         }
         #endregion
     }

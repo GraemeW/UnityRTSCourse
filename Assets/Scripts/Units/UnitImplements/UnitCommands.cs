@@ -10,6 +10,7 @@ namespace GameDevTV.RTS.Units
         Gather,
         ReturnSupplies,
         BuildBuilding,
-        Attack
+        Attack,
+        LoadUnits
     }
 }

@@ -1,7 +1,10 @@
 namespace GameDevTV.RTS.Units
 {
-    public class BaseMilitaryUnit : AbstractUnit
+    public class BaseMilitaryUnit : AbstractUnit, ITransportable
     {
+        // Properties
+        public int transportCapacityUsage => unitSOImpl != null ? unitSOImpl.transportConfig.GetTransportCapacityUsage() : int.MaxValue;
+        
         // Cached References
         protected AttackConfigSO attackConfigSO;
         
@@ -16,6 +19,13 @@ namespace GameDevTV.RTS.Units
         protected override void ReconcileContingentCommands()
         {
             // No special commands
+        }
+        #endregion
+
+        #region TransportableMethods
+        public void LoadInto(ITransporter transporter)
+        {
+            throw new System.NotImplementedException();
         }
         #endregion
     }
